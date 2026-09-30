@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Дурак онлайн</title>
+<style>
+:root{--w:clamp(46px,13vw,70px);--cloth:#12343b;--ink:#0b1f23;--paper:#fbf6ea;--red:#c8372d;--gold:#e0b84c}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--cloth);color:var(--paper);font:16px/1.4 system-ui,sans-serif;overscroll-behavior:none}
+[hidden]{display:none!important}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:12px 20px;background:var(--gold);color:var(--ink)}
+button:active{transform:scale(.97)}
+input{font:inherit;border-radius:10px;border:2px solid #ffffff33;background:#0003;color:var(--paper);padding:10px;width:7em;text-transform:uppercase;text-align:center}
+#lobby{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center}
+#lobby h1{font:700 clamp(40px,12vw,64px)/1 Georgia,serif;margin:0}
+#lobby p{margin:0;opacity:.75;max-width:26em}
+.row{display:flex;gap:8px}
+#game{height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+#bar{display:flex;justify-content:space-between;padding:8px 14px;font-size:14px;opacity:.85}
+#dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#888;margin-right:6px}
+#dot.on{background:#5fd07a}
+#wait{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px}
+#wait b{font:700 44px Georgia,serif;letter-spacing:.12em}
+#board{flex:1;display:flex;flex-direction:column;min-height:0}
+.hand{display:flex;justify-content:safe center;padding:8px 14px;overflow-x:auto}
+.hand .c+.c{margin-left:calc(var(--w)*-.38)}
+#opp .c+.c{margin-left:calc(var(--w)*-.62)}
+#me{padding-top:14px}
+#me .c{cursor:pointer;transition:transform .12s}
+#me .c:active{transform:translateY(-12px)}
+#mid{flex:1;display:flex;align-items:center;justify-content:center;gap:clamp(10px,4vw,28px);padding:6px 12px;min-height:0}
+#deck{position:relative;width:calc(var(--w)*1.5);height:calc(var(--w)*1.5);flex:none}
+#deck .tr{position:absolute;left:calc(var(--w)*.45);top:calc(var(--w)*.3);transform:rotate(90deg)}
+#deck .back{position:absolute;left:0;top:0}
+#deck .ts{position:absolute;inset:0;display:grid;place-items:center;font-size:calc(var(--w)*.9)}
+#deck em{font:normal 700 calc(var(--w)*.3) Georgia,serif;color:var(--gold)}
+#table{display:grid;grid-template-columns:repeat(3,calc(var(--w)*1.5));gap:10px 6px;align-content:center}
+.pair{position:relative;height:calc(var(--w)*1.55)}
+.pair .c:nth-child(2){position:absolute;left:calc(var(--w)*.4);top:calc(var(--w)*.18);box-shadow:-3px 3px 8px #0006}
+#ctl{display:flex;align-items:center;justify-content:center;gap:12px;padding:4px 14px 0;min-height:52px}
+#st{font-size:15px;opacity:.9;text-align:center}
+.c{flex:none;width:var(--w);height:calc(var(--w)*1.4);border-radius:calc(var(--w)*.12);background:var(--paper);color:var(--ink);border:1px solid #0003;box-shadow:0 2px 6px #0005;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;line-height:1;user-select:none}
+.c b{font-size:calc(var(--w)*.36)}
+.c span{font-size:calc(var(--w)*.42)}
+.c.r{color:var(--red)}
+.c.back{background:repeating-linear-gradient(45deg,#7a2430 0 6px,#5e1a25 6px 12px);border:3px solid var(--paper)}
+.c.back em{color:var(--paper)}
+#over{position:fixed;inset:0;background:#000a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
+#over h2{font:700 36px Georgia,serif;margin:0}
+#toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:var(--ink);padding:8px 16px;border-radius:10px;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.on{opacity:1}
+@media (max-height:560px){:root{--w:clamp(38px,9vw,54px)}}
+</style>
+</head>
+<body>
+<div id="lobby">
+  <h1>Дурак</h1>
+  <p>Играйте вдвоём с другом: создайте комнату и отправьте ему ссылку.</p>
+  <button id="create">Создать комнату</button>
+  <div class="row"><input id="codeIn" maxlength="4" placeholder="Код"><button id="join">Войти</button></div>
+</div>
+
+<div id="game" hidden>
+  <div id="bar"><span><i id="dot"></i>Соперник</span><span>Комната <b id="code"></b></span></div>
+  <div id="wait" hidden>
+    <p>Ждём друга. Отправьте ему код или ссылку:</p>
+    <b id="wcode"></b>
+    <button id="share">Отправить ссылку</button>
+  </div>
+  <div id="board" hidden>
+    <div id="opp" class="hand"></div>
+    <div id="mid"><div id="deck"></div><div id="table"></div></div>
+    <div id="ctl"><div id="st"></div><button id="act" hidden></button></div>
+    <div id="me" class="hand"></div>
+  </div>
+</div>
+
+<div id="over" hidden><h2 id="res"></h2><button id="again">Сыграть ещё</button></div>
+<div id="toast"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const SY = '♠♥♦♣', RK = {11:'В', 12:'Д', 13:'К', 14:'Т'};
+const tok = sessionStorage.t || (sessionStorage.t = Math.random().toString(36).slice(2));
+let ws, S = null, code = (new URLSearchParams(location.search).get('room') || '').toUpperCase() || null;
+
+function toast(t){ const e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('on'), 2200); }
+const send = o => ws && ws.readyState === 1 && ws.send(JSON.stringify(o));
+
+function connect(){
+  ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host);
+  ws.onopen = () => send({t:'join', code, token:tok});
+  ws.onmessage = e => {
+    const m = JSON.parse(e.data);
+    if (m.t === 'err') { toast(m.m); if (!S) { code = null; history.replaceState(0, '', location.pathname); } return; }
+    S = m; code = m.code; history.replaceState(0, '', '?room=' + code); render();
+  };
+  ws.onclose = () => { if (S) setTimeout(connect, 1500); };
+}
+
+const card = (c, cls = '') => `<div class="c ${c.s === 1 || c.s === 2 ? 'r' : ''} ${cls}" data-r="${c.r}" data-s="${c.s}"><b>${RK[c.r] || c.r}</b><span>${SY[c.s]}</span></div>`;
+
+function render(){
+  $('lobby').hidden = true; $('game').hidden = false;
+  $('code').textContent = S.code; $('wcode').textContent = S.code;
+  $('dot').className = S.on[1 - S.me] ? 'on' : '';
+  const g = S.g;
+  $('wait').hidden = !!g; $('board').hidden = !g;
+  if (!g) return;
+
+  const tr = g.trump, me = S.me === g.att, und = g.table.some(x => !x.d), all = g.table.length && !und;
+  $('opp').innerHTML = '<div class="c back"></div>'.repeat(g.opp);
+  $('me').innerHTML = [...g.hand].sort((a, b) => ((a.s === tr ? 20 : 0) + a.r + a.s / 10) - ((b.s === tr ? 20 : 0) + b.r + b.s / 10)).map(c => card(c)).join('');
+  $('table').innerHTML = g.table.map(x => `<div class="pair">${card(x.a)}${x.d ? card(x.d) : ''}</div>`).join('');
+  $('deck').innerHTML = g.deck
+    ? `${card(g.tc, 'tr')}<div class="c back"><em>${g.deck}</em></div>`
+    : `<div class="ts" style="color:${tr === 1 || tr === 2 ? 'var(--red)' : 'var(--paper)'}">${SY[tr]}</div>`;
+
+  let st, btn = null;
+  if (me) {
+    if (g.taking) { st = 'Соперник берёт. Подкиньте карты или завершите ход'; btn = 'Готово'; }
+    else if (!g.table.length) st = 'Ваш ход — атакуйте';
+    else if (all) { st = 'Соперник отбился. Подкиньте ещё или скажите «Бито»'; btn = 'Бито'; }
+    else st = 'Ждём, пока соперник отобьётся';
+  } else {
+    if (g.taking) st = 'Вы берёте карты…';
+    else if (!g.table.length) st = 'Ход соперника';
+    else if (und) { st = 'Отбейте карту или возьмите'; btn = 'Беру'; }
+    else st = 'Ждём соперника';
+  }
+  $('st').textContent = st; $('st').hidden = !!btn && false;
+  $('act').hidden = !btn; $('act').textContent = btn || ''; $('act').dataset.m = g.taking || all ? 'done' : 'take';
+
+  $('over').hidden = g.winner === null;
+  if (g.winner !== null) $('res').textContent = g.winner === -1 ? 'Ничья' : g.winner === S.me ? 'Вы победили!' : 'Вы остались в дураках';
+}
+
+$('me').onclick = e => { const c = e.target.closest('.c'); if (c) send({t:'card', r:+c.dataset.r, s:+c.dataset.s}); };
+$('act').onclick = () => send({t:$('act').dataset.m});
+$('again').onclick = () => send({t:'again'});
+$('create').onclick = () => { code = null; connect(); };
+$('join').onclick = () => { const v = $('codeIn').value.trim().toUpperCase(); if (v.length === 4) { code = v; connect(); } else toast('Введите код из 4 букв'); };
+$('share').onclick = () => {
+  const url = location.origin + location.pathname + '?room=' + S.code;
+  if (navigator.share) navigator.share({title:'Дурак', text:'Сыграем в дурака?', url}).catch(() => {});
+  else navigator.clipboard.writeText(url).then(() => toast('Ссылка скопирована'));
+};
+if (code) connect();
+</script>
+</body>
+</html>
