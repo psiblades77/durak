@@ -78,12 +78,14 @@ function moveDurak(room, p, m) {
 
 // ---------- мини-игры ----------
 const L3 = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-const KINDS = ['durak', 'ttt', 'c4', 'rps'];
+const KINDS = ['durak', 'ttt', 'c4', 'rps', 'wd', 'pk'];
 
 function newGame(k) {
   if (k === 'durak') return newDurak();
   if (k === 'ttt') return { b: Array(9).fill(-1), turn: 0, winner: null, line: null };
   if (k === 'c4') return { b: Array(42).fill(-1), turn: 0, winner: null, line: null };
+  if (k === 'wd') return { phase: 'who', setter: null, word: null, guesses: [], winner: null };
+  if (k === 'pk') return { phase: 'prep', cats: [null, null], log: [], turn: 0, step: 'item', item: null, ans: null, guess: null, winner: null };
   return { picks: [null, null], wins: [0, 0], last: null, winner: null };
 }
 
@@ -101,10 +103,75 @@ function line4(b, i, p) {
   return null;
 }
 
+// ---------- Wordies ----------
+const norm = s => String(s || '').toLowerCase().replace(/ё/g, 'е').replace(/\s+/g, ' ').trim();
+const txt = (s, n) => String(s || '').replace(/\s+/g, ' ').trim().slice(0, n);
+function wdScore(word, guess) {
+  const r = Array(word.length).fill(0), cnt = {};
+  for (let i = 0; i < word.length; i++) {
+    if (word[i] === ' ') r[i] = -1;
+    else if (guess[i] === word[i]) r[i] = 2;
+    else cnt[word[i]] = (cnt[word[i]] || 0) + 1;
+  }
+  for (let i = 0; i < word.length; i++) if (r[i] === 0 && cnt[guess[i]] > 0) { r[i] = 1; cnt[guess[i]]--; }
+  return r; // 2 — на месте, 1 — есть в слове, 0 — нет, -1 — пробел
+}
+function moveWd(g, p, m) {
+  if (g.phase === 'who' && m.t === 'wsetter') { g.setter = m.who === 'me' ? p : 1 - p; g.phase = 'set'; }
+  else if (g.phase === 'set' && m.t === 'word' && p === g.setter) {
+    const w = norm(m.w);
+    if (w.length < 3 || w.length > 15 || !/^\p{L}+( \p{L}+)*$/u.test(w)) return 'Слово: 3–15 символов, только буквы и пробелы';
+    g.word = w; g.phase = 'guess';
+  } else if (g.phase === 'guess' && m.t === 'guess' && p !== g.setter) {
+    const L = norm(m.w).replace(/ /g, ''), n = g.word.replace(/ /g, '').length;
+    if (L.length !== n) return 'Нужно букв: ' + n;
+    if (!/^\p{L}+$/u.test(L)) return 'Только буквы и пробелы';
+    let k = 0;
+    const gs = [...g.word].map(ch => ch === ' ' ? ' ' : L[k++]).join('');
+    const r = wdScore(g.word, gs);
+    g.guesses.push({ w: gs, r });
+    if (r.every(x => x !== 0 && x !== 1)) { g.winner = p; g.phase = 'done'; }
+    else if (g.guesses.length >= 6) { g.winner = g.setter; g.phase = 'done'; }
+  }
+}
+
+// ---------- «Я иду в поход…» ----------
+function movePk(g, p, m) {
+  const o = 1 - p, t = txt(m.w, 40);
+  if (m.t === 'giveup' && g.phase === 'play') { g.phase = 'done'; g.winner = -1; return; }
+  if (g.phase === 'prep') {
+    if (m.t === 'cat' && g.cats[p] === null) {
+      if (!t) return 'Введите категорию';
+      g.cats[p] = t;
+      if (g.cats[o] !== null) { g.phase = 'play'; g.turn = 0; g.step = 'item'; }
+    }
+    return;
+  }
+  if (g.phase !== 'play') return;
+  const mine = p === g.turn;
+  if (g.step === 'item' && mine && m.t === 'item') {
+    if (!t) return 'Введите предмет';
+    g.item = t; g.log.push({ k: 'item', by: p, txt: t }); g.step = 'judge';
+  } else if (g.step === 'judge' && !mine && m.t === 'judge') {
+    g.ans = !!m.v; g.log.push({ k: 'ans', by: p, v: g.ans }); g.step = 'decide';
+  } else if (g.step === 'decide' && mine && m.t === 'skip') { g.turn = o; g.step = 'item'; g.item = g.ans = null; }
+  else if (g.step === 'decide' && mine && m.t === 'try') g.step = 'guess';
+  else if (g.step === 'guess' && mine && m.t === 'pguess') {
+    if (!t) return 'Введите догадку';
+    g.guess = t; g.log.push({ k: 'guess', by: p, txt: t }); g.step = 'verify';
+  } else if (g.step === 'verify' && !mine && m.t === 'verify') {
+    g.log.push({ k: 'ver', by: p, v: !!m.v });
+    if (m.v) { g.winner = g.turn; g.phase = 'done'; }
+    else { g.turn = p; g.step = 'item'; g.item = g.ans = g.guess = null; }
+  }
+}
+
 function move(room, p, m) {
   const g = room.g, k = room.kind;
   if (!g || g.winner !== null) return;
   if (k === 'durak') return moveDurak(room, p, m);
+  if (k === 'wd') return moveWd(g, p, m);
+  if (k === 'pk') return movePk(g, p, m);
   if (k === 'ttt' && m.t === 'cell') {
     if (g.turn !== p || g.b[m.i] !== -1) return;
     g.b[m.i] = p;
@@ -139,6 +206,14 @@ const gv = (room, p) => {
   if (room.kind === 'durak') return {
     hand: g.hands[p], opp: g.hands[1 - p].length, deck: g.deck.length, trump: g.trump,
     tc: g.deck[0] || null, table: g.table, att: g.att, taking: g.taking, winner: g.winner,
+  };
+  if (room.kind === 'wd') return {
+    phase: g.phase, setter: g.setter, pat: g.word ? g.word.replace(/\S/g, '•') : null, guesses: g.guesses,
+    word: (g.winner !== null || p === g.setter) ? g.word : null, winner: g.winner,
+  };
+  if (room.kind === 'pk') return {
+    phase: g.phase, ready: g.cats.map(c => c !== null), mine: g.cats[p], cats: g.winner !== null ? g.cats : null,
+    log: g.log, turn: g.turn, step: g.step, item: g.item, ans: g.ans, guess: g.guess, winner: g.winner,
   };
   if (room.kind === 'rps') return { mine: g.picks[p], opp: g.picks[1 - p] !== null, last: g.last, wins: g.wins, winner: g.winner };
   return { b: g.b, turn: g.turn, winner: g.winner, line: g.line };
@@ -186,7 +261,8 @@ wss.on('connection', ws => {
     else if (m.t === 'again') { if (fin) start(room, room.kind); }
     else if (room.g) {
       const was = room.g.winner;
-      move(room, seat, m);
+      const e = move(room, seat, m);
+      if (e) err(ws, e);
       if (was === null && room.g.winner !== null && room.g.winner >= 0) room.score[room.g.winner]++;
     }
     push(room);
