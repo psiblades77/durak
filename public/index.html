@@ -93,6 +93,25 @@ h1,h2,.st b{font-family:Georgia,serif}
 .sheet h2{margin:0;font-size:26px}.sheet p{margin:0}
 #toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:var(--ink);border:1px solid #ffffff33;padding:8px 16px;border-radius:10px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9;max-width:90vw;text-align:center}
 #toast.on{opacity:1}
+#menu{overflow-y:auto;justify-content:safe center}
+.wd{display:flex;flex-direction:column;align-items:center;gap:6px}
+.wrow{display:flex;gap:4px;justify-content:center}
+.wc{width:var(--cs);height:var(--cs);display:grid;place-items:center;border-radius:6px;background:#0004;border:1px solid #ffffff22;font:700 calc(var(--cs)*.55) Georgia,serif;font-style:normal;text-transform:uppercase;color:var(--paper)}
+.wc.g{background:#4f9d5a;border-color:#4f9d5a}.wc.y{background:#c9a227;border-color:#c9a227;color:var(--ink)}.wc.x{background:#2a3a3f}
+.wgap{width:calc(var(--cs)*.5)}
+.flip{animation:flip .5s ease both}
+@keyframes flip{from{transform:rotateX(90deg);opacity:0}}
+.keys{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;max-width:420px;min-height:26px}
+.keys i{font:700 13px Georgia,serif;text-transform:uppercase;min-width:22px;text-align:center;padding:3px 5px;border-radius:5px;background:#ffffff1a}
+.keys .g{background:#4f9d5a}.keys .y{background:#c9a227;color:var(--ink)}.keys .x{background:#2a3a3f;opacity:.6}
+.frm{display:flex;gap:8px;width:min(420px,100%)}.frm input{flex:1;min-width:0}
+.pkbox{flex:1;display:flex;flex-direction:column;min-height:0;padding:6px 14px;gap:10px}
+.chat{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;background:#0003;border-radius:14px;padding:10px;min-height:80px}
+.msg{max-width:85%;padding:8px 12px;border-radius:14px;background:#ffffff14;align-self:flex-start;font-size:15px}
+.msg.mine{align-self:flex-end;background:#e0b84c33}.msg b{display:block;font-size:12px;opacity:.7}
+.act{background:#0004;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+.act h3{margin:0;font:700 18px Georgia,serif}.chip2{font-size:13px;opacity:.8;text-align:center}
+.sent{font:700 22px Georgia,serif;margin:0}
 @media (max-height:600px){:root{--w:clamp(36px,9vw,52px);--ds:clamp(28px,8vw,40px)}}
 </style>
 </head>
@@ -124,6 +143,8 @@ h1,h2,.st b{font-family:Georgia,serif}
       <button class="tile" data-k="ttt"><span>❌</span>Крестики-нолики<small>3×3</small></button>
       <button class="tile" data-k="c4"><span>🔴</span>4 в ряд<small>собери четыре</small></button>
       <button class="tile" data-k="rps"><span>✂️</span>Камень-ножницы<small>до 3 побед</small></button>
+      <button class="tile" data-k="wd"><span>🔤</span>Wordies<small>угадай слово за 6 попыток</small></button>
+      <button class="tile" data-k="pk"><span>🎒</span>Я иду в поход…<small>угадай категорию</small></button>
     </div>
   </div>
   <div id="board" hidden></div>
@@ -158,7 +179,7 @@ function connect(){
   ws.onclose = () => setTimeout(connect, 1500);
   ws.onmessage = e => {
     const m = JSON.parse(e.data);
-    if (m.t === 'err') { toast(m.m); if (!S && code) { code = null; history.replaceState(0, '', location.pathname); } return; }
+    if (m.t === 'err') { toast(m.m); if (lastSent) { const el = $(lastSent.id); if (el && !el.value) el.value = lastSent.v; } if (!S && code) { code = null; history.replaceState(0, '', location.pathname); } return; }
     S = m; code = m.code;
     history.replaceState(0, '', '?room=' + code); render();
   };
@@ -220,6 +241,45 @@ function c4(g){
   return `<div class="center"><div class="st">${turnTxt(g, my)} · ваш цвет <i class="disc sm p${S.me}"></i></div><div class="c4">${cols}</div><div class="st hint">Коснитесь столбца, чтобы бросить фишку</div></div>`;
 }
 
+function wd(g){
+  const me = S.me, o = 1 - me, nm = i => esc(S.names[i]), setter = g.setter === me;
+  const form = (id, act, ph, btn, hint) => `<div class="frm"><input id="${id}" maxlength="15" placeholder="${ph}" autocomplete="off"><button class="go" data-f="${act}" data-in="${id}">${btn}</button></div>${hint ? `<div class="hint">${hint}</div>` : ''}`;
+  if (g.phase === 'who') return `<div class="center"><h2 style="margin:0">Wordies</h2><p class="st">Кто будет загадывать слово?<br>Второй игрок отгадывает за 6 попыток.</p><div class="row"><button ${M({t:'wsetter', who:'me'})}>Я загадываю</button><button class="ghost" ${M({t:'wsetter', who:'other'})}>Пусть загадывает ${nm(o)}</button></div></div>`;
+  if (g.phase === 'set') return `<div class="center">${setter ? `<div class="st"><b>Загадайте слово или фразу</b><br>3–15 символов, пробелы можно</div>${form('wIn', 'word', 'например: белый медведь', 'Готово', 'Только буквы и пробелы')}` : `<div class="st">${nm(g.setter)} загадывает слово…</div>`}</div>`;
+  const n = g.pat.length, letters = g.pat.replace(/ /g, '').length, cs = `--cs:min(46px,calc((100vw - 36px) / ${n} - 4px))`;
+  const row = (r, i) => '<div class="wrow">' + [...g.pat].map((ch, j) => ch === ' ' ? '<i class="wgap"></i>' : `<i class="wc ${r ? ['x', 'y', 'g'][r.r[j]] + an('w' + i, 'flip') : ''}" ${r ? `style="animation-delay:${j * 80}ms"` : ''}>${r ? esc(r.w[j]) : ''}</i>`).join('') + '</div>';
+  const best = {};
+  g.guesses.forEach(x => [...x.w].forEach((ch, j) => { if (ch !== ' ' && x.r[j] > (best[ch] ?? -1)) best[ch] = x.r[j]; }));
+  const keys = Object.keys(best).sort().map(ch => `<i class="${['x', 'y', 'g'][best[ch]]}">${esc(ch)}</i>`).join('');
+  const info = g.phase === 'done' ? `Слово: <b>${esc(g.word)}</b>` : setter ? `Ваше слово: <b>${esc(g.word)}</b>` : `Букв: ${letters}${n > letters ? ' (пробелы показаны)' : ''}`;
+  const ctl = g.phase === 'guess' ? (setter ? `<div class="st">${nm(o)} угадывает… осталось попыток: ${6 - g.guesses.length}</div>`
+    : form('gIn', 'guess', `Ваш вариант (${letters} букв)`, 'Проверить', `Осталось попыток: ${6 - g.guesses.length}`)) : '';
+  return `<div class="center wd" style="${cs}"><div class="st">${info}</div>${Array.from({length:6}, (_, i) => row(g.guesses[i], i)).join('')}<div class="keys">${keys}</div>${ctl}</div>`;
+}
+
+function pk(g){
+  const me = S.me, o = 1 - me, nm = i => esc(S.names[i]), q = s => `«${esc(s)}»`;
+  const form = (id, act, ph, btn) => `<div class="frm"><input id="${id}" maxlength="40" placeholder="${ph}" autocomplete="off"><button class="go" data-f="${act}" data-in="${id}">${btn}</button></div>`;
+  if (g.phase === 'prep') return `<div class="center"><p class="sent">Я иду в поход и беру с собой…</p>${g.ready[me]
+    ? `<div class="st">Ваша категория: <b>${q(g.mine)}</b><br>Ждём, пока ${nm(o)} придумает свою…</div>`
+    : `${form('cIn', 'cat', 'категорию предметов', 'Готово')}<div class="hint">Например: всё красное · на букву К · съедобное · круглое.<br>Соперник не узнает её до конца игры.</div>`}</div>`;
+  const log = g.log.map(e => {
+    const t = e.k === 'item' ? `берёт с собой: ${q(e.txt)}` : e.k === 'ans' ? (e.v ? '✅ Ты идёшь в поход' : '❌ Ты не идёшь в поход')
+      : e.k === 'guess' ? `пробует угадать категорию: ${q(e.txt)}` : (e.v ? '✅ Верно!' : '❌ Неверно');
+    return `<div class="msg ${e.by === me ? 'mine' : ''}"><b>${nm(e.by)}</b>${t}</div>`;
+  }).join('') || `<div class="hint">Игра началась. Первым ходит ${nm(g.turn)}</div>`;
+  const t = g.turn === me;
+  const mineCat = `<div class="chip2">Ваша категория: ${q(g.mine)}</div>`;
+  let act = '';
+  if (g.phase === 'done') act = `<h3>Категории раскрыты</h3><div>${nm(0)}: <b>${q(g.cats[0])}</b></div><div>${nm(1)}: <b>${q(g.cats[1])}</b></div>`;
+  else if (g.step === 'item') act = t ? `<h3>Что ты берёшь с собой в поход?</h3>${form('iIn', 'item', 'Название предмета', 'Отправить')}` : `<div>${nm(g.turn)} выбирает предмет…</div>`;
+  else if (g.step === 'judge') act = t ? `<div>Ждём ответа ${nm(o)}…</div>` : `<h3>${nm(g.turn)} берёт с собой ${q(g.item)}</h3><div class="row"><button ${M({t:'judge', v:true})}>Ты идёшь в поход</button><button class="ghost" ${M({t:'judge', v:false})}>Ты не идёшь в поход</button></div>${mineCat}`;
+  else if (g.step === 'decide') act = t ? `<h3>${g.ans ? '✅ Ты идёшь в поход' : '❌ Ты не идёшь в поход'}</h3><div>${q(g.item)}</div><div class="row"><button ${M({t:'try'})}>Попробовать угадать категорию</button><button class="ghost" ${M({t:'skip'})}>Пропустить</button></div>` : `<div>${nm(g.turn)} решает, пробовать ли угадать вашу категорию…</div>`;
+  else if (g.step === 'guess') act = t ? `<h3>Какая категория у ${nm(o)}?</h3>${form('gIn', 'pguess', 'Ваш вариант', 'Отправить')}` : `<div>${nm(g.turn)} пишет догадку…</div>`;
+  else act = t ? `<div>Ждём ответа ${nm(o)}…</div>` : `<h3>${nm(g.turn)} думает: ${q(g.guess)}</h3><div class="row"><button ${M({t:'verify', v:true})}>Верно ✅</button><button class="ghost" ${M({t:'verify', v:false})}>Неверно ❌</button></div>${mineCat}`;
+  return `<div class="pkbox">${mineCat}<div class="chat" id="chat">${log}</div><div class="act">${act}</div>${g.phase === 'play' ? `<button class="sm ghost" ${M({t:'giveup'})}>Сдаться и раскрыть категории</button>` : ''}</div>`;
+}
+
 const E = ['✊', '✋', '✌️'], N = ['Камень', 'Бумага', 'Ножницы'];
 function rps(g){
   const me = S.me, l = g.last, can = g.mine === null && g.winner === null;
@@ -241,21 +301,36 @@ function render(){
 
   const over = !!g && g.winner !== null;
   $('over').hidden = !over;
-  if (!S.kind) return;
+  if (!S.kind) { $('board').innerHTML = ''; return; }
   if (S.gid !== lastGid) { P = new Set(); lastGid = S.gid; }
   cur = new Set();
-  $('board').innerHTML = {durak, ttt, c4, rps}[S.kind](g);
+  const keep = [...$('board').querySelectorAll('input')].map(i => [i.id, i.value, document.activeElement === i]);
+  $('board').innerHTML = {durak, ttt, c4, rps, wd, pk}[S.kind](g);
+  keep.forEach(([id, v, f]) => { const el = $(id); if (el) { el.value = v; if (f) el.focus(); } });
+  const ch = $('chat'); if (ch) ch.scrollTop = ch.scrollHeight;
   P = cur;
   if (over) {
-    $('res').textContent = g.winner === -1 ? 'Ничья' : g.winner === me ? '🎉 Вы победили!' : S.kind === 'durak' ? 'Вы остались в дураках' : 'Победил соперник';
+    const pkk = S.kind === 'pk', L = {durak:'Вы остались в дураках', pk:'Соперник угадал вашу категорию'};
+    $('res').textContent = g.winner === -1 ? (pkk ? 'Игра окончена' : 'Ничья') : g.winner === me ? (pkk ? '🎉 Вы угадали категорию!' : '🎉 Вы победили!') : (L[S.kind] || 'Победил соперник');
   }
 }
 
+let lastSent = null;
 document.addEventListener('click', e => {
-  const x = e.target.closest('[data-m],[data-k]');
+  const x = e.target.closest('[data-m],[data-k],[data-f]');
   if (!x) return;
   if (x.dataset.k) return send({t:'pick', k:x.dataset.k});
-  send(JSON.parse(x.dataset.m));
+  if (x.dataset.f) {
+    const el = $(x.dataset.in);
+    if (!el.value.trim()) return toast('Введите текст');
+    lastSent = {id:el.id, v:el.value}; send({t:x.dataset.f, w:el.value}); el.value = ''; return;
+  }
+  const o = JSON.parse(x.dataset.m);
+  if (o.t === 'giveup' && !confirm('Закончить игру и раскрыть категории?')) return;
+  send(o);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && e.target.matches('.frm input')) e.target.parentElement.querySelector('[data-f]').click();
 });
 $('guest').value = localStorage.dname || '';
 $('guest').oninput = () => { localStorage.dname = $('guest').value; };
