@@ -5,131 +5,153 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Игры для двоих</title>
 <style>
-:root{--w:clamp(44px,13vw,68px);--ds:clamp(34px,10.5vw,54px);--ink:#0b1f23;--paper:#fbf6ea;--red:#c8372d;--gold:#e0b84c;--coral:#ef6f5e}
+:root{--w:clamp(44px,13vw,68px);--ds:clamp(34px,10.5vw,54px);--txt:#ecebff;--mut:#a9a6d6;--surf:#ffffff0f;--surf2:#ffffff1a;--line:#ffffff24;--acc:#8b7cf6;--ink:#17163a;--paper:#f3f1ff;--red:#cf4a6c;--p0:#7aa5ff;--p1:#c39bff;--ch:min(44dvh,340px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
-body{background:radial-gradient(ellipse at 50% 30%,#1f5c66 0%,#12343b 55%,#081a1e 100%) fixed;color:var(--paper);font:16px/1.4 system-ui,sans-serif;overscroll-behavior:none;touch-action:manipulation}
+body{background:radial-gradient(900px 600px at 12% -10%,#4b3fb766,transparent 60%),radial-gradient(800px 600px at 105% 25%,#2f5fd055,transparent 55%),linear-gradient(165deg,#0d0e29,#16134a 55%,#0d1033) fixed;color:var(--txt);font:16px/1.4 system-ui,sans-serif;overscroll-behavior:none;touch-action:manipulation}
 [hidden]{display:none!important}
-button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 20px;background:var(--gold);color:var(--ink);box-shadow:0 3px 0 #9a7b22}
-button:active{transform:translateY(2px);box-shadow:0 1px 0 #9a7b22}
-button.sm{padding:6px 12px;font-size:14px}
-button.ghost{background:#ffffff1a;color:var(--paper);box-shadow:none}
-input{font:inherit;border-radius:12px;border:2px solid #ffffff33;background:#0003;color:var(--paper);padding:10px;width:100%;text-align:center}
-#codeIn{width:7em;text-transform:uppercase}
+button,.btn{font:inherit;font-weight:700;border:0;border-radius:14px;padding:12px 20px;background:linear-gradient(135deg,#7f6df2,#5b86f7);color:#fff;box-shadow:0 6px 18px #5b4fd855;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
+button:active{transform:scale(.97)}button:disabled{opacity:.4}
+button.sm{padding:6px 12px;font-size:14px;border-radius:10px;box-shadow:none}
+button.ghost{background:var(--surf2);box-shadow:none;border:1px solid var(--line)}
+input{font:inherit;border-radius:14px;border:1px solid var(--line);background:#0b0c2488;color:var(--txt);padding:11px 12px;width:100%;text-align:center;outline:none}
+input:focus{border-color:var(--acc)}input::placeholder{color:#8d89c4}
 h1,h2,.st b{font-family:Georgia,serif}
-#lobby{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
-#lobby h1{font-size:clamp(38px,11vw,60px);line-height:1;margin:0}
-#lobby p{margin:0;opacity:.75;max-width:26em}
-.suits{font-size:34px;letter-spacing:.2em}
+.hint{font-size:13px;color:var(--mut)}
 .row{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
-.acct{font-size:14px}.acct b{color:var(--gold)}
-#guest{width:min(260px,100%)}
+#codeIn{width:7em;text-transform:uppercase}
+/* лобби */
+#lobby{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center}
+#lobby h1{font-size:clamp(40px,12vw,64px);line-height:1.02;margin:0;background:linear-gradient(90deg,#d3c9ff,#8fb2ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+#lobby p{margin:0;color:var(--mut);max-width:26em}
+.suits{font-size:30px;letter-spacing:.25em;color:#b9b0f5}
+.panel{display:flex;flex-direction:column;gap:12px;width:min(340px,100%);padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(10px)}
+/* комната */
 #game{height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-#bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 10px;padding:8px 14px;font-size:14px}
-#score{background:#0004;border-radius:99px;padding:4px 14px;font-weight:700}
-#dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#888;margin-right:6px}
-#dot.on{background:#5fd07a;box-shadow:0 0 8px #5fd07a}
+#bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 10px 0;padding:6px 10px;background:var(--surf);border:1px solid var(--line);border-radius:16px;font-size:14px}
+#bar>span{display:flex;align-items:center;gap:8px;min-width:0}
+#score{background:#0004;border-radius:99px;padding:3px 12px;font-weight:700;white-space:nowrap}
+#oppn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:20vw}
+#dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#777;flex:none}
+#dot.on{background:#6fe0b0;box-shadow:0 0 8px #6fe0b0}
+#code{letter-spacing:.1em;color:#c9c2ff}
+#chatBtn{position:relative;padding:6px 12px;font-size:18px;line-height:1.2}
+#badge{position:absolute;top:-7px;right:-7px;min-width:19px;height:19px;border-radius:10px;background:#e9679a;color:#fff;font:700 11px system-ui;display:grid;place-items:center;padding:0 5px}
 #wait,#menu,.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:18px}
-#wait b{font:700 44px Georgia,serif;letter-spacing:.12em}
-#menu h2{margin:0;font-size:26px}
+#wait b{font:700 44px Georgia,serif;letter-spacing:.12em;color:#d3c9ff}
+#menu{overflow-y:auto;justify-content:safe center}#menu h2{margin:0;font-size:26px}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(420px,100%)}
-.tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 8px;background:#ffffff14;color:var(--paper);border:1px solid #ffffff2a;box-shadow:none;border-radius:16px}
-.tile span{font-size:36px}.tile small{font-weight:400;opacity:.7;font-size:12px}
-.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-.chip{padding:6px 14px;background:#ffffff14;color:var(--paper);box-shadow:none;border:1px solid #ffffff33;border-radius:99px}
-.chip.on{background:var(--gold);color:var(--ink)}.chip:disabled{opacity:.3}
-.hint{font-size:13px;opacity:.7}
-#board{flex:1;display:flex;flex-direction:column;min-height:0}
+.tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 8px;background:linear-gradient(160deg,#ffffff18,#ffffff08);color:var(--txt);border:1px solid var(--line);box-shadow:none;border-radius:18px}
+.tile:hover{border-color:var(--acc)}.tile:last-child{grid-column:1/-1}
+.tile span{font-size:34px}.tile small{font-weight:400;color:var(--mut);font-size:12px}
+#board{flex:1;display:flex;flex-direction:column;min-height:0;overflow-y:auto}
+.ttl{margin:0;font-size:28px}
+/* дурак */
 .hand{display:flex;justify-content:safe center;padding:8px 14px;overflow-x:auto}
-.hand .c+.c{margin-left:calc(var(--w)*-.38)}
-.opp .c+.c{margin-left:calc(var(--w)*-.62)}
+.hand .c+.c{margin-left:calc(var(--w)*-.38)}.opp .c+.c{margin-left:calc(var(--w)*-.62)}
 .me{padding-top:16px;border-radius:18px 18px 0 0}
-.me.turn{background:linear-gradient(#e0b84c33,transparent);animation:glow 1.4s ease-in-out infinite}
-@keyframes glow{50%{background:linear-gradient(#e0b84c66,transparent)}}
-.me .c.ok{cursor:pointer;transform:translateY(-8px)}
-.me .c.no{opacity:.5;filter:saturate(.6)}
-/* анимации */
+.me.turn{background:linear-gradient(#8b7cf633,transparent);animation:glow 1.4s ease-in-out infinite}
+@keyframes glow{50%{background:linear-gradient(#8b7cf670,transparent)}}
+.me .c.ok{cursor:pointer;transform:translateY(-8px)}.me .c.no{opacity:.5;filter:saturate(.6)}
 @keyframes deal{from{opacity:0;transform:translate(-70px,-120px) rotate(-14deg) scale(.55)}}
 @keyframes dealo{from{opacity:0;transform:translateY(-70px) rotate(10deg) scale(.6)}}
 @keyframes pop{0%{opacity:0;transform:scale(1.55) rotate(-6deg)}60%{transform:scale(.94)}}
 @keyframes drop{from{opacity:.3;transform:translateY(calc((var(--r) + 1) * (var(--ds) + 5px) * -1 - 40px))}}
-.deal{animation:deal .45s cubic-bezier(.2,.8,.3,1) both}
-.dealo{animation:dealo .4s ease-out both}
-.pop{animation:pop .35s ease-out both}
-.drop{animation:drop .5s cubic-bezier(.5,0,.9,.5) both}
+.deal{animation:deal .45s cubic-bezier(.2,.8,.3,1) both}.dealo{animation:dealo .4s ease-out both}
+.pop{animation:pop .35s ease-out both}.drop{animation:drop .5s cubic-bezier(.5,0,.9,.5) both}
 .mid{flex:1;display:flex;align-items:center;justify-content:center;gap:clamp(8px,3vw,24px);padding:6px 10px;min-height:0}
 .deckw{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
 .deck{position:relative;width:calc(var(--w)*2.05);height:calc(var(--w)*1.45)}
-.deck .tr{position:absolute;left:calc(var(--w)*.8);top:0;transform:rotate(90deg);z-index:1;outline:3px solid var(--gold);outline-offset:1px}
+.deck .tr{position:absolute;left:calc(var(--w)*.8);top:0;transform:rotate(90deg);z-index:1;outline:3px solid #a99bff;outline-offset:1px}
 .deck .back{position:absolute;left:0;top:0;z-index:2}
-.tb{background:#0005;border:1px solid var(--gold);border-radius:99px;padding:3px 12px;font-size:14px;white-space:nowrap}
-.tb b{font-size:22px;vertical-align:-2px;margin-left:2px}.tb.r b{color:#ff7b6b}
-.tbl{display:grid;grid-template-columns:repeat(3,calc(var(--w)*1.5));gap:10px 6px;align-content:center;padding:10px;border:2px dashed #ffffff22;border-radius:18px;min-height:calc(var(--w)*3.4)}
+.tb{background:#0005;border:1px solid #a99bff;border-radius:99px;padding:3px 12px;font-size:14px;white-space:nowrap}
+.tb b{font-size:22px;vertical-align:-2px;margin-left:2px}.tb.r b{color:#ff8fae}
+.tbl{display:grid;grid-template-columns:repeat(3,calc(var(--w)*1.5));gap:10px 6px;align-content:center;padding:10px;background:var(--surf);border:1px solid var(--line);border-radius:20px;min-height:calc(var(--w)*3.4)}
 .pair{position:relative;height:calc(var(--w)*1.55)}
 .pair .c:nth-child(2){position:absolute;left:calc(var(--w)*.4);top:calc(var(--w)*.18);box-shadow:-3px 3px 8px #0006}
 .ctl{display:flex;align-items:center;justify-content:center;gap:12px;padding:4px 14px 0;min-height:52px}
-.st{text-align:center;opacity:.95}
-.c{flex:none;width:var(--w);height:calc(var(--w)*1.4);border-radius:calc(var(--w)*.12);background:var(--paper);color:var(--ink);border:1px solid #0003;box-shadow:0 2px 6px #0006;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;line-height:1;user-select:none;transition:transform .12s,opacity .2s}
-.c b{font-size:calc(var(--w)*.36)}.c span{font-size:calc(var(--w)*.42)}
-.c.r{color:var(--red)}
-.c.back{background:repeating-linear-gradient(45deg,#7a2430 0 6px,#5e1a25 6px 12px);border:3px solid var(--paper)}
-.c.back em{font:normal 700 calc(var(--w)*.3) Georgia,serif;color:var(--paper)}
+.st{text-align:center}
+.c{flex:none;width:var(--w);height:calc(var(--w)*1.4);border-radius:calc(var(--w)*.12);background:var(--paper);color:var(--ink);border:1px solid #0003;box-shadow:0 2px 8px #0008;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;line-height:1;user-select:none;transition:transform .12s,opacity .2s}
+.c b{font-size:calc(var(--w)*.36)}.c span{font-size:calc(var(--w)*.42)}.c.r{color:var(--red)}
+.c.back{background:repeating-linear-gradient(45deg,#4f43b8 0 6px,#3d3499 6px 12px);border:3px solid #e9e6ff}
+.c.back em{font:normal 700 calc(var(--w)*.3) Georgia,serif;color:#fff}
+/* крестики-нолики, 4 в ряд, КНБ */
 .ttt{display:grid;grid-template-columns:repeat(3,clamp(78px,24vw,110px));gap:8px}
-.cell{height:clamp(78px,24vw,110px);font-size:clamp(40px,13vw,64px);padding:0;background:#0004;color:var(--paper);box-shadow:none;border:1px solid #ffffff22}
-.p0{color:var(--gold)}.p1{color:var(--coral)}
-.win{background:#ffffff33!important;animation:glow2 .8s infinite alternate}
-@keyframes glow2{to{transform:scale(1.06)}}
-.c4{display:flex;gap:5px;padding:10px;background:#17406b;border-radius:16px;box-shadow:0 6px 0 #0d2a49;overflow:hidden}
+.cell{height:clamp(78px,24vw,110px);font-size:clamp(40px,13vw,64px);padding:0;background:var(--surf);color:var(--txt);box-shadow:none;border:1px solid var(--line);border-radius:18px}
+.p0{color:var(--p0)}.p1{color:var(--p1)}
+.win{background:#ffffff33!important;animation:glow2 .8s infinite alternate}@keyframes glow2{to{transform:scale(1.06)}}
+.c4{display:flex;gap:5px;padding:10px;background:#2a3180;border-radius:18px;box-shadow:0 6px 0 #1b2060;overflow:hidden}
 .col{display:flex;flex-direction:column;gap:5px}
-.disc{display:block;width:var(--ds);height:var(--ds);border-radius:50%;background:#0b1f23aa}
-.disc.p0{background:var(--gold)}.disc.p1{background:var(--coral)}
-.disc.sm{display:inline-block;width:16px;height:16px;vertical-align:-3px}
+.disc{display:block;width:var(--ds);height:var(--ds);border-radius:50%;background:#12154a}
+.disc.p0{background:var(--p0)}.disc.p1{background:var(--p1)}.disc.sm{display:inline-block;width:16px;height:16px;vertical-align:-3px}
 .rps{display:flex;gap:10px}
 .rps button{display:flex;flex-direction:column;align-items:center;font-size:48px;line-height:1.1;padding:14px 12px;width:clamp(86px,26vw,110px)}
-.rps small{font-size:13px}
-.rps button.sel{background:#5fd07a;box-shadow:0 3px 0 #2f8f48}
+.rps small{font-size:13px}.rps button.sel{background:linear-gradient(135deg,#3fa186,#4fb59a)}
 .reveal{display:flex;align-items:center;gap:14px;font-size:54px}.reveal em{font:normal 600 15px system-ui}
-.sheet{position:fixed;left:0;right:0;bottom:0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));background:#081a1eee;border-top:2px solid var(--gold);border-radius:20px 20px 0 0;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;z-index:5}
-.sheet h2{margin:0;font-size:26px}.sheet p{margin:0}
-#toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:var(--ink);border:1px solid #ffffff33;padding:8px 16px;border-radius:10px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9;max-width:90vw;text-align:center}
-#toast.on{opacity:1}
-#menu{overflow-y:auto;justify-content:safe center}
-.wd{display:flex;flex-direction:column;align-items:center;gap:6px}
-.wrow{display:flex;gap:4px;justify-content:center}
-.wc{width:var(--cs);height:var(--cs);display:grid;place-items:center;border-radius:6px;background:#0004;border:1px solid #ffffff22;font:700 calc(var(--cs)*.55) Georgia,serif;font-style:normal;text-transform:uppercase;color:var(--paper)}
-.wc.g{background:#4f9d5a;border-color:#4f9d5a}.wc.y{background:#c9a227;border-color:#c9a227;color:var(--ink)}.wc.x{background:#2a3a3f}
-.wgap{width:calc(var(--cs)*.5)}
-.flip{animation:flip .5s ease both}
-@keyframes flip{from{transform:rotateX(90deg);opacity:0}}
+/* Wordies */
+.wd{gap:6px}.wrow{display:flex;gap:4px;justify-content:center}
+.wc{width:var(--cs);height:var(--cs);display:grid;place-items:center;border-radius:7px;background:#0004;border:1px solid var(--line);font:700 calc(var(--cs)*.55) Georgia,serif;font-style:normal;text-transform:uppercase;color:var(--txt)}
+.wc.g{background:#3fa186;border-color:#3fa186}.wc.y{background:#d3a84b;border-color:#d3a84b;color:var(--ink)}.wc.x{background:#2c2f66}
+.wgap{width:calc(var(--cs)*.5)}.flip{animation:flip .5s ease both}@keyframes flip{from{transform:rotateX(90deg);opacity:0}}
 .keys{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;max-width:420px;min-height:26px}
-.keys i{font:700 13px Georgia,serif;text-transform:uppercase;min-width:22px;text-align:center;padding:3px 5px;border-radius:5px;background:#ffffff1a}
-.keys .g{background:#4f9d5a}.keys .y{background:#c9a227;color:var(--ink)}.keys .x{background:#2a3a3f;opacity:.6}
+.keys i{font:700 13px Georgia,serif;text-transform:uppercase;min-width:22px;text-align:center;padding:3px 5px;border-radius:6px;background:var(--surf2)}
+.keys .g{background:#3fa186}.keys .y{background:#d3a84b;color:var(--ink)}.keys .x{background:#2c2f66;opacity:.6}
 .frm{display:flex;gap:8px;width:min(420px,100%)}.frm input{flex:1;min-width:0}
-.pkbox{flex:1;display:flex;flex-direction:column;min-height:0;padding:6px 14px;gap:10px}
-.chat{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;background:#0003;border-radius:14px;padding:10px;min-height:80px}
-.msg{max-width:85%;padding:8px 12px;border-radius:14px;background:#ffffff14;align-self:flex-start;font-size:15px}
-.msg.mine{align-self:flex-end;background:#e0b84c33}.msg b{display:block;font-size:12px;opacity:.7}
-.act{background:#0004;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
-.act h3{margin:0;font:700 18px Georgia,serif}.chip2{font-size:13px;opacity:.8;text-align:center}
+/* поход */
+.pkbox{flex:1;display:flex;flex-direction:column;min-height:0;padding:8px 14px;gap:10px}
+.chat{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:10px;min-height:80px}
+.msg{max-width:85%;padding:8px 12px;border-radius:14px;background:var(--surf2);align-self:flex-start;font-size:15px}
+.msg.mine{align-self:flex-end;background:#7f6df255}.msg b{display:block;font-size:12px;opacity:.7}
+.act{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
+.act h3{margin:0;font:700 18px Georgia,serif}.chip2{font-size:13px;color:var(--mut);text-align:center}
 .sent{font:700 22px Georgia,serif;margin:0}
+/* портреты */
+.modes{display:flex;flex-direction:column;gap:12px;width:min(380px,100%)}
+.mode{display:flex;flex-direction:column;align-items:center;gap:4px;background:linear-gradient(160deg,#ffffff18,#ffffff08);border:1px solid var(--line);box-shadow:none;border-radius:18px;padding:18px;color:var(--txt)}
+.mode span{font-size:34px}.mode small{font-weight:400;color:var(--mut)}
+#cv{display:block;touch-action:none;background:#fff;border-radius:16px;box-shadow:0 8px 28px #0007;width:min(100vw - 28px,52dvh,460px);aspect-ratio:1;cursor:crosshair}
+.tools{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:420px}
+.sw{width:30px;height:30px;padding:0;border-radius:50%;border:2px solid #ffffff55;box-shadow:none}.sw.on{border-color:#fff;transform:scale(1.2)}
+.sz{width:38px;height:38px;padding:0;display:grid;place-items:center;background:var(--surf2);box-shadow:none;border:1px solid var(--line);border-radius:12px;font-size:18px}
+.sz.on{background:#7f6df2;border-color:#fff}.sz i{display:block;background:#fff;border-radius:50%}
+.pics{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.pic{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(300px,100%)}
+.pic img,.pv{width:100%;border-radius:16px;background:#fff;box-shadow:0 8px 28px #0007}.pv{width:min(240px,70vw)}
+/* чат */
+#drawer{position:fixed;left:0;right:0;bottom:0;height:var(--ch);display:flex;flex-direction:column;background:#15133fef;backdrop-filter:blur(12px);border-top:1px solid var(--line);border-radius:20px 20px 0 0;z-index:6;padding-bottom:env(safe-area-inset-bottom)}
+.dhead{display:flex;justify-content:space-between;align-items:center;padding:8px 14px}
+#cList{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:0 14px}
+.cm{max-width:82%;padding:7px 12px;border-radius:14px;background:var(--surf2);align-self:flex-start;font-size:15px;word-break:break-word}
+.cm.me{align-self:flex-end;background:#7f6df280}.cm b{display:block;font-size:11px;opacity:.65}
+.drow{display:flex;gap:8px;padding:8px 14px}.drow input{text-align:left}.drow button{padding:10px 16px}
+#cPrev{position:fixed;top:58px;left:50%;transform:translateX(-50%);max-width:88vw;background:#241f66f2;border:1px solid var(--acc);padding:8px 14px;border-radius:14px;z-index:7;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+body.chat-open #game{padding-bottom:var(--ch)}body.chat-open .sheet{bottom:var(--ch)}
+@media (min-width:800px){#drawer{left:auto;right:14px;bottom:14px;width:340px;height:min(70dvh,560px);border-radius:20px;border:1px solid var(--line)}
+ body.chat-open #game{padding-bottom:0;padding-right:372px}body.chat-open .sheet{bottom:0;right:372px}}
+.sheet{position:fixed;left:0;right:0;bottom:0;padding:16px 18px calc(16px + env(safe-area-inset-bottom));background:#15133ff2;border-top:1px solid var(--acc);border-radius:22px 22px 0 0;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;z-index:5}
+.sheet h2{margin:0;font-size:26px}
+#toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:#1d1a52;border:1px solid var(--line);padding:8px 16px;border-radius:12px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9;max-width:90vw;text-align:center}
+#toast.on{opacity:1}
 @media (max-height:600px){:root{--w:clamp(36px,9vw,52px);--ds:clamp(28px,8vw,40px)}}
 </style>
 </head>
 <body>
 <div id="lobby">
-  <div class="suits">♠ <span style="color:#ff7b6b">♥</span> <span style="color:#ff7b6b">♦</span> ♣</div>
-  <h1>Игры для двоих</h1>
-  <p>Дурак, крестики-нолики, 4 в ряд и камень-ножницы-бумага. Создайте комнату и отправьте ссылку другу.</p>
-  <input id="guest" maxlength="16" placeholder="Ваше имя">
-  <button id="create">Создать комнату</button>
-  <div class="row"><input id="codeIn" maxlength="4" placeholder="Код"><button id="join" class="ghost">Войти</button></div>
+  <div class="suits">♠ ♥ ♦ ♣</div>
+  <h1>Игры<br>для двоих</h1>
+  <p>Карты, слова, рисование и мини-игры. Создайте комнату и отправьте ссылку другу.</p>
+  <div class="panel">
+    <input id="guest" maxlength="16" placeholder="Ваше имя">
+    <button id="create">Создать комнату</button>
+    <div class="row"><input id="codeIn" maxlength="4" placeholder="Код"><button id="join" class="ghost">Войти</button></div>
+  </div>
 </div>
 
 <div id="game" hidden>
   <div id="bar">
     <span><i id="dot"></i><span id="oppn">Соперник</span></span>
     <span id="score"></span>
-    <span><b id="code"></b> <button class="sm ghost" id="menuBtn" data-m='{"t":"menu"}' hidden>Меню</button></span>
+    <span><b id="code"></b><button class="ghost" id="chatBtn" data-ui="chat" aria-label="Чат">💬<i id="badge" hidden></i></button><button class="sm ghost" id="menuBtn" data-m='{"t":"menu"}' hidden>Меню</button></span>
   </div>
   <div id="wait" hidden>
     <p>Ждём друга. Отправьте ему код или ссылку:</p>
@@ -143,17 +165,25 @@ h1,h2,.st b{font-family:Georgia,serif}
       <button class="tile" data-k="ttt"><span>❌</span>Крестики-нолики<small>3×3</small></button>
       <button class="tile" data-k="c4"><span>🔴</span>4 в ряд<small>собери четыре</small></button>
       <button class="tile" data-k="rps"><span>✂️</span>Камень-ножницы<small>до 3 побед</small></button>
-      <button class="tile" data-k="wd"><span>🔤</span>Wordies<small>угадай слово за 6 попыток</small></button>
+      <button class="tile" data-k="wd"><span>🔤</span>Wordies<small>слово за 6 попыток</small></button>
       <button class="tile" data-k="pk"><span>🎒</span>Я иду в поход…<small>угадай категорию</small></button>
+      <button class="tile" data-k="pt"><span>🖌️</span>Портреты<small>рисуем друг друга или общую тему · без соревнования</small></button>
     </div>
   </div>
   <div id="board" hidden></div>
 </div>
 
-<div id="over" class="sheet" hidden>
-  <h2 id="res"></h2><div class="row"><button data-m='{"t":"again"}'>Ещё раз</button><button class="ghost" data-m='{"t":"menu"}'>Другая игра</button></div>
+<div id="drawer" hidden>
+  <div class="dhead"><b>💬 Чат</b><button class="sm ghost" data-ui="cclose">✕</button></div>
+  <div id="cList"></div>
+  <div class="drow"><input id="chIn" maxlength="300" placeholder="Сообщение…" autocomplete="off"><button data-ui="csend">➤</button></div>
 </div>
+<div id="cPrev" hidden></div>
 
+<div id="over" class="sheet" hidden>
+  <h2 id="res"></h2>
+  <div class="row"><button data-m='{"t":"again"}'>Ещё раз</button><button class="ghost" data-m='{"t":"menu"}'>Другая игра</button></div>
+</div>
 <div id="toast"></div>
 
 <script>
@@ -180,6 +210,8 @@ function connect(){
   ws.onmessage = e => {
     const m = JSON.parse(e.data);
     if (m.t === 'err') { toast(m.m); if (lastSent) { const el = $(lastSent.id); if (el && !el.value) el.value = lastSent.v; } if (!S && code) { code = null; history.replaceState(0, '', location.pathname); } return; }
+    if (m.t === 'chatlog') { chat = m.log; renderChat(); return; }
+    if (m.t === 'chat') { addChat(m.m); return; }
     S = m; code = m.code;
     history.replaceState(0, '', '?room=' + code); render();
   };
@@ -289,6 +321,68 @@ function rps(g){
   <div class="rps">${E.map((e, v) => `<button class="${g.mine === v ? 'sel' : ''}" ${can ? M({t:'rps', v}) : ''}>${e}<small>${N[v]}</small></button>`).join('')}</div></div>`;
 }
 
+// ---------- чат ----------
+let chat = [], unread = 0, chatOpen = false;
+function setChat(open, focus){
+  chatOpen = open; $('drawer').hidden = !open; document.body.classList.toggle('chat-open', open);
+  if (open) { unread = 0; $('cPrev').hidden = true; renderChat(); if (focus) $('chIn').focus(); }
+  $('badge').hidden = !unread; $('badge').textContent = unread;
+}
+function renderChat(){
+  const l = $('cList');
+  l.innerHTML = chat.length ? chat.map(m => `<div class="cm ${S && m.from === S.me ? 'me' : ''}"><b>${esc(m.name)}</b>${esc(m.text)}</div>`).join('') : '<div class="hint" style="text-align:center">Пока пусто. Напишите что-нибудь 👋</div>';
+  l.scrollTop = l.scrollHeight;
+}
+function addChat(m){
+  chat.push(m); if (chat.length > 100) chat.shift();
+  if (chatOpen) return renderChat();
+  if (S && m.from !== S.me) {
+    unread++; setChat(false);
+    const p = $('cPrev'); p.textContent = m.name + ': ' + m.text; p.hidden = false;
+    clearTimeout(addChat.t); addChat.t = setTimeout(() => { p.hidden = true; }, 3500);
+  }
+}
+function sendChat(){ const v = $('chIn').value.trim(); if (!v) return; send({t:'chat', text:v}); $('chIn').value = ''; }
+
+// ---------- Портреты: холст ----------
+const cv = document.createElement('canvas'); cv.width = cv.height = 600; cv.id = 'cv';
+const cx = cv.getContext('2d');
+const pen = {col:'#1b1a3d', sz:7, tool:'pen'};
+let undo = [], drawing = false, last = null, myImg = null;
+function cvClear(){ cx.fillStyle = '#fff'; cx.fillRect(0, 0, 600, 600); undo = []; myImg = null; }
+cvClear();
+const cpos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * 600 / r.width, (e.clientY - r.top) * 600 / r.height]; };
+function stroke(){ cx.lineCap = cx.lineJoin = 'round'; cx.lineWidth = pen.tool === 'eraser' ? pen.sz * 3 : pen.sz; cx.strokeStyle = pen.tool === 'eraser' ? '#fff' : pen.col; cx.stroke(); }
+cv.addEventListener('pointerdown', e => {
+  cv.setPointerCapture(e.pointerId);
+  undo.push(cx.getImageData(0, 0, 600, 600)); if (undo.length > 15) undo.shift();
+  drawing = true; last = cpos(e); cx.beginPath(); cx.moveTo(last[0], last[1]); cx.lineTo(last[0] + .01, last[1]); stroke();
+});
+cv.addEventListener('pointermove', e => {
+  if (!drawing) return;
+  const p = cpos(e); cx.beginPath(); cx.moveTo(last[0], last[1]); cx.lineTo(p[0], p[1]); stroke(); last = p;
+});
+['pointerup', 'pointercancel'].forEach(t => cv.addEventListener(t, () => { drawing = false; }));
+cv.addEventListener('touchmove', e => e.preventDefault(), {passive:false});
+
+function pt(g){
+  const me = S.me, o = 1 - me, nm = i => esc(S.names[i]);
+  if (g.phase === 'mode') return `<div class="center"><h2 class="ttl">Портреты</h2><p class="st hint">Не соревнование: рисуем и смотрим, что получилось.</p><div class="modes">
+    <button class="mode" ${M({t:'pmode', mode:'each'})}><span>🪞</span><b>Нарисовать друг друга</b><small>в случайном стиле: киберпанк, аниме…</small></button>
+    <button class="mode" ${M({t:'pmode', mode:'topic'})}><span>🎨</span><b>Одна тема на двоих</b><small>например «бурундук» или «Президент»</small></button></div></div>`;
+  if (g.phase === 'done') {
+    const cards = g.imgs.map((img, i) => `<div class="pic"><img src="${img}" alt=""><div class="st">${g.mode === 'each' ? `Портрет ${nm(1 - i)} от ${nm(i)}` : `Работа ${nm(i)}`}</div><a class="btn" href="${img}" download="portrait-${i + 1}.jpg">💾 Сохранить</a></div>`).join('');
+    return `<div class="center"><div class="st">${g.mode === 'each' ? 'Стиль' : 'Тема'}: «<b>${esc(g.theme)}</b>»</div><div class="pics">${cards}</div><div class="hint">На iPhone: нажмите на картинку и удерживайте, затем «Сохранить»</div><div class="row"><button ${M({t:'again'})}>Ещё раз</button><button class="ghost" ${M({t:'menu'})}>Другая игра</button></div></div>`;
+  }
+  const task = g.mode === 'each' ? `Нарисуйте <b>${nm(o)}</b> в стиле «<b>${esc(g.theme)}</b>»` : `Нарисуйте: «<b>${esc(g.theme)}</b>»`;
+  if (g.done[me] || myImg) return `<div class="center"><div class="st">${task}</div>${myImg ? `<img class="pv" src="${myImg}" alt="">` : ''}<div class="st">Рисунок отправлен ✔<br>Ждём, пока ${nm(o)} закончит…</div></div>`;
+  const cols = ['#1b1a3d', '#6c5ce7', '#3b82f6', '#14b8a6', '#22c55e', '#eab308', '#f97316', '#ef4444', '#ec4899', '#92400e', '#9ca3af'];
+  return `<div class="center" style="gap:10px;padding:10px"><div class="st">${task}</div><div id="cvHost"></div>
+    <div class="tools">${cols.map(c => `<button class="sw ${pen.tool === 'pen' && pen.col === c ? 'on' : ''}" style="background:${c}" data-col="${c}"></button>`).join('')}</div>
+    <div class="tools">${[3, 7, 14].map(z => `<button class="sz ${pen.sz === z ? 'on' : ''}" data-sz="${z}"><i style="width:${z + 4}px;height:${z + 4}px"></i></button>`).join('')}<button class="sz ${pen.tool === 'eraser' ? 'on' : ''}" data-tool="eraser">🧽</button><button class="sz" data-ui="pundo">↩️</button><button class="sz" data-ui="pclear">🗑</button></div>
+    <button data-ui="psubmit">Готово</button></div>`;
+}
+
 function render(){
   $('lobby').hidden = true; $('game').hidden = false;
   const me = S.me, both = S.peers[0] && S.peers[1], g = S.g, opp = 1 - me;
@@ -300,13 +394,14 @@ function render(){
   $('board').hidden = !S.kind; $('menuBtn').hidden = !S.kind;
 
   const over = !!g && g.winner !== null;
-  $('over').hidden = !over;
+  $('over').hidden = !over || S.kind === 'pt';
   if (!S.kind) { $('board').innerHTML = ''; return; }
-  if (S.gid !== lastGid) { P = new Set(); lastGid = S.gid; }
+  if (S.gid !== lastGid) { P = new Set(); lastGid = S.gid; cvClear(); }
   cur = new Set();
   const keep = [...$('board').querySelectorAll('input')].map(i => [i.id, i.value, document.activeElement === i]);
-  $('board').innerHTML = {durak, ttt, c4, rps, wd, pk}[S.kind](g);
+  $('board').innerHTML = {durak, ttt, c4, rps, wd, pk, pt}[S.kind](g);
   keep.forEach(([id, v, f]) => { const el = $(id); if (el) { el.value = v; if (f) el.focus(); } });
+  const host = $('cvHost'); if (host) host.appendChild(cv);
   const ch = $('chat'); if (ch) ch.scrollTop = ch.scrollHeight;
   P = cur;
   if (over) {
@@ -316,19 +411,32 @@ function render(){
 }
 
 let lastSent = null;
+const UI = {
+  chat: () => setChat(!chatOpen, true), cclose: () => setChat(false), csend: sendChat,
+  psubmit: () => { if (confirm('Отправить рисунок? Изменить его будет нельзя.')) { myImg = cv.toDataURL('image/jpeg', .88); send({t:'pimg', img:myImg}); render(); } },
+  pundo: () => { const u = undo.pop(); if (u) cx.putImageData(u, 0, 0); },
+  pclear: () => { if (confirm('Стереть весь рисунок?')) { undo.push(cx.getImageData(0, 0, 600, 600)); cx.fillStyle = '#fff'; cx.fillRect(0, 0, 600, 600); } },
+};
 document.addEventListener('click', e => {
-  const x = e.target.closest('[data-m],[data-k],[data-f]');
+  if (e.target.closest('#cPrev')) { $('cPrev').hidden = true; return setChat(true, true); }
+  const x = e.target.closest('[data-m],[data-k],[data-f],[data-ui],[data-col],[data-sz],[data-tool]');
   if (!x) return;
-  if (x.dataset.k) return send({t:'pick', k:x.dataset.k});
-  if (x.dataset.f) {
-    const el = $(x.dataset.in);
+  const d = x.dataset;
+  if (d.ui) return UI[d.ui]();
+  if (d.col) { pen.col = d.col; pen.tool = 'pen'; return render(); }
+  if (d.sz) { pen.sz = +d.sz; return render(); }
+  if (d.tool) { pen.tool = 'eraser'; return render(); }
+  if (d.k) return send({t:'pick', k:d.k});
+  if (d.f) {
+    const el = $(d.in);
     if (!el.value.trim()) return toast('Введите текст');
-    lastSent = {id:el.id, v:el.value}; send({t:x.dataset.f, w:el.value}); el.value = ''; return;
+    lastSent = {id:el.id, v:el.value}; send({t:d.f, w:el.value}); el.value = ''; return;
   }
-  const o = JSON.parse(x.dataset.m);
+  const o = JSON.parse(d.m);
   if (o.t === 'giveup' && !confirm('Закончить игру и раскрыть категории?')) return;
   send(o);
 });
+$('chIn').addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && e.target.matches('.frm input')) e.target.parentElement.querySelector('[data-f]').click();
 });
