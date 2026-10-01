@@ -13,7 +13,7 @@ const rooms = new Map();
 // ---------- правила ----------
 const beats = (a, d, t) => (d.s === a.s && d.r > a.r) || (d.s === t && a.s !== t);
 
-function newGame() {
+function newDurak() {
   const deck = [];
   for (let s = 0; s < 4; s++) for (let r = 6; r <= 14; r++) deck.push({ r, s });
   for (let i = deck.length - 1; i > 0; i--) {
@@ -46,7 +46,7 @@ function finish(g) {
   }
 }
 
-function move(room, p, m) {
+function moveDurak(room, p, m) {
   const g = room.g;
   if (!g || g.winner !== null) return;
   const def = 1 - g.att, H = g.hands[p];
@@ -76,18 +76,74 @@ function move(room, p, m) {
   if (g.winner === null && g.table.length && (g.taking || g.table.every(x => x.d)) && !canThrow(g)) finish(g);
 }
 
+// ---------- мини-игры ----------
+const L3 = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+const KINDS = ['durak', 'ttt', 'c4', 'rps'];
+
+function newGame(k) {
+  if (k === 'durak') return newDurak();
+  if (k === 'ttt') return { b: Array(9).fill(-1), turn: 0, winner: null, line: null };
+  if (k === 'c4') return { b: Array(42).fill(-1), turn: 0, winner: null, line: null };
+  return { picks: [null, null], wins: [0, 0], last: null, winner: null };
+}
+
+function line4(b, i, p) {
+  const r = (i / 7) | 0, c = i % 7;
+  for (const [dr, dc] of [[0,1],[1,0],[1,1],[1,-1]]) {
+    const cells = [i];
+    for (const s of [1, -1]) for (let k = 1; k < 4; k++) {
+      const rr = r + dr * k * s, cc = c + dc * k * s;
+      if (rr < 0 || rr > 5 || cc < 0 || cc > 6 || b[rr * 7 + cc] !== p) break;
+      cells.push(rr * 7 + cc);
+    }
+    if (cells.length >= 4) return cells;
+  }
+  return null;
+}
+
+function move(room, p, m) {
+  const g = room.g, k = room.kind;
+  if (!g || g.winner !== null) return;
+  if (k === 'durak') return moveDurak(room, p, m);
+  if (k === 'ttt' && m.t === 'cell') {
+    if (g.turn !== p || g.b[m.i] !== -1) return;
+    g.b[m.i] = p;
+    const l = L3.find(l => l.every(i => g.b[i] === p));
+    if (l) { g.winner = p; g.line = l; } else if (g.b.every(x => x >= 0)) g.winner = -1; else g.turn = 1 - p;
+  } else if (k === 'c4' && m.t === 'col') {
+    if (g.turn !== p || !Number.isInteger(m.c) || m.c < 0 || m.c > 6) return;
+    let r = 5; while (r >= 0 && g.b[r * 7 + m.c] !== -1) r--;
+    if (r < 0) return;
+    const i = r * 7 + m.c; g.b[i] = p;
+    const l = line4(g.b, i, p);
+    if (l) { g.winner = p; g.line = l; } else if (g.b.every(x => x >= 0)) g.winner = -1; else g.turn = 1 - p;
+  } else if (k === 'rps' && m.t === 'rps') {
+    if (g.picks[p] !== null || ![0, 1, 2].includes(m.v)) return;
+    g.picks[p] = m.v;
+    if (g.picks[0] !== null && g.picks[1] !== null) {
+      const [a, b] = g.picks, w = a === b ? -1 : (a - b + 3) % 3 === 1 ? 0 : 1;
+      g.last = { p: [a, b], w };
+      if (w >= 0 && ++g.wins[w] >= 3) g.winner = w;
+      g.picks = [null, null];
+    }
+  }
+}
+
 // ---------- комнаты ----------
-const view = (room, p) => {
+const gv = (room, p) => {
   const g = room.g;
-  return {
-    t: 'state', me: p, code: room.code,
-    peers: room.tok.map(Boolean), on: room.ws.map(Boolean),
-    g: g && {
-      hand: g.hands[p], opp: g.hands[1 - p].length, deck: g.deck.length, trump: g.trump,
-      tc: g.deck[0] || null, table: g.table, att: g.att, taking: g.taking, winner: g.winner,
-    },
+  if (!g) return null;
+  if (room.kind === 'durak') return {
+    hand: g.hands[p], opp: g.hands[1 - p].length, deck: g.deck.length, trump: g.trump,
+    tc: g.deck[0] || null, table: g.table, att: g.att, taking: g.taking, winner: g.winner,
   };
+  if (room.kind === 'rps') return { mine: g.picks[p], opp: g.picks[1 - p] !== null, last: g.last, wins: g.wins, winner: g.winner };
+  return { b: g.b, turn: g.turn, winner: g.winner, line: g.line };
 };
+const view = (room, p) => ({
+  t: 'state', me: p, code: room.code, peers: room.tok.map(Boolean), on: room.ws.map(Boolean),
+  score: room.score, kind: room.kind, g: gv(room, p),
+});
 const push = room => room.ws.forEach((w, p) => w && w.readyState === 1 && w.send(JSON.stringify(view(room, p))));
 const err = (ws, m) => ws.send(JSON.stringify({ t: 'err', m }));
 const genCode = () => {
@@ -103,7 +159,7 @@ wss.on('connection', ws => {
     if (m.t === 'join') {
       const code = m.code ? String(m.code).toUpperCase() : null;
       if (code) room = rooms.get(code);
-      else { room = { code: genCode(), tok: [null, null], ws: [null, null], g: null, last: Date.now() }; rooms.set(room.code, room); }
+      else { room = { code: genCode(), tok: [null, null], ws: [null, null], kind: null, g: null, score: [0, 0], last: Date.now() }; rooms.set(room.code, room); }
       if (!room) return err(ws, 'Комната не найдена');
       seat = room.tok.indexOf(m.token);
       if (seat < 0) seat = room.tok.indexOf(null);
@@ -111,12 +167,19 @@ wss.on('connection', ws => {
       room.tok[seat] = m.token;
       if (room.ws[seat] && room.ws[seat] !== ws) room.ws[seat].close();
       room.ws[seat] = ws;
-      if (!room.g && room.tok[0] && room.tok[1]) room.g = newGame();
       push(room);
     } else if (room) {
       room.last = Date.now();
-      if (m.t === 'again') { if (room.g && room.g.winner !== null) room.g = newGame(); }
-      else move(room, seat, m);
+      const fin = room.g && room.g.winner !== null;
+      if (m.t === 'pick') {
+        if (KINDS.includes(m.k) && room.tok[0] && room.tok[1] && (!room.g || fin)) { room.kind = m.k; room.g = newGame(m.k); }
+      } else if (m.t === 'menu') { room.kind = null; room.g = null; }
+      else if (m.t === 'again') { if (fin) room.g = newGame(room.kind); }
+      else if (room.g) {
+        const was = room.g.winner;
+        move(room, seat, m);
+        if (was === null && room.g.winner !== null && room.g.winner >= 0) room.score[room.g.winner]++;
+      }
       push(room);
     }
   });
@@ -127,4 +190,4 @@ setInterval(() => {
   for (const [c, r] of rooms) if (Date.now() - r.last > 3600e3) rooms.delete(c);
 }, 600e3);
 
-srv.listen(process.env.PORT || 3000, () => console.log('Дурак: http://localhost:' + (process.env.PORT || 3000)));
+srv.listen(process.env.PORT || 3000, () => console.log('Игры: http://localhost:' + (process.env.PORT || 3000)));
