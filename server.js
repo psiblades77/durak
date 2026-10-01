@@ -130,6 +130,9 @@ function move(room, p, m) {
 }
 
 // ---------- комнаты ----------
+const clean = s => String(s || '').replace(/[<>&"'`]/g, '').trim().slice(0, 16);
+const start = (room, k) => { room.kind = k; room.g = newGame(k); room.gid++; };
+
 const gv = (room, p) => {
   const g = room.g;
   if (!g) return null;
@@ -141,8 +144,8 @@ const gv = (room, p) => {
   return { b: g.b, turn: g.turn, winner: g.winner, line: g.line };
 };
 const view = (room, p) => ({
-  t: 'state', me: p, code: room.code, peers: room.tok.map(Boolean), on: room.ws.map(Boolean),
-  score: room.score, kind: room.kind, g: gv(room, p),
+  t: 'state', me: p, code: room.code, peers: room.ids.map(Boolean), on: room.ws.map(Boolean),
+  names: room.names, score: room.score, kind: room.kind, gid: room.gid, g: gv(room, p),
 });
 const push = room => room.ws.forEach((w, p) => w && w.readyState === 1 && w.send(JSON.stringify(view(room, p))));
 const err = (ws, m) => ws.send(JSON.stringify({ t: 'err', m }));
@@ -159,29 +162,34 @@ wss.on('connection', ws => {
     if (m.t === 'join') {
       const code = m.code ? String(m.code).toUpperCase() : null;
       if (code) room = rooms.get(code);
-      else { room = { code: genCode(), tok: [null, null], ws: [null, null], kind: null, g: null, score: [0, 0], last: Date.now() }; rooms.set(room.code, room); }
+      else {
+        room = { code: genCode(), ids: [null, null], names: ['', ''], ws: [null, null], kind: null, g: null, score: [0, 0], gid: 0, last: Date.now() };
+        rooms.set(room.code, room);
+      }
       if (!room) return err(ws, 'Комната не найдена');
-      seat = room.tok.indexOf(m.token);
-      if (seat < 0) seat = room.tok.indexOf(null);
+      const id = String(m.token || '');
+      seat = room.ids.indexOf(id);
+      if (seat < 0) seat = room.ids.indexOf(null);
       if (seat < 0) { room = null; return err(ws, 'В комнате уже двое игроков'); }
-      room.tok[seat] = m.token;
+      room.ids[seat] = id;
+      room.names[seat] = clean(m.name) || 'Игрок ' + (seat + 1);
       if (room.ws[seat] && room.ws[seat] !== ws) room.ws[seat].close();
       room.ws[seat] = ws;
-      push(room);
-    } else if (room) {
-      room.last = Date.now();
-      const fin = room.g && room.g.winner !== null;
-      if (m.t === 'pick') {
-        if (KINDS.includes(m.k) && room.tok[0] && room.tok[1] && (!room.g || fin)) { room.kind = m.k; room.g = newGame(m.k); }
-      } else if (m.t === 'menu') { room.kind = null; room.g = null; }
-      else if (m.t === 'again') { if (fin) room.g = newGame(room.kind); }
-      else if (room.g) {
-        const was = room.g.winner;
-        move(room, seat, m);
-        if (was === null && room.g.winner !== null && room.g.winner >= 0) room.score[room.g.winner]++;
-      }
-      push(room);
+      return push(room);
     }
+    if (!room) return;
+    room.last = Date.now();
+    const fin = !!room.g && room.g.winner !== null;
+    if (m.t === 'pick') {
+      if (KINDS.includes(m.k) && room.ids[0] && room.ids[1] && (!room.g || fin)) start(room, m.k);
+    } else if (m.t === 'menu') { room.kind = null; room.g = null; }
+    else if (m.t === 'again') { if (fin) start(room, room.kind); }
+    else if (room.g) {
+      const was = room.g.winner;
+      move(room, seat, m);
+      if (was === null && room.g.winner !== null && room.g.winner >= 0) room.score[room.g.winner]++;
+    }
+    push(room);
   });
   ws.on('close', () => { if (room && room.ws[seat] === ws) { room.ws[seat] = null; push(room); } });
 });
