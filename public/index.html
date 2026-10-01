@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>Игры для двоих</title>
 <style>
-:root{--w:clamp(44px,13vw,68px);--ink:#0b1f23;--paper:#fbf6ea;--red:#c8372d;--gold:#e0b84c;--coral:#ef6f5e}
+:root{--w:clamp(44px,13vw,68px);--ds:clamp(34px,10.5vw,54px);--ink:#0b1f23;--paper:#fbf6ea;--red:#c8372d;--gold:#e0b84c;--coral:#ef6f5e}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;margin:0}
 body{background:radial-gradient(ellipse at 50% 30%,#1f5c66 0%,#12343b 55%,#081a1e 100%) fixed;color:var(--paper);font:16px/1.4 system-ui,sans-serif;overscroll-behavior:none;touch-action:manipulation}
@@ -14,33 +14,49 @@ button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 20p
 button:active{transform:translateY(2px);box-shadow:0 1px 0 #9a7b22}
 button.sm{padding:6px 12px;font-size:14px}
 button.ghost{background:#ffffff1a;color:var(--paper);box-shadow:none}
-input{font:inherit;border-radius:12px;border:2px solid #ffffff33;background:#0003;color:var(--paper);padding:10px;width:7em;text-transform:uppercase;text-align:center}
+input{font:inherit;border-radius:12px;border:2px solid #ffffff33;background:#0003;color:var(--paper);padding:10px;width:100%;text-align:center}
+#codeIn{width:7em;text-transform:uppercase}
 h1,h2,.st b{font-family:Georgia,serif}
-#lobby{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center}
-#lobby h1{font-size:clamp(40px,12vw,64px);line-height:1;margin:0}
+#lobby{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
+#lobby h1{font-size:clamp(38px,11vw,60px);line-height:1;margin:0}
 #lobby p{margin:0;opacity:.75;max-width:26em}
-.suits{font-size:34px;letter-spacing:.2em;opacity:.9}
-.row{display:flex;gap:8px}
+.suits{font-size:34px;letter-spacing:.2em}
+.row{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
+.acct{font-size:14px}.acct b{color:var(--gold)}
+#guest{width:min(260px,100%)}
 #game{height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-#bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 14px;font-size:14px}
+#bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px 10px;padding:8px 14px;font-size:14px}
 #score{background:#0004;border-radius:99px;padding:4px 14px;font-weight:700}
 #dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#888;margin-right:6px}
 #dot.on{background:#5fd07a;box-shadow:0 0 8px #5fd07a}
 #wait,#menu,.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:18px}
 #wait b{font:700 44px Georgia,serif;letter-spacing:.12em}
-#menu h2{margin:0;font-size:28px}
+#menu h2{margin:0;font-size:26px}
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(420px,100%)}
-.tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:18px 8px;background:#ffffff14;color:var(--paper);border:1px solid #ffffff2a;box-shadow:none;border-radius:16px}
-.tile span{font-size:38px}.tile small{font-weight:400;opacity:.7;font-size:12px}
+.tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 8px;background:#ffffff14;color:var(--paper);border:1px solid #ffffff2a;box-shadow:none;border-radius:16px}
+.tile span{font-size:36px}.tile small{font-weight:400;opacity:.7;font-size:12px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.chip{padding:6px 14px;background:#ffffff14;color:var(--paper);box-shadow:none;border:1px solid #ffffff33;border-radius:99px}
+.chip.on{background:var(--gold);color:var(--ink)}.chip:disabled{opacity:.3}
+.hint{font-size:13px;opacity:.7}
 #board{flex:1;display:flex;flex-direction:column;min-height:0}
 .hand{display:flex;justify-content:safe center;padding:8px 14px;overflow-x:auto}
 .hand .c+.c{margin-left:calc(var(--w)*-.38)}
 .opp .c+.c{margin-left:calc(var(--w)*-.62)}
-.me{padding-top:16px;border-radius:18px 18px 0 0;transition:background .3s}
+.me{padding-top:16px;border-radius:18px 18px 0 0}
 .me.turn{background:linear-gradient(#e0b84c33,transparent);animation:glow 1.4s ease-in-out infinite}
 @keyframes glow{50%{background:linear-gradient(#e0b84c66,transparent)}}
 .me .c.ok{cursor:pointer;transform:translateY(-8px)}
 .me .c.no{opacity:.5;filter:saturate(.6)}
+/* анимации */
+@keyframes deal{from{opacity:0;transform:translate(-70px,-120px) rotate(-14deg) scale(.55)}}
+@keyframes dealo{from{opacity:0;transform:translateY(-70px) rotate(10deg) scale(.6)}}
+@keyframes pop{0%{opacity:0;transform:scale(1.55) rotate(-6deg)}60%{transform:scale(.94)}}
+@keyframes drop{from{opacity:.3;transform:translateY(calc((var(--r) + 1) * (var(--ds) + 5px) * -1 - 40px))}}
+.deal{animation:deal .45s cubic-bezier(.2,.8,.3,1) both}
+.dealo{animation:dealo .4s ease-out both}
+.pop{animation:pop .35s ease-out both}
+.drop{animation:drop .5s cubic-bezier(.5,0,.9,.5) both}
 .mid{flex:1;display:flex;align-items:center;justify-content:center;gap:clamp(8px,3vw,24px);padding:6px 10px;min-height:0}
 .deckw{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
 .deck{position:relative;width:calc(var(--w)*2.05);height:calc(var(--w)*1.45)}
@@ -53,7 +69,7 @@ h1,h2,.st b{font-family:Georgia,serif}
 .pair .c:nth-child(2){position:absolute;left:calc(var(--w)*.4);top:calc(var(--w)*.18);box-shadow:-3px 3px 8px #0006}
 .ctl{display:flex;align-items:center;justify-content:center;gap:12px;padding:4px 14px 0;min-height:52px}
 .st{text-align:center;opacity:.95}
-.c{flex:none;width:var(--w);height:calc(var(--w)*1.4);border-radius:calc(var(--w)*.12);background:var(--paper);color:var(--ink);border:1px solid #0003;box-shadow:0 2px 6px #0006;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;line-height:1;user-select:none;transition:transform .12s}
+.c{flex:none;width:var(--w);height:calc(var(--w)*1.4);border-radius:calc(var(--w)*.12);background:var(--paper);color:var(--ink);border:1px solid #0003;box-shadow:0 2px 6px #0006;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;line-height:1;user-select:none;transition:transform .12s,opacity .2s}
 .c b{font-size:calc(var(--w)*.36)}.c span{font-size:calc(var(--w)*.42)}
 .c.r{color:var(--red)}
 .c.back{background:repeating-linear-gradient(45deg,#7a2430 0 6px,#5e1a25 6px 12px);border:3px solid var(--paper)}
@@ -63,9 +79,9 @@ h1,h2,.st b{font-family:Georgia,serif}
 .p0{color:var(--gold)}.p1{color:var(--coral)}
 .win{background:#ffffff33!important;animation:glow2 .8s infinite alternate}
 @keyframes glow2{to{transform:scale(1.06)}}
-.c4{display:flex;gap:5px;padding:10px;background:#17406b;border-radius:16px;box-shadow:0 6px 0 #0d2a49}
+.c4{display:flex;gap:5px;padding:10px;background:#17406b;border-radius:16px;box-shadow:0 6px 0 #0d2a49;overflow:hidden}
 .col{display:flex;flex-direction:column;gap:5px}
-.disc{display:block;width:clamp(34px,10.5vw,54px);height:clamp(34px,10.5vw,54px);border-radius:50%;background:#0b1f23aa}
+.disc{display:block;width:var(--ds);height:var(--ds);border-radius:50%;background:#0b1f23aa}
 .disc.p0{background:var(--gold)}.disc.p1{background:var(--coral)}
 .disc.sm{display:inline-block;width:16px;height:16px;vertical-align:-3px}
 .rps{display:flex;gap:10px}
@@ -73,11 +89,11 @@ h1,h2,.st b{font-family:Georgia,serif}
 .rps small{font-size:13px}
 .rps button.sel{background:#5fd07a;box-shadow:0 3px 0 #2f8f48}
 .reveal{display:flex;align-items:center;gap:14px;font-size:54px}.reveal em{font:normal 600 15px system-ui}
-#over{position:fixed;left:0;right:0;bottom:0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));background:#081a1eee;border-top:2px solid var(--gold);border-radius:20px 20px 0 0;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;z-index:5}
-#over h2{margin:0;font-size:28px}
+.sheet{position:fixed;left:0;right:0;bottom:0;padding:18px 18px calc(18px + env(safe-area-inset-bottom));background:#081a1eee;border-top:2px solid var(--gold);border-radius:20px 20px 0 0;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;z-index:5}
+.sheet h2{margin:0;font-size:26px}.sheet p{margin:0}
 #toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:var(--ink);border:1px solid #ffffff33;padding:8px 16px;border-radius:10px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9;max-width:90vw;text-align:center}
 #toast.on{opacity:1}
-@media (max-height:600px){:root{--w:clamp(36px,9vw,52px)}}
+@media (max-height:600px){:root{--w:clamp(36px,9vw,52px);--ds:clamp(28px,8vw,40px)}}
 </style>
 </head>
 <body>
@@ -85,15 +101,16 @@ h1,h2,.st b{font-family:Georgia,serif}
   <div class="suits">♠ <span style="color:#ff7b6b">♥</span> <span style="color:#ff7b6b">♦</span> ♣</div>
   <h1>Игры для двоих</h1>
   <p>Дурак, крестики-нолики, 4 в ряд и камень-ножницы-бумага. Создайте комнату и отправьте ссылку другу.</p>
+  <input id="guest" maxlength="16" placeholder="Ваше имя">
   <button id="create">Создать комнату</button>
   <div class="row"><input id="codeIn" maxlength="4" placeholder="Код"><button id="join" class="ghost">Войти</button></div>
 </div>
 
 <div id="game" hidden>
   <div id="bar">
-    <span><i id="dot"></i>Соперник</span>
+    <span><i id="dot"></i><span id="oppn">Соперник</span></span>
     <span id="score"></span>
-    <span>Комната <b id="code"></b> <button class="sm ghost" id="menuBtn" data-m='{"t":"menu"}' hidden>Меню</button></span>
+    <span><b id="code"></b> <button class="sm ghost" id="menuBtn" data-m='{"t":"menu"}' hidden>Меню</button></span>
   </div>
   <div id="wait" hidden>
     <p>Ждём друга. Отправьте ему код или ссылку:</p>
@@ -103,47 +120,53 @@ h1,h2,.st b{font-family:Georgia,serif}
   <div id="menu" hidden>
     <h2>Во что играем?</h2>
     <div class="tiles">
-      <button class="tile" data-m='{"t":"pick","k":"durak"}'><span>🃏</span>Дурак<small>36 карт, козырь</small></button>
-      <button class="tile" data-m='{"t":"pick","k":"ttt"}'><span>❌</span>Крестики-нолики<small>3×3</small></button>
-      <button class="tile" data-m='{"t":"pick","k":"c4"}'><span>🔴</span>4 в ряд<small>собери четыре</small></button>
-      <button class="tile" data-m='{"t":"pick","k":"rps"}'><span>✂️</span>Камень-ножницы<small>до 3 побед</small></button>
+      <button class="tile" data-k="durak"><span>🃏</span>Дурак<small>36 карт, козырь</small></button>
+      <button class="tile" data-k="ttt"><span>❌</span>Крестики-нолики<small>3×3</small></button>
+      <button class="tile" data-k="c4"><span>🔴</span>4 в ряд<small>собери четыре</small></button>
+      <button class="tile" data-k="rps"><span>✂️</span>Камень-ножницы<small>до 3 побед</small></button>
     </div>
   </div>
   <div id="board" hidden></div>
 </div>
 
-<div id="over" hidden>
-  <h2 id="res"></h2>
-  <div class="row"><button data-m='{"t":"again"}'>Ещё раз</button><button class="ghost" data-m='{"t":"menu"}'>Другая игра</button></div>
+<div id="over" class="sheet" hidden>
+  <h2 id="res"></h2><div class="row"><button data-m='{"t":"again"}'>Ещё раз</button><button class="ghost" data-m='{"t":"menu"}'>Другая игра</button></div>
 </div>
+
 <div id="toast"></div>
 
 <script>
 const $ = id => document.getElementById(id);
 const SY = '♠♥♦♣', RK = {11:'В', 12:'Д', 13:'К', 14:'Т'};
+const GN = {durak:'Дурак', ttt:'Крестики-нолики', c4:'4 в ряд', rps:'Камень-ножницы'};
+const esc = s => String(s).replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
 const tok = sessionStorage.t || (sessionStorage.t = Math.random().toString(36).slice(2));
 let ws, S = null, code = (new URLSearchParams(location.search).get('room') || '').toUpperCase() || null;
+let P = new Set(), cur = new Set(), lastGid = -1;
+const an = (key, cls) => { cur.add(key); return P.has(key) ? '' : ' ' + cls; }; // анимируем только новые элементы
 
-function toast(t){ const e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('on'), 2400); }
-const send = o => ws && ws.readyState === 1 && ws.send(JSON.stringify(o));
+function toast(t){ const e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('on'), 2600); }
+const send = o => { if (ws && ws.readyState === 1) ws.send(JSON.stringify(o)); else toast('Нет связи с сервером, подождите…'); };
+const myName = () => $('guest').value.trim() || 'Игрок';
+const joinRoom = () => send({t:'join', code, token:tok, name:myName()});
 
 function connect(){
   if (location.protocol === 'file:') { toast('Откройте игру по ссылке сайта или http://localhost:3000, а не файлом'); return; }
-  toast('Подключаемся… (если сервер спал, подождите до минуты)');
   ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host);
+  ws.onopen = () => { if (code) joinRoom(); };
   ws.onerror = () => toast('Не удалось подключиться к серверу');
-  ws.onopen = () => send({t:'join', code, token:tok});
+  ws.onclose = () => setTimeout(connect, 1500);
   ws.onmessage = e => {
     const m = JSON.parse(e.data);
-    if (m.t === 'err') { toast(m.m); if (!S) { code = null; history.replaceState(0, '', location.pathname); } return; }
-    S = m; code = m.code; history.replaceState(0, '', '?room=' + code); render();
+    if (m.t === 'err') { toast(m.m); if (!S && code) { code = null; history.replaceState(0, '', location.pathname); } return; }
+    S = m; code = m.code;
+    history.replaceState(0, '', '?room=' + code); render();
   };
-  ws.onclose = () => { if (S) setTimeout(connect, 1500); };
 }
 
 const M = o => `data-m='${JSON.stringify(o)}'`;
 const red = s => s === 1 || s === 2;
-const card = (c, cls = '', m = '') => `<div class="c ${red(c.s) ? 'r' : ''} ${cls}" ${m}><b>${RK[c.r] || c.r}</b><span>${SY[c.s]}</span></div>`;
+const card = (c, cls = '', m = '', st = '') => `<div class="c ${red(c.s) ? 'r' : ''} ${cls}" ${m} style="${st}"><b>${RK[c.r] || c.r}</b><span>${SY[c.s]}</span></div>`;
 const turnTxt = (g, ok) => g.winner !== null ? 'Игра окончена' : ok ? '<b>Ваш ход</b>' : 'Ход соперника…';
 
 function durak(g){
@@ -165,14 +188,16 @@ function durak(g){
     else st = 'Ждём соперника';
   }
   const turn = att ? (g.taking || !und) : (und && !g.taking);
-  const hand = [...g.hand].sort((a, b) => key(a) - key(b)).map(c => card(c, ok(c) ? 'ok' : 'no', M({t:'card', r:c.r, s:c.s}))).join('');
-  return `<div class="hand opp">${'<div class="c back"></div>'.repeat(g.opp)}</div>
+  const hand = [...g.hand].sort((a, b) => key(a) - key(b)).map((c, i) => card(c, (ok(c) ? 'ok' : 'no') + an('h' + c.r + '-' + c.s, 'deal'), M({t:'card', r:c.r, s:c.s}), `animation-delay:${i * 45}ms`)).join('');
+  const opp = Array.from({length:g.opp}, (_, i) => `<div class="c back${an('o' + i, 'dealo')}" style="animation-delay:${i * 45}ms"></div>`).join('');
+  const tbl = g.table.map(x => `<div class="pair">${card(x.a, an('a' + x.a.r + '-' + x.a.s, 'pop'))}${x.d ? card(x.d, an('d' + x.d.r + '-' + x.d.s, 'pop')) : ''}</div>`).join('');
+  return `<div class="hand opp">${opp}</div>
   <div class="mid">
     <div class="deckw">
       <div class="deck">${g.tc ? card(g.tc, 'tr') : ''}${g.deck > 1 ? `<div class="c back"><em>${g.deck}</em></div>` : ''}</div>
       <div class="tb ${red(tr) ? 'r' : ''}">Козырь <b>${SY[tr]}</b>${g.deck ? ` · в колоде ${g.deck}` : ' · колода пуста'}</div>
     </div>
-    <div class="tbl">${g.table.map(x => `<div class="pair">${card(x.a)}${x.d ? card(x.d) : ''}</div>`).join('')}</div>
+    <div class="tbl">${tbl}</div>
   </div>
   <div class="ctl"><div class="st">${st}</div>${btn ? `<button ${M({t:act})}>${btn}</button>` : ''}</div>
   <div class="hand me ${turn && g.winner === null ? 'turn' : ''}">${hand}</div>`;
@@ -180,7 +205,7 @@ function durak(g){
 
 function ttt(g){
   const mk = ['✕', '◯'], my = g.turn === S.me && g.winner === null;
-  const cells = g.b.map((v, i) => `<button class="cell p${v} ${g.line && g.line.includes(i) ? 'win' : ''}" ${v < 0 && my ? M({t:'cell', i}) : ''}>${v < 0 ? '' : mk[v]}</button>`).join('');
+  const cells = g.b.map((v, i) => `<button class="cell p${v} ${g.line && g.line.includes(i) ? 'win' : ''}${v >= 0 ? an('x' + i, 'pop') : ''}" ${v < 0 && my ? M({t:'cell', i}) : ''}>${v < 0 ? '' : mk[v]}</button>`).join('');
   return `<div class="center"><div class="st">${turnTxt(g, my)} · вы — <span class="p${S.me}">${mk[S.me]}</span></div><div class="ttt">${cells}</div></div>`;
 }
 
@@ -189,10 +214,10 @@ function c4(g){
   let cols = '';
   for (let c = 0; c < 7; c++) {
     let d = '';
-    for (let r = 0; r < 6; r++) { const i = r * 7 + c; d += `<i class="disc p${g.b[i]} ${g.line && g.line.includes(i) ? 'win' : ''}"></i>`; }
+    for (let r = 0; r < 6; r++) { const i = r * 7 + c, v = g.b[i]; d += `<i class="disc p${v} ${g.line && g.line.includes(i) ? 'win' : ''}${v >= 0 ? an('d' + i, 'drop') : ''}" style="--r:${r}"></i>`; }
     cols += `<div class="col" ${my ? M({t:'col', c}) : ''}>${d}</div>`;
   }
-  return `<div class="center"><div class="st">${turnTxt(g, my)} · ваш цвет <i class="disc sm p${S.me}"></i></div><div class="c4">${cols}</div><div class="st" style="opacity:.6">Коснитесь столбца, чтобы бросить фишку</div></div>`;
+  return `<div class="center"><div class="st">${turnTxt(g, my)} · ваш цвет <i class="disc sm p${S.me}"></i></div><div class="c4">${cols}</div><div class="st hint">Коснитесь столбца, чтобы бросить фишку</div></div>`;
 }
 
 const E = ['✊', '✋', '✌️'], N = ['Камень', 'Бумага', 'Ножницы'];
@@ -206,28 +231,42 @@ function rps(g){
 
 function render(){
   $('lobby').hidden = true; $('game').hidden = false;
+  const me = S.me, both = S.peers[0] && S.peers[1], g = S.g, opp = 1 - me;
   $('code').textContent = S.code; $('wcode').textContent = S.code;
-  $('dot').className = S.on[1 - S.me] ? 'on' : '';
-  $('score').textContent = `Вы ${S.score[S.me]} : ${S.score[1 - S.me]}`;
-  const both = S.peers[0] && S.peers[1], g = S.g;
+  $('dot').className = S.on[opp] ? 'on' : '';
+  $('oppn').textContent = both ? S.names[opp] : 'Соперник';
+  $('score').textContent = `Вы ${S.score[me]} : ${S.score[opp]}`;
   $('wait').hidden = both; $('menu').hidden = !both || !!S.kind;
   $('board').hidden = !S.kind; $('menuBtn').hidden = !S.kind;
+
   const over = !!g && g.winner !== null;
   $('over').hidden = !over;
   if (!S.kind) return;
+  if (S.gid !== lastGid) { P = new Set(); lastGid = S.gid; }
+  cur = new Set();
   $('board').innerHTML = {durak, ttt, c4, rps}[S.kind](g);
-  if (over) $('res').textContent = g.winner === -1 ? 'Ничья' : g.winner === S.me ? '🎉 Вы победили!' : S.kind === 'durak' ? 'Вы остались в дураках' : 'Победил соперник';
+  P = cur;
+  if (over) {
+    $('res').textContent = g.winner === -1 ? 'Ничья' : g.winner === me ? '🎉 Вы победили!' : S.kind === 'durak' ? 'Вы остались в дураках' : 'Победил соперник';
+  }
 }
 
-document.addEventListener('click', e => { const x = e.target.closest('[data-m]'); if (x) send(JSON.parse(x.dataset.m)); });
-$('create').onclick = () => { code = null; connect(); };
-$('join').onclick = () => { const v = $('codeIn').value.trim().toUpperCase(); if (v.length === 4) { code = v; connect(); } else toast('Введите код из 4 букв'); };
+document.addEventListener('click', e => {
+  const x = e.target.closest('[data-m],[data-k]');
+  if (!x) return;
+  if (x.dataset.k) return send({t:'pick', k:x.dataset.k});
+  send(JSON.parse(x.dataset.m));
+});
+$('guest').value = localStorage.dname || '';
+$('guest').oninput = () => { localStorage.dname = $('guest').value; };
+$('create').onclick = () => { code = null; joinRoom(); };
+$('join').onclick = () => { const v = $('codeIn').value.trim().toUpperCase(); if (v.length === 4) { code = v; joinRoom(); } else toast('Введите код из 4 букв'); };
 $('share').onclick = () => {
   const url = location.origin + location.pathname + '?room=' + S.code;
   if (navigator.share) navigator.share({title:'Игры для двоих', text:'Сыграем?', url}).catch(() => {});
   else navigator.clipboard.writeText(url).then(() => toast('Ссылка скопирована'));
 };
-if (code) connect();
+connect();
 </script>
 </body>
 </html>
