@@ -9,81 +9,13 @@ const srv = http.createServer((req, res) => {
 });
 const wss = new WebSocketServer({ server: srv });
 const rooms = new Map();
-
-// ---------- правила ----------
-const beats = (a, d, t) => (d.s === a.s && d.r > a.r) || (d.s === t && a.s !== t);
-
-function newDurak() {
-  const deck = [];
-  for (let s = 0; s < 4; s++) for (let r = 6; r <= 14; r++) deck.push({ r, s });
-  for (let i = deck.length - 1; i > 0; i--) {
-    const j = (Math.random() * (i + 1)) | 0;
-    [deck[i], deck[j]] = [deck[j], deck[i]];
-  }
-  const g = { deck, hands: [[], []], table: [], taking: false, winner: null, trump: deck[0].s };
-  for (let i = 0; i < 6; i++) { g.hands[0].push(deck.pop()); g.hands[1].push(deck.pop()); }
-  const low = p => Math.min(99, ...g.hands[p].filter(c => c.s === g.trump).map(c => c.r));
-  g.att = low(1) < low(0) ? 1 : 0; // первым ходит обладатель младшего козыря
-  return g;
-}
-
-function canThrow(g) {
-  const def = 1 - g.att, und = g.table.filter(x => !x.d).length;
-  if (g.table.length >= 6 || und + 1 > g.hands[def].length) return false;
-  return g.hands[g.att].some(c => g.table.some(x => x.a.r === c.r || (x.d && x.d.r === c.r)));
-}
-
-function finish(g) {
-  const def = 1 - g.att;
-  if (g.taking) g.table.forEach(x => { g.hands[def].push(x.a); if (x.d) g.hands[def].push(x.d); });
-  g.table = [];
-  for (const p of [g.att, def]) while (g.hands[p].length < 6 && g.deck.length) g.hands[p].push(g.deck.pop());
-  if (!g.taking) g.att = def;
-  g.taking = false;
-  if (!g.deck.length) {
-    const e0 = !g.hands[0].length, e1 = !g.hands[1].length;
-    if (e0 && e1) g.winner = -1; else if (e0) g.winner = 0; else if (e1) g.winner = 1;
-  }
-}
-
-function moveDurak(room, p, m) {
-  const g = room.g;
-  if (!g || g.winner !== null) return;
-  const def = 1 - g.att, H = g.hands[p];
-  if (m.t === 'card') {
-    const i = H.findIndex(c => c.r === m.r && c.s === m.s);
-    if (i < 0) return;
-    const c = H[i];
-    if (p === g.att) {
-      if (g.table.length && !g.table.some(x => x.a.r === c.r || (x.d && x.d.r === c.r))) return;
-      const und = g.table.filter(x => !x.d).length;
-      if (g.table.length >= 6 || und + 1 > g.hands[def].length) return;
-      H.splice(i, 1); g.table.push({ a: c, d: null });
-    } else {
-      if (g.taking) return;
-      const k = g.table.findIndex(x => !x.d && beats(x.a, c, g.trump));
-      if (k < 0) return;
-      H.splice(i, 1); g.table[k].d = c;
-    }
-  } else if (m.t === 'take') {
-    if (p !== def || g.taking || !g.table.some(x => !x.d)) return;
-    g.taking = true;
-  } else if (m.t === 'done') {
-    if (p !== g.att || !g.table.length || (!g.taking && g.table.some(x => !x.d))) return;
-    finish(g);
-  } else return;
-  // автозавершение, если подкидывать уже нечего
-  if (g.winner === null && g.table.length && (g.taking || g.table.every(x => x.d)) && !canThrow(g)) finish(g);
-}
-
-// ---------- мини-игры ----------
-const L3 = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-const KINDS = ['durak', 'ttt', 'c4', 'rps', 'wd', 'pk'];
+const KINDS = ['durak', 'ttt', 'c4', 'rps', 'wd', 'pk', 'pt'];
 
 function newGame(k) {
   if (k === 'durak') return newDurak();
   if (k === 'ttt') return { b: Array(9).fill(-1), turn: 0, winner: null, line: null };
   if (k === 'c4') return { b: Array(42).fill(-1), turn: 0, winner: null, line: null };
+  if (k === 'pt') return { phase: 'mode', mode: null, theme: null, imgs: [null, null], winner: null };
   if (k === 'wd') return { phase: 'who', setter: null, word: null, guesses: [], winner: null };
   if (k === 'pk') return { phase: 'prep', cats: [null, null], log: [], turn: 0, step: 'item', item: null, ans: null, guess: null, winner: null };
   return { picks: [null, null], wins: [0, 0], last: null, winner: null };
@@ -166,12 +98,27 @@ function movePk(g, p, m) {
   }
 }
 
+// ---------- Портреты ----------
+const STYLES = ['киберпанк', 'аниме', 'пиксель-арт', 'комикс', 'стимпанк', 'мультфильм 90-х', 'фэнтези', 'ретро 80-х', 'поп-арт', 'ужастик', 'супергерой', 'викинг', 'космонавт', 'пират', 'самурай', 'вестерн'];
+const TOPICS = ['бурундук', 'Президент', 'робот-повар', 'дракон', 'космический кот', 'ёжик в тумане', 'бабушка-супергерой', 'король пиццы', 'вампир-вегетарианец', 'сонный волшебник', 'ниндзя-официант', 'пингвин-директор'];
+function movePt(g, p, m) {
+  if (g.phase === 'mode' && m.t === 'pmode' && (m.mode === 'each' || m.mode === 'topic')) {
+    const L = m.mode === 'each' ? STYLES : TOPICS;
+    g.mode = m.mode; g.theme = L[(Math.random() * L.length) | 0]; g.phase = 'draw';
+  } else if (g.phase === 'draw' && m.t === 'pimg' && g.imgs[p] === null) {
+    if (typeof m.img !== 'string' || !m.img.startsWith('data:image/jpeg;base64,') || m.img.length > 1.5e6) return 'Рисунок не принят (слишком большой)';
+    g.imgs[p] = m.img;
+    if (g.imgs[1 - p] !== null) { g.phase = 'done'; g.winner = -1; }
+  }
+}
+
 function move(room, p, m) {
   const g = room.g, k = room.kind;
   if (!g || g.winner !== null) return;
   if (k === 'durak') return moveDurak(room, p, m);
   if (k === 'wd') return moveWd(g, p, m);
   if (k === 'pk') return movePk(g, p, m);
+  if (k === 'pt') return movePt(g, p, m);
   if (k === 'ttt' && m.t === 'cell') {
     if (g.turn !== p || g.b[m.i] !== -1) return;
     g.b[m.i] = p;
@@ -207,6 +154,7 @@ const gv = (room, p) => {
     hand: g.hands[p], opp: g.hands[1 - p].length, deck: g.deck.length, trump: g.trump,
     tc: g.deck[0] || null, table: g.table, att: g.att, taking: g.taking, winner: g.winner,
   };
+  if (room.kind === 'pt') return { phase: g.phase, mode: g.mode, theme: g.theme, done: g.imgs.map(x => x !== null), imgs: g.phase === 'done' ? g.imgs : null, winner: g.winner };
   if (room.kind === 'wd') return {
     phase: g.phase, setter: g.setter, pat: g.word ? g.word.replace(/\S/g, '•') : null, guesses: g.guesses,
     word: (g.winner !== null || p === g.setter) ? g.word : null, winner: g.winner,
@@ -238,7 +186,7 @@ wss.on('connection', ws => {
       const code = m.code ? String(m.code).toUpperCase() : null;
       if (code) room = rooms.get(code);
       else {
-        room = { code: genCode(), ids: [null, null], names: ['', ''], ws: [null, null], kind: null, g: null, score: [0, 0], gid: 0, last: Date.now() };
+        room = { code: genCode(), ids: [null, null], names: ['', ''], ws: [null, null], kind: null, g: null, score: [0, 0], gid: 0, chat: [], last: Date.now() };
         rooms.set(room.code, room);
       }
       if (!room) return err(ws, 'Комната не найдена');
@@ -250,10 +198,18 @@ wss.on('connection', ws => {
       room.names[seat] = clean(m.name) || 'Игрок ' + (seat + 1);
       if (room.ws[seat] && room.ws[seat] !== ws) room.ws[seat].close();
       room.ws[seat] = ws;
-      return push(room);
+      push(room);
+      return ws.send(JSON.stringify({ t: 'chatlog', log: room.chat }));
     }
     if (!room) return;
     room.last = Date.now();
+    if (m.t === 'chat') {
+      const text = txt(m.text, 300);
+      if (!text) return;
+      const msg = { from: seat, name: room.names[seat], text, ts: Date.now() };
+      room.chat.push(msg); if (room.chat.length > 100) room.chat.shift();
+      return room.ws.forEach(w => w && w.readyState === 1 && w.send(JSON.stringify({ t: 'chat', m: msg })));
+    }
     const fin = !!room.g && room.g.winner !== null;
     if (m.t === 'pick') {
       if (KINDS.includes(m.k) && room.ids[0] && room.ids[1] && (!room.g || fin)) start(room, m.k);
