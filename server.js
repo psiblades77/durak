@@ -1,9 +1,12 @@
 const http = require('http'), fs = require('fs'), path = require('path');
 const { WebSocketServer } = require('ws');
 
+const MIME = { '.svg': 'image/svg+xml', '.png': 'image/png', '.webmanifest': 'application/manifest+json' };
 const srv = http.createServer((req, res) => {
-  fs.readFile(path.join(__dirname, 'public', 'index.html'), (e, d) => {
-    res.writeHead(e ? 500 : 200, { 'Content-Type': 'text/html; charset=utf-8' });
+  const m = req.url.split('?')[0].match(/^\/icons\/([\w.-]+)$/);
+  const file = m ? path.join('icons', m[1]) : 'index.html';
+  fs.readFile(path.join(__dirname, 'public', file), (e, d) => {
+    res.writeHead(e ? (m ? 404 : 500) : 200, { 'Content-Type': m ? (MIME[path.extname(file)] || 'application/octet-stream') : 'text/html; charset=utf-8' });
     res.end(d);
   });
 });
