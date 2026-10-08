@@ -12,6 +12,74 @@ const srv = http.createServer((req, res) => {
 });
 const wss = new WebSocketServer({ server: srv });
 const rooms = new Map();
+// ---------- Дурак ----------
+const beats = (a, d, t) => (d.s === a.s && d.r > a.r) || (d.s === t && a.s !== t);
+
+function newDurak() {
+  const deck = [];
+  for (let s = 0; s < 4; s++) for (let r = 6; r <= 14; r++) deck.push({ r, s });
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = (Math.random() * (i + 1)) | 0;
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  const g = { deck, hands: [[], []], table: [], taking: false, winner: null, trump: deck[0].s };
+  for (let i = 0; i < 6; i++) { g.hands[0].push(deck.pop()); g.hands[1].push(deck.pop()); }
+  const low = p => Math.min(99, ...g.hands[p].filter(c => c.s === g.trump).map(c => c.r));
+  g.att = low(1) < low(0) ? 1 : 0; // первым ходит обладатель младшего козыря
+  return g;
+}
+
+function canThrow(g) {
+  const def = 1 - g.att, und = g.table.filter(x => !x.d).length;
+  if (g.table.length >= 6 || und + 1 > g.hands[def].length) return false;
+  return g.hands[g.att].some(c => g.table.some(x => x.a.r === c.r || (x.d && x.d.r === c.r)));
+}
+
+function finish(g) {
+  const def = 1 - g.att;
+  if (g.taking) g.table.forEach(x => { g.hands[def].push(x.a); if (x.d) g.hands[def].push(x.d); });
+  g.table = [];
+  for (const p of [g.att, def]) while (g.hands[p].length < 6 && g.deck.length) g.hands[p].push(g.deck.pop());
+  if (!g.taking) g.att = def;
+  g.taking = false;
+  if (!g.deck.length) {
+    const e0 = !g.hands[0].length, e1 = !g.hands[1].length;
+    if (e0 && e1) g.winner = -1; else if (e0) g.winner = 0; else if (e1) g.winner = 1;
+  }
+}
+
+function moveDurak(room, p, m) {
+  const g = room.g;
+  if (!g || g.winner !== null) return;
+  const def = 1 - g.att, H = g.hands[p];
+  if (m.t === 'card') {
+    const i = H.findIndex(c => c.r === m.r && c.s === m.s);
+    if (i < 0) return;
+    const c = H[i];
+    if (p === g.att) {
+      if (g.table.length && !g.table.some(x => x.a.r === c.r || (x.d && x.d.r === c.r))) return;
+      const und = g.table.filter(x => !x.d).length;
+      if (g.table.length >= 6 || und + 1 > g.hands[def].length) return;
+      H.splice(i, 1); g.table.push({ a: c, d: null });
+    } else {
+      if (g.taking) return;
+      const k = g.table.findIndex(x => !x.d && beats(x.a, c, g.trump));
+      if (k < 0) return;
+      H.splice(i, 1); g.table[k].d = c;
+    }
+  } else if (m.t === 'take') {
+    if (p !== def || g.taking || !g.table.some(x => !x.d)) return;
+    g.taking = true;
+  } else if (m.t === 'done') {
+    if (p !== g.att || !g.table.length || (!g.taking && g.table.some(x => !x.d))) return;
+    finish(g);
+  } else return;
+  // автозавершение, если подкидывать уже нечего
+  if (g.winner === null && g.table.length && (g.taking || g.table.every(x => x.d)) && !canThrow(g)) finish(g);
+}
+
+// ---------- крестики-нолики ----------
+const L3 = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 const KINDS = ['durak', 'ttt', 'c4', 'rps', 'wd', 'pk', 'pt'];
 
 function newGame(k) {
@@ -183,7 +251,7 @@ const genCode = () => {
 
 wss.on('connection', ws => {
   let room = null, seat = -1;
-  ws.on('message', raw => {
+  const onMsg = raw => {
     let m; try { m = JSON.parse(raw); } catch { return; }
     if (m.t === 'join') {
       const code = m.code ? String(m.code).toUpperCase() : null;
@@ -225,7 +293,8 @@ wss.on('connection', ws => {
       if (was === null && room.g.winner !== null && room.g.winner >= 0) room.score[room.g.winner]++;
     }
     push(room);
-  });
+  };
+  ws.on('message', raw => { try { onMsg(raw); } catch (e) { console.error('handler error:', e); try { err(ws, 'Ошибка сервера'); } catch {} } });
   ws.on('close', () => { if (room && room.ws[seat] === ws) { room.ws[seat] = null; push(room); } });
 });
 
@@ -233,4 +302,5 @@ setInterval(() => {
   for (const [c, r] of rooms) if (Date.now() - r.last > 3600e3) rooms.delete(c);
 }, 600e3);
 
+process.on('uncaughtException', e => console.error('uncaught:', e));
 srv.listen(process.env.PORT || 3000, () => console.log('Игры: http://localhost:' + (process.env.PORT || 3000)));
