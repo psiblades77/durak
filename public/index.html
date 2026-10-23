@@ -2,258 +2,1735 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Игры для двоих</title>
 <meta name="theme-color" content="#16134a">
-<link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png">
-<link rel="apple-touch-icon" href="/icons/icon-180.png">
-<link rel="manifest" href="/icons/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Игры для двоих">
+<meta name="format-detection" content="telephone=no">
+
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+
 <style>
-:root{--w:clamp(44px,13vw,68px);--ds:clamp(34px,10.5vw,54px);--txt:#ecebff;--mut:#a9a6d6;--surf:#ffffff0f;--surf2:#ffffff1a;--line:#ffffff24;--acc:#8b7cf6;--ink:#17163a;--paper:#f3f1ff;--red:#cf4a6c;--p0:#7aa5ff;--p1:#c39bff;--ch:min(44dvh,340px)}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;margin:0}
-body{background:radial-gradient(900px 600px at 12% -10%,#4b3fb766,transparent 60%),radial-gradient(800px 600px at 105% 25%,#2f5fd055,transparent 55%),linear-gradient(165deg,#0d0e29,#16134a 55%,#0d1033) fixed;color:var(--txt);font:16px/1.4 system-ui,sans-serif;overscroll-behavior:none;touch-action:manipulation}
-[hidden]{display:none!important}
-button,.btn{font:inherit;font-weight:700;border:0;border-radius:14px;padding:12px 20px;background:linear-gradient(135deg,#7f6df2,#5b86f7);color:#fff;box-shadow:0 6px 18px #5b4fd855;cursor:pointer;text-decoration:none;display:inline-block;text-align:center}
-button:active{transform:scale(.97)}button:disabled{opacity:.4}
-button.sm{padding:6px 12px;font-size:14px;border-radius:10px;box-shadow:none}
-button.ghost{background:var(--surf2);box-shadow:none;border:1px solid var(--line)}
-input{font:inherit;border-radius:14px;border:1px solid var(--line);background:#0b0c2488;color:var(--txt);padding:11px 12px;width:100%;text-align:center;outline:none}
-input:focus{border-color:var(--acc)}input::placeholder{color:#8d89c4}
-h1,h2,.st b{font-family:Georgia,serif}
-.hint{font-size:13px;color:var(--mut)}
-.row{display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap}
-#codeIn{width:7em;text-transform:uppercase}
-/* лобби */
-#lobby{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;text-align:center}
-#lobby h1{font-size:clamp(40px,12vw,64px);line-height:1.02;margin:0;background:linear-gradient(90deg,#d3c9ff,#8fb2ff);-webkit-background-clip:text;background-clip:text;color:transparent}
-#lobby p{margin:0;color:var(--mut);max-width:26em}
-.suits{font-size:30px;letter-spacing:.25em;color:#b9b0f5}
-.panel{display:flex;flex-direction:column;gap:12px;width:min(340px,100%);padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(10px)}
-/* комната */
-#game{height:100%;display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-#bar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 10px 0;padding:6px 10px;background:var(--surf);border:1px solid var(--line);border-radius:16px;font-size:14px}
-#bar>span{display:flex;align-items:center;gap:8px;min-width:0}
-#score{background:#0004;border-radius:99px;padding:3px 12px;font-weight:700;white-space:nowrap}
-#oppn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:20vw}
-#dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#777;flex:none}
-#dot.on{background:#6fe0b0;box-shadow:0 0 8px #6fe0b0}
-#code{letter-spacing:.1em;color:#c9c2ff}
-#chatBtn{position:relative;padding:6px 12px;font-size:18px;line-height:1.2}
-#badge{position:absolute;top:-7px;right:-7px;min-width:19px;height:19px;border-radius:10px;background:#e9679a;color:#fff;font:700 11px system-ui;display:grid;place-items:center;padding:0 5px}
-#wait,#menu,.center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:18px}
-#wait b{font:700 44px Georgia,serif;letter-spacing:.12em;color:#d3c9ff}
-#menu{overflow-y:auto;justify-content:safe center}#menu h2{margin:0;font-size:26px}
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:min(420px,100%)}
-.tile{display:flex;flex-direction:column;align-items:center;gap:4px;padding:16px 8px;background:linear-gradient(160deg,#ffffff18,#ffffff08);color:var(--txt);border:1px solid var(--line);box-shadow:none;border-radius:18px}
-.tile:hover{border-color:var(--acc)}.tile:last-child{grid-column:1/-1}
-.tile span{font-size:34px}.tile small{font-weight:400;color:var(--mut);font-size:12px}
-#board{flex:1;display:flex;flex-direction:column;min-height:0;overflow-y:auto}
-.ttl{margin:0;font-size:28px}
-/* дурак */
-.hand{display:flex;justify-content:safe center;padding:8px 14px;overflow-x:auto}
-.hand .c+.c{margin-left:calc(var(--w)*-.38)}.opp .c+.c{margin-left:calc(var(--w)*-.62)}
-.me{padding-top:16px;border-radius:18px 18px 0 0}
-.me.turn{background:linear-gradient(#8b7cf633,transparent);animation:glow 1.4s ease-in-out infinite}
-@keyframes glow{50%{background:linear-gradient(#8b7cf670,transparent)}}
-.me .c.ok{cursor:pointer;transform:translateY(-8px)}.me .c.no{opacity:.5;filter:saturate(.6)}
-@keyframes deal{from{opacity:0;transform:translate(-70px,-120px) rotate(-14deg) scale(.55)}}
-@keyframes dealo{from{opacity:0;transform:translateY(-70px) rotate(10deg) scale(.6)}}
-@keyframes pop{0%{opacity:0;transform:scale(1.55) rotate(-6deg)}60%{transform:scale(.94)}}
-@keyframes drop{from{opacity:.3;transform:translateY(calc((var(--r) + 1) * (var(--ds) + 5px) * -1 - 40px))}}
-.deal{animation:deal .45s cubic-bezier(.2,.8,.3,1) both}.dealo{animation:dealo .4s ease-out both}
-.pop{animation:pop .35s ease-out both}.drop{animation:drop .5s cubic-bezier(.5,0,.9,.5) both}
-.mid{flex:1;display:flex;align-items:center;justify-content:center;gap:clamp(8px,3vw,24px);padding:6px 10px;min-height:0}
-.deckw{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none}
-.deck{position:relative;width:calc(var(--w)*2.05);height:calc(var(--w)*1.45)}
-.deck .tr{position:absolute;left:calc(var(--w)*.8);top:0;transform:rotate(90deg);z-index:1;outline:3px solid #a99bff;outline-offset:1px}
-.deck .back{position:absolute;left:0;top:0;z-index:2}
-.tb{background:#0005;border:1px solid #a99bff;border-radius:99px;padding:3px 12px;font-size:14px;white-space:nowrap}
-.tb b{font-size:22px;vertical-align:-2px;margin-left:2px}.tb.r b{color:#ff8fae}
-.tbl{display:grid;grid-template-columns:repeat(3,calc(var(--w)*1.5));gap:10px 6px;align-content:center;padding:10px;background:var(--surf);border:1px solid var(--line);border-radius:20px;min-height:calc(var(--w)*3.4)}
-.pair{position:relative;height:calc(var(--w)*1.55)}
-.pair .c:nth-child(2){position:absolute;left:calc(var(--w)*.4);top:calc(var(--w)*.18);box-shadow:-3px 3px 8px #0006}
-.ctl{display:flex;align-items:center;justify-content:center;gap:12px;padding:4px 14px 0;min-height:52px}
-.st{text-align:center}
-.c{flex:none;width:var(--w);height:calc(var(--w)*1.4);border-radius:calc(var(--w)*.12);background:var(--paper);color:var(--ink);border:1px solid #0003;box-shadow:0 2px 8px #0008;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Georgia,serif;line-height:1;user-select:none;transition:transform .12s,opacity .2s}
-.c b{font-size:calc(var(--w)*.36)}.c span{font-size:calc(var(--w)*.42)}.c.r{color:var(--red)}
-.c.back{background:repeating-linear-gradient(45deg,#4f43b8 0 6px,#3d3499 6px 12px);border:3px solid #e9e6ff}
-.c.back em{font:normal 700 calc(var(--w)*.3) Georgia,serif;color:#fff}
-/* крестики-нолики, 4 в ряд, КНБ */
-.ttt{display:grid;grid-template-columns:repeat(3,clamp(78px,24vw,110px));gap:8px}
-.cell{height:clamp(78px,24vw,110px);font-size:clamp(40px,13vw,64px);padding:0;background:var(--surf);color:var(--txt);box-shadow:none;border:1px solid var(--line);border-radius:18px}
-.p0{color:var(--p0)}.p1{color:var(--p1)}
-.win{background:#ffffff33!important;animation:glow2 .8s infinite alternate}@keyframes glow2{to{transform:scale(1.06)}}
-.c4{display:flex;gap:5px;padding:10px;background:#2a3180;border-radius:18px;box-shadow:0 6px 0 #1b2060;overflow:hidden}
-.col{display:flex;flex-direction:column;gap:5px}
-.disc{display:block;width:var(--ds);height:var(--ds);border-radius:50%;background:#12154a}
-.disc.p0{background:var(--p0)}.disc.p1{background:var(--p1)}.disc.sm{display:inline-block;width:16px;height:16px;vertical-align:-3px}
-.rps{display:flex;gap:10px}
-.rps button{display:flex;flex-direction:column;align-items:center;font-size:48px;line-height:1.1;padding:14px 12px;width:clamp(86px,26vw,110px)}
-.rps small{font-size:13px}.rps button.sel{background:linear-gradient(135deg,#3fa186,#4fb59a)}
-.reveal{display:flex;align-items:center;gap:14px;font-size:54px}.reveal em{font:normal 600 15px system-ui}
-/* Wordies */
-.wd{gap:6px}.wrow{display:flex;gap:4px;justify-content:center}
-.wc{width:var(--cs);height:var(--cs);display:grid;place-items:center;border-radius:7px;background:#0004;border:1px solid var(--line);font:700 calc(var(--cs)*.55) Georgia,serif;font-style:normal;text-transform:uppercase;color:var(--txt)}
-.wc.g{background:#3fa186;border-color:#3fa186}.wc.y{background:#d3a84b;border-color:#d3a84b;color:var(--ink)}.wc.x{background:#2c2f66}
-.wgap{width:calc(var(--cs)*.5)}.flip{animation:flip .5s ease both}@keyframes flip{from{transform:rotateX(90deg);opacity:0}}
-.keys{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;max-width:420px;min-height:26px}
-.keys i{font:700 13px Georgia,serif;text-transform:uppercase;min-width:22px;text-align:center;padding:3px 5px;border-radius:6px;background:var(--surf2)}
-.keys .g{background:#3fa186}.keys .y{background:#d3a84b;color:var(--ink)}.keys .x{background:#2c2f66;opacity:.6}
-.frm{display:flex;gap:8px;width:min(420px,100%)}.frm input{flex:1;min-width:0}
-/* поход */
-.pkbox{flex:1;display:flex;flex-direction:column;min-height:0;padding:8px 14px;gap:10px}
-.chat{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:10px;min-height:80px}
-.msg{max-width:85%;padding:8px 12px;border-radius:14px;background:var(--surf2);align-self:flex-start;font-size:15px}
-.msg.mine{align-self:flex-end;background:#7f6df255}.msg b{display:block;font-size:12px;opacity:.7}
-.act{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center}
-.act h3{margin:0;font:700 18px Georgia,serif}.chip2{font-size:13px;color:var(--mut);text-align:center}
-.sent{font:700 22px Georgia,serif;margin:0}
-/* портреты */
-.modes{display:flex;flex-direction:column;gap:12px;width:min(380px,100%)}
-.mode{display:flex;flex-direction:column;align-items:center;gap:4px;background:linear-gradient(160deg,#ffffff18,#ffffff08);border:1px solid var(--line);box-shadow:none;border-radius:18px;padding:18px;color:var(--txt)}
-.mode span{font-size:34px}.mode small{font-weight:400;color:var(--mut)}
-#cv{display:block;touch-action:none;background:#fff;border-radius:16px;box-shadow:0 8px 28px #0007;width:min(100vw - 28px,52dvh,460px);aspect-ratio:1;cursor:crosshair}
-.tools{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;max-width:420px}
-.sw{width:30px;height:30px;padding:0;border-radius:50%;border:2px solid #ffffff55;box-shadow:none}.sw.on{border-color:#fff;transform:scale(1.2)}
-.sz{width:38px;height:38px;padding:0;display:grid;place-items:center;background:var(--surf2);box-shadow:none;border:1px solid var(--line);border-radius:12px;font-size:18px}
-.sz.on{background:#7f6df2;border-color:#fff}.sz i{display:block;background:#fff;border-radius:50%}
-.pics{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
-.pic{display:flex;flex-direction:column;align-items:center;gap:8px;width:min(300px,100%)}
-.pic img,.pv{width:100%;border-radius:16px;background:#fff;box-shadow:0 8px 28px #0007}.pv{width:min(240px,70vw)}
-/* чат */
-#drawer{position:fixed;left:0;right:0;bottom:0;height:var(--ch);display:flex;flex-direction:column;background:#15133fef;backdrop-filter:blur(12px);border-top:1px solid var(--line);border-radius:20px 20px 0 0;z-index:6;padding-bottom:env(safe-area-inset-bottom)}
-.dhead{display:flex;justify-content:space-between;align-items:center;padding:8px 14px}
-#cList{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:0 14px}
-.cm{max-width:82%;padding:7px 12px;border-radius:14px;background:var(--surf2);align-self:flex-start;font-size:15px;word-break:break-word}
-.cm.me{align-self:flex-end;background:#7f6df280}.cm b{display:block;font-size:11px;opacity:.65}
-.drow{display:flex;gap:8px;padding:8px 14px}.drow input{text-align:left}.drow button{padding:10px 16px}
-#cPrev{position:fixed;top:58px;left:50%;transform:translateX(-50%);max-width:88vw;background:#241f66f2;border:1px solid var(--acc);padding:8px 14px;border-radius:14px;z-index:7;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
-body.chat-open #game{padding-bottom:var(--ch)}body.chat-open .sheet{bottom:var(--ch)}
-@media (min-width:800px){#drawer{left:auto;right:14px;bottom:14px;width:340px;height:min(70dvh,560px);border-radius:20px;border:1px solid var(--line)}
- body.chat-open #game{padding-bottom:0;padding-right:372px}body.chat-open .sheet{bottom:0;right:372px}}
-.sheet{position:fixed;left:0;right:0;bottom:0;padding:16px 18px calc(16px + env(safe-area-inset-bottom));background:#15133ff2;border-top:1px solid var(--acc);border-radius:22px 22px 0 0;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;z-index:5}
-.sheet h2{margin:0;font-size:26px}
-#toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);background:#1d1a52;border:1px solid var(--line);padding:8px 16px;border-radius:12px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9;max-width:90vw;text-align:center}
-#toast.on{opacity:1}
-@media (max-height:600px){:root{--w:clamp(36px,9vw,52px);--ds:clamp(28px,8vw,40px)}}
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --keyboard-height: 0px;
+
+  --w: clamp(44px, 13vw, 68px);
+  --ds: clamp(34px, 10.5vw, 54px);
+  --txt: #ecebff;
+  --mut: #a9a6d6;
+  --surf: #ffffff0f;
+  --surf2: #ffffff1a;
+  --line: #ffffff24;
+  --acc: #8b7cf6;
+  --ink: #17163a;
+  --paper: #f3f1ff;
+  --red: #cf4a6c;
+  --p0: #7aa5ff;
+  --p1: #c39bff;
+  --ch: min(44dvh, 340px);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overscroll-behavior: none;
+  -webkit-overscroll-behavior: none;
+}
+
+body {
+  background: radial-gradient(900px 600px at 12% -10%, #4b3fb766, transparent 60%),
+              radial-gradient(800px 600px at 105% 25%, #2f5fd055, transparent 55%),
+              linear-gradient(165deg, #0d0e29, #16134a 55%, #0d1033) fixed;
+  color: var(--txt);
+  font: 16px/1.4 -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  touch-action: manipulation;
+}
+
+[hidden] { display: none !important; }
+
+button, .btn {
+  font: inherit;
+  font-weight: 700;
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #7f6df2, #5b86f7);
+  color: #fff;
+  box-shadow: 0 6px 18px #5b4fd855;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  transition: transform .12s cubic-bezier(0.2, 0.8, 0.4, 1), opacity .12s, box-shadow .15s;
+}
+
+button:active, .btn:active { transform: scale(.96); }
+button:disabled { opacity: .4; transform: none !important; }
+
+button.sm {
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+button.ghost {
+  background: var(--surf2);
+  box-shadow: none;
+  border: 1px solid var(--line);
+}
+
+button.mm-btn {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  box-shadow: 0 6px 20px #ef444455;
+  font-size: 16px;
+  padding: 13px 20px;
+}
+button.solo-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  box-shadow: 0 6px 20px #8b5cf655;
+}
+
+button.icon-btn {
+  padding: 7px 11px;
+  font-size: 14px;
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: .03em;
+}
+
+input, textarea {
+  font: inherit;
+  font-size: 16px !important;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #0b0c2488;
+  color: var(--txt);
+  padding: 12px 14px;
+  width: 100%;
+  text-align: center;
+  outline: none;
+  -webkit-user-select: auto;
+  user-select: auto;
+  transition: border-color .15s ease;
+}
+
+input:focus { border-color: var(--acc); }
+input::placeholder { color: #8d89c4; }
+
+h1, h2, .st b {
+  font-family: -apple-system-ui-serif, Georgia, "Times New Roman", serif;
+}
+
+.hint { font-size: 13px; color: var(--mut); }
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  color: var(--mut);
+  font-size: 12px;
+  margin: 2px 0;
+}
+.divider::before, .divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+#codeIn {
+  width: 7em;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+/* ---------- Лобби ---------- */
+#lobby {
+  min-height: 100%;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: max(20px, calc(var(--sat) + 12px)) max(18px, var(--sar)) max(20px, calc(var(--sab) + 12px)) max(18px, var(--sal));
+  text-align: center;
+  position: relative;
+}
+
+.lobby-top {
+  position: absolute;
+  top: max(12px, calc(var(--sat) + 8px));
+  right: max(16px, calc(var(--sar) + 8px));
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 5;
+}
+
+.conn-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  font-size: 12px;
+  color: var(--mut);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.conn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff5252;
+}
+.conn-dot.on {
+  background: #6fe0b0;
+  box-shadow: 0 0 8px #6fe0b0;
+}
+.conn-dot.wait {
+  background: #ffb74d;
+  box-shadow: 0 0 6px #ffb74d;
+}
+
+#lobby h1 {
+  font-size: clamp(34px, 10vw, 60px);
+  line-height: 1.04;
+  margin: 0;
+  background: linear-gradient(90deg, #d3c9ff, #8fb2ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#lobby p {
+  margin: 0;
+  color: var(--mut);
+  max-width: 26em;
+  font-size: 14px;
+}
+
+.suits {
+  font-size: 26px;
+  letter-spacing: .25em;
+  color: #b9b0f5;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(340px, 100%);
+  padding: 18px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px #0004;
+}
+
+/* ---------- Игровая комната ---------- */
+#game {
+  height: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  padding-top: var(--sat);
+  padding-bottom: var(--sab);
+  padding-left: var(--sal);
+  padding-right: var(--sar);
+  position: relative;
+}
+
+#bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 6px 10px 0;
+  padding: 6px 10px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  font-size: 14px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+#bar > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+#score {
+  background: #0004;
+  border-radius: 99px;
+  padding: 3px 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+#oppn {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 24vw;
+}
+
+#dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #777;
+  flex: none;
+}
+#dot.on {
+  background: #6fe0b0;
+  box-shadow: 0 0 8px #6fe0b0;
+}
+
+#code {
+  letter-spacing: .1em;
+  color: #c9c2ff;
+}
+
+#chatBtn {
+  position: relative;
+  padding: 6px 10px;
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+#badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  min-width: 19px;
+  height: 19px;
+  border-radius: 10px;
+  background: #e9679a;
+  color: #fff;
+  font: 700 11px system-ui;
+  display: grid;
+  place-items: center;
+  padding: 0 5px;
+}
+
+#wait, #menu, .center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  padding: 16px;
+}
+
+#wait b {
+  font: 700 44px -apple-system-ui-serif, Georgia, serif;
+  letter-spacing: .12em;
+  color: #d3c9ff;
+}
+
+#menu {
+  overflow-y: auto;
+  justify-content: safe center;
+}
+#menu h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: min(460px, 100%);
+}
+
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 14px 8px;
+  background: linear-gradient(160deg, #ffffff18, #ffffff08);
+  color: var(--txt);
+  border: 1px solid var(--line);
+  box-shadow: none;
+  border-radius: 18px;
+  transition: transform .12s, border-color .15s;
+}
+
+.tile:hover, .tile:focus { border-color: var(--acc); }
+
+.tile span { font-size: 32px; }
+.tile small {
+  font-weight: 400;
+  color: var(--mut);
+  font-size: 12px;
+}
+
+.tag-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 8px;
+  margin-top: 2px;
+  letter-spacing: .02em;
+}
+.ai-tag {
+  background: #6366f140;
+  color: #a5b4fc;
+  border: 1px solid #6366f160;
+}
+.duo-tag {
+  background: #ffffff15;
+  color: var(--mut);
+  border: 1px solid #ffffff20;
+}
+
+#board {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ttl { margin: 0; font-size: 26px; }
+
+/* ---------- Дурак ---------- */
+.hand {
+  display: flex;
+  justify-content: safe center;
+  padding: 8px 14px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hand .c + .c { margin-left: calc(var(--w) * -.38); }
+.opp .c + .c { margin-left: calc(var(--w) * -.62); }
+
+.me {
+  padding-top: 16px;
+  border-radius: 18px 18px 0 0;
+}
+.me.turn {
+  background: linear-gradient(#8b7cf633, transparent);
+  animation: glow 1.4s ease-in-out infinite;
+}
+
+@keyframes glow { 50% { background: linear-gradient(#8b7cf670, transparent); } }
+
+.me .c.ok { cursor: pointer; transform: translateY(-8px); }
+.me .c.no { opacity: .5; filter: saturate(.6); }
+
+@keyframes deal { from { opacity: 0; transform: translate(-70px, -120px) rotate(-14deg) scale(.55); } }
+@keyframes dealo { from { opacity: 0; transform: translateY(-70px) rotate(10deg) scale(.6); } }
+@keyframes pop { 0% { opacity: 0; transform: scale(1.55) rotate(-6deg); } 60% { transform: scale(.94); } }
+@keyframes drop { from { opacity: .3; transform: translateY(calc((var(--r) + 1) * (var(--ds) + 5px) * -1 - 40px)); } }
+@keyframes flip { from { transform: rotateY(90deg); opacity: 0; } }
+@keyframes glow2 { to { transform: scale(1.06); } }
+
+.deal { animation: deal .45s cubic-bezier(.2, .8, .3, 1) both; }
+.dealo { animation: dealo .4s ease-out both; }
+.pop { animation: pop .35s ease-out both; }
+.drop { animation: drop .5s cubic-bezier(.5, 0, .9, .5) both; }
+.flip { animation: flip .4s ease both; }
+
+.mid {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 3vw, 24px);
+  padding: 6px 10px;
+  min-height: 0;
+}
+
+.deckw {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+.deck {
+  position: relative;
+  width: calc(var(--w) * 2.05);
+  height: calc(var(--w) * 1.45);
+}
+
+.deck .tr {
+  position: absolute;
+  left: calc(var(--w) * .8);
+  top: 0;
+  transform: rotate(90deg);
+  z-index: 1;
+  outline: 3px solid #a99bff;
+  outline-offset: 1px;
+}
+
+.deck .back {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+}
+
+.tb {
+  background: #0005;
+  border: 1px solid #a99bff;
+  border-radius: 99px;
+  padding: 3px 12px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.tb b { font-size: 22px; vertical-align: -2px; margin-left: 2px; }
+.tb.r b { color: #ff8fae; }
+
+.tbl {
+  display: grid;
+  grid-template-columns: repeat(3, calc(var(--w) * 1.5));
+  gap: 10px 6px;
+  align-content: center;
+  padding: 10px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  min-height: calc(var(--w) * 3.4);
+}
+
+.pair { position: relative; height: calc(var(--w) * 1.55); }
+.pair .c:nth-child(2) {
+  position: absolute;
+  left: calc(var(--w) * .4);
+  top: calc(var(--w) * .18);
+  box-shadow: -3px 3px 8px #0006;
+}
+
+.ctl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 4px 14px 0;
+  min-height: 52px;
+}
+
+.st { text-align: center; }
+
+.c {
+  flex: none;
+  width: var(--w);
+  height: calc(var(--w) * 1.4);
+  border-radius: calc(var(--w) * .12);
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid #0003;
+  box-shadow: 0 2px 8px #0008;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system-ui-serif, Georgia, serif;
+  line-height: 1;
+  user-select: none;
+  transition: transform .12s, opacity .2s;
+}
+
+.c b { font-size: calc(var(--w) * .36); }
+.c span { font-size: calc(var(--w) * .42); }
+.c.r { color: var(--red); }
+
+.c.back {
+  background: repeating-linear-gradient(45deg, #4f43b8 0 6px, #3d3499 6px 12px);
+  border: 3px solid #e9e6ff;
+}
+.c.back em {
+  font: normal 700 calc(var(--w) * .3) -apple-system-ui-serif, Georgia, serif;
+  color: #fff;
+}
+
+/* ---------- Крестики-нолики, 4 в ряд, КНБ ---------- */
+.ttt {
+  display: grid;
+  grid-template-columns: repeat(3, clamp(78px, 24vw, 110px));
+  gap: 8px;
+}
+
+.cell {
+  height: clamp(78px, 24vw, 110px);
+  font-size: clamp(40px, 13vw, 64px);
+  padding: 0;
+  background: var(--surf);
+  color: var(--txt);
+  box-shadow: none;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.p0 { color: var(--p0); }
+.p1 { color: var(--p1); }
+
+.win {
+  background: #ffffff33 !important;
+  animation: glow2 .8s infinite alternate;
+}
+
+.c4 {
+  display: flex;
+  gap: 5px;
+  padding: 10px;
+  background: #2a3180;
+  border-radius: 18px;
+  box-shadow: 0 6px 0 #1b2060;
+  overflow: hidden;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.disc {
+  display: block;
+  width: var(--ds);
+  height: var(--ds);
+  border-radius: 50%;
+  background: #12154a;
+}
+.disc.p0 { background: var(--p0); }
+.disc.p1 { background: var(--p1); }
+.disc.sm {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  vertical-align: -3px;
+}
+
+.rps { display: flex; gap: 10px; }
+.rps button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 48px;
+  line-height: 1.1;
+  padding: 14px 12px;
+  width: clamp(86px, 26vw, 110px);
+}
+.rps small { font-size: 13px; }
+.rps button.sel {
+  background: linear-gradient(135deg, #3fa186, #4fb59a);
+}
+
+.reveal {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 54px;
+}
+.reveal em { font: normal 600 15px system-ui; }
+
+/* ---------- Мемори ---------- */
+.memo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: min(340px, 88vw);
+  aspect-ratio: 1;
+}
+
+.memo-card {
+  border-radius: 14px;
+  background: var(--surf2);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  font-size: clamp(26px, 6.5vw, 40px);
+  cursor: pointer;
+  box-shadow: 0 4px 12px #0004;
+  transition: transform .2s, border-color .2s;
+}
+
+.memo-card:active { transform: scale(.94); }
+.memo-card.open {
+  background: linear-gradient(145deg, #2b276b, #1d194f);
+  border-color: var(--acc);
+}
+.memo-card.m0 {
+  background: rgba(122, 165, 255, 0.22);
+  border-color: var(--p0);
+  box-shadow: 0 0 12px rgba(122, 165, 255, 0.4);
+}
+.memo-card.m1 {
+  background: rgba(195, 155, 255, 0.22);
+  border-color: var(--p1);
+  box-shadow: 0 0 12px rgba(195, 155, 255, 0.4);
+}
+.memo-card.back {
+  background: repeating-linear-gradient(45deg, #252063 0 5px, #1a174c 5px 10px);
+}
+
+/* ---------- Точки и линии ---------- */
+.dots-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.dots-svg {
+  width: min(320px, 86vw);
+  aspect-ratio: 1;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 8px;
+  box-shadow: 0 8px 24px #0006;
+}
+
+/* ---------- Wordies ---------- */
+.wd { gap: 6px; }
+.wrow { display: flex; gap: 4px; justify-content: center; }
+
+.wc {
+  width: var(--cs);
+  height: var(--cs);
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #0004;
+  border: 1px solid var(--line);
+  font: 700 calc(var(--cs) * .55) -apple-system-ui-serif, Georgia, serif;
+  font-style: normal;
+  text-transform: uppercase;
+  color: var(--txt);
+}
+.wc.g { background: #3fa186; border-color: #3fa186; }
+.wc.y { background: #d3a84b; border-color: #d3a84b; color: var(--ink); }
+.wc.x { background: #2c2f66; }
+
+.wgap { width: calc(var(--cs) * .5); }
+
+.keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  max-width: 420px;
+  min-height: 26px;
+}
+.keys i {
+  font: 700 13px -apple-system-ui-serif, Georgia, serif;
+  text-transform: uppercase;
+  min-width: 22px;
+  text-align: center;
+  padding: 3px 5px;
+  border-radius: 6px;
+  background: var(--surf2);
+}
+.keys .g { background: #3fa186; }
+.keys .y { background: #d3a84b; color: var(--ink); }
+.keys .x { background: #2c2f66; opacity: .6; }
+
+.frm { display: flex; gap: 8px; width: min(420px, 100%); }
+.frm input { flex: 1; min-width: 0; }
+
+/* ---------- Поход ---------- */
+.pkbox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 8px 14px;
+  gap: 10px;
+}
+
+.chat {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 10px;
+  min-height: 80px;
+}
+
+.msg {
+  max-width: 85%;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--surf2);
+  align-self: flex-start;
+  font-size: 15px;
+}
+.msg.mine { align-self: flex-end; background: #7f6df255; }
+.msg b { display: block; font-size: 12px; opacity: .7; }
+
+.act {
+  background: var(--surf);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+}
+.act h3 { margin: 0; font: 700 18px -apple-system-ui-serif, Georgia, serif; }
+
+.chip2 { font-size: 13px; color: var(--mut); text-align: center; }
+.sent { font: 700 22px -apple-system-ui-serif, Georgia, serif; margin: 0; }
+
+/* ---------- Портреты ---------- */
+.modes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(380px, 100%);
+}
+.mode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(160deg, #ffffff18, #ffffff08);
+  border: 1px solid var(--line);
+  box-shadow: none;
+  border-radius: 18px;
+  padding: 18px;
+  color: var(--txt);
+}
+.mode span { font-size: 34px; }
+.mode small { font-weight: 400; color: var(--mut); }
+
+#cv {
+  display: block;
+  touch-action: none;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px #0007;
+  width: min(100vw - 28px, 52dvh, 460px);
+  aspect-ratio: 1;
+  cursor: crosshair;
+}
+
+.tools {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 420px;
+}
+
+.sw {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid #ffffff55;
+  box-shadow: none;
+}
+.sw.on { border-color: #fff; transform: scale(1.18); }
+
+.sz {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: var(--surf2);
+  box-shadow: none;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 18px;
+}
+.sz.on { background: #7f6df2; border-color: #fff; }
+.sz i { display: block; background: #fff; border-radius: 50%; }
+
+.pics {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.pic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: min(300px, 100%);
+}
+.pic img, .pv {
+  width: 100%;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 8px 28px #0007;
+}
+.pv { width: min(240px, 70vw); }
+
+/* ---------- Чат (iOS Drawer) ---------- */
+#drawer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--ch);
+  display: flex;
+  flex-direction: column;
+  background: #15133ff7;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line);
+  border-radius: 22px 22px 0 0;
+  z-index: 50;
+  padding-bottom: max(8px, var(--sab));
+  padding-left: var(--sal);
+  padding-right: var(--sar);
+  box-shadow: 0 -8px 32px #0008;
+}
+
+.dhead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid #ffffff12;
+}
+
+#cList {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 16px;
+}
+
+.cm {
+  max-width: 82%;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--surf2);
+  align-self: flex-start;
+  font-size: 15px;
+  word-break: break-word;
+}
+.cm.me { align-self: flex-end; background: #7f6df280; }
+.cm b { display: block; font-size: 11px; opacity: .65; }
+
+.drow { display: flex; gap: 8px; padding: 8px 16px; }
+.drow input { text-align: left; }
+.drow button { padding: 10px 18px; }
+
+#cPrev {
+  position: fixed;
+  top: max(56px, calc(var(--sat) + 52px));
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 88vw;
+  background: #241f66f7;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--acc);
+  padding: 8px 16px;
+  border-radius: 16px;
+  z-index: 90;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  box-shadow: 0 8px 24px #0008;
+}
+
+body.chat-open #game { padding-bottom: var(--ch); }
+body.chat-open .sheet { bottom: var(--ch); }
+
+/* ---------- Всплывающие модалки и Toast ---------- */
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 20px 20px max(18px, calc(18px + var(--sab)));
+  padding-left: max(20px, var(--sal));
+  padding-right: max(20px, var(--sar));
+  background: #15133ff5;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--acc);
+  border-radius: 24px 24px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  z-index: 60;
+  box-shadow: 0 -10px 36px #0009;
+}
+.sheet h2 { margin: 0; font-size: 26px; }
+
+.radar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(#ef444455, transparent);
+  border: 2px solid #ef4444;
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  animation: pulseRadar 1.5s infinite;
+  margin: 6px 0;
+}
+@keyframes pulseRadar {
+  0% { transform: scale(.88); box-shadow: 0 0 0 0 #ef444477; }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 24px #ef444400; }
+  100% { transform: scale(.88); box-shadow: 0 0 0 0 #ef444400; }
+}
+
+#toast {
+  position: fixed;
+  left: 50%;
+  top: max(14px, calc(var(--sat) + 12px));
+  transform: translateX(-50%);
+  background: #1d1a52f2;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  padding: 8px 18px;
+  border-radius: 99px;
+  opacity: 0;
+  transition: opacity .2s, transform .2s;
+  pointer-events: none;
+  z-index: 100;
+  max-width: 90vw;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 8px 24px #0008;
+}
+#toast.on { opacity: 1; transform: translateX(-50%) translateY(4px); }
+
+/* ---------- Планшеты и iPad ---------- */
+@media (min-width: 768px) {
+  :root {
+    --w: clamp(62px, 8.5vw, 88px);
+    --ds: clamp(46px, 5.5vw, 64px);
+  }
+  #lobby .panel { width: 380px; }
+  .tiles {
+    grid-template-columns: 1fr 1fr;
+    width: min(540px, 90vw);
+    gap: 14px;
+  }
+  .tile { padding: 18px 12px; }
+  .tile span { font-size: 38px; }
+  .ttt {
+    grid-template-columns: repeat(3, clamp(96px, 15vw, 130px));
+    gap: 12px;
+  }
+  .cell {
+    height: clamp(96px, 15vw, 130px);
+    font-size: clamp(52px, 8vw, 76px);
+    border-radius: 22px;
+  }
+  .rps button {
+    font-size: 56px;
+    width: clamp(100px, 16vw, 130px);
+    padding: 18px 14px;
+  }
+  .memo-grid {
+    width: min(460px, 60vw);
+    gap: 12px;
+  }
+  .dots-svg { width: min(420px, 60vw); }
+  #cv { width: min(75vw, 56dvh, 520px); }
+  #drawer {
+    left: auto;
+    right: max(16px, var(--sar));
+    bottom: max(16px, var(--sab));
+    width: 360px;
+    height: min(70dvh, 560px);
+    border-radius: 22px;
+    border: 1px solid var(--line);
+  }
+  body.chat-open #game { padding-bottom: 0; padding-right: 390px; }
+  body.chat-open .sheet { bottom: 0; right: 390px; }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --w: clamp(70px, 6.5vw, 98px);
+    --ds: clamp(52px, 4.5vw, 72px);
+  }
+  .tiles { width: 600px; }
+}
+
+@media (max-height: 700px) and (orientation: portrait) {
+  :root {
+    --w: clamp(38px, 11vw, 56px);
+    --ds: clamp(30px, 9vw, 44px);
+  }
+  #lobby { gap: 8px; padding-top: max(14px, var(--sat)); padding-bottom: max(14px, var(--sab)); }
+  #lobby h1 { font-size: clamp(30px, 8.5vw, 44px); }
+  .suits { font-size: 22px; }
+  .panel { padding: 14px; gap: 8px; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  :root {
+    --w: clamp(32px, 7vh, 46px);
+    --ds: clamp(24px, 6.5vh, 36px);
+  }
+  #lobby {
+    flex-direction: row;
+    gap: 24px;
+    padding: var(--sat) max(24px, var(--sar)) var(--sab) max(24px, var(--sal));
+  }
+  #bar { margin: 2px 10px 0; padding: 4px 8px; font-size: 13px; }
+  .mid { padding: 2px 8px; gap: 8px; }
+  .tbl { min-height: calc(var(--w) * 2.8); padding: 6px; gap: 4px; }
+  .hand { padding: 4px 10px; }
+  .ctl { min-height: 38px; padding: 2px 10px; }
+  #cv { width: min(48vw, 75dvh, 340px); }
+  .memo-grid { width: min(44vw, 75dvh); }
+  .dots-svg { width: min(44vw, 75dvh); }
+}
 </style>
+<script src="ios-bridge.js"></script>
 </head>
 <body>
+
 <div id="lobby">
+  <div class="lobby-top">
+    <div class="conn-badge">
+      <i class="conn-dot" id="connDot"></i>
+      <span id="connTxt">Онлайн...</span>
+    </div>
+    <!-- Селектор языка в углу (Language selector in corner) -->
+    <button class="ghost icon-btn" id="langBtn" title="Switch language">🌐 RU</button>
+    <button class="ghost icon-btn" id="openCfg" title="Настройки сервера">⚙️</button>
+  </div>
+
   <div class="suits">♠ ♥ ♦ ♣</div>
-  <h1>Игры<br>для двоих</h1>
-  <p>Карты, слова, рисование и мини-игры. Создайте комнату и отправьте ссылку другу.</p>
+  <h1 id="lobbyTitle">Игры<br>для двоих</h1>
+  <p id="lobbyDesc">Карты, слова, мини-игры и рисование. Играйте с другом онлайн, против ИИ или ищите соперника!</p>
+
   <div class="panel">
     <input id="guest" maxlength="16" placeholder="Ваше имя">
-    <button id="create">Создать комнату</button>
-    <div class="row"><input id="codeIn" maxlength="4" placeholder="Код"><button id="join" class="ghost">Войти</button></div>
+    <button id="quickPlay" class="btn mm-btn">⚡ Быстрая игра (Найти соперника)</button>
+    <button id="soloPlay" class="btn solo-btn">🤖 Одиночная игра с ИИ</button>
+    <div class="divider"><span id="orFriendTxt">или игра по коду</span></div>
+    <button id="create" class="ghost">👥 Создать комнату</button>
+    <div class="row">
+      <input id="codeIn" maxlength="4" placeholder="Код">
+      <button id="join" class="ghost">Войти</button>
+    </div>
   </div>
 </div>
 
 <div id="game" hidden>
   <div id="bar">
-    <span><i id="dot"></i><span id="oppn">Соперник</span></span>
+    <span>
+      <i id="dot"></i>
+      <span id="oppn">Соперник</span>
+    </span>
     <span id="score"></span>
-    <span><b id="code"></b><button class="ghost" id="chatBtn" data-ui="chat" aria-label="Чат">💬<i id="badge" hidden></i></button><button class="sm ghost" id="menuBtn" data-m='{"t":"menu"}' hidden>Меню</button></span>
+    <span>
+      <b id="code"></b>
+      <button class="ghost" id="chatBtn" data-ui="chat" aria-label="Чат">💬<i id="badge" hidden></i></button>
+      <button class="sm ghost" id="menuBtn" data-m='{"t":"menu"}' hidden>Меню</button>
+      <button class="sm ghost icon-btn" id="gameLangBtn" title="Language">🌐 RU</button>
+      <button class="sm ghost icon-btn" id="gameCfgBtn" title="Настройки">⚙️</button>
+    </span>
   </div>
+
   <div id="wait" hidden>
-    <p>Ждём друга. Отправьте ему код или ссылку:</p>
+    <p id="waitTxt">Ждём друга. Отправьте ему код или ссылку:</p>
     <b id="wcode"></b>
     <button id="share">Отправить ссылку</button>
   </div>
+
   <div id="menu" hidden>
-    <h2>Во что играем?</h2>
+    <h2 id="menuTitle">Во что играем?</h2>
     <div class="tiles">
-      <button class="tile" data-k="durak"><span>🃏</span>Дурак<small>36 карт, козырь</small></button>
-      <button class="tile" data-k="ttt"><span>❌</span>Крестики-нолики<small>3×3</small></button>
-      <button class="tile" data-k="c4"><span>🔴</span>4 в ряд<small>собери четыре</small></button>
-      <button class="tile" data-k="rps"><span>✂️</span>Камень-ножницы<small>до 3 побед</small></button>
-      <button class="tile" data-k="wd"><span>🔤</span>Wordies<small>слово за 6 попыток</small></button>
-      <button class="tile" data-k="pk"><span>🎒</span>Я иду в поход…<small>угадай категорию</small></button>
-      <button class="tile" data-k="pt"><span>🖌️</span>Портреты<small>рисуем друг друга или общую тему · без соревнования</small></button>
+      <button class="tile" data-k="durak">
+        <span>🃏</span><b class="t-name">Дурак</b><small class="t-desc">36 карт, козырь</small>
+        <span class="tag-badge ai-tag">🤖 с ИИ</span>
+      </button>
+      <button class="tile" data-k="ttt">
+        <span>❌</span><b class="t-name">Крестики-нолики</b><small class="t-desc">3×3</small>
+        <span class="tag-badge ai-tag">🤖 с ИИ</span>
+      </button>
+      <button class="tile" data-k="c4">
+        <span>🔴</span><b class="t-name">4 в ряд</b><small class="t-desc">собери четыре</small>
+        <span class="tag-badge ai-tag">🤖 с ИИ</span>
+      </button>
+      <button class="tile" data-k="rps">
+        <span>✂️</span><b class="t-name">Камень-ножницы</b><small class="t-desc">до 3 побед</small>
+        <span class="tag-badge ai-tag">🤖 с ИИ</span>
+      </button>
+      <button class="tile" data-k="memo">
+        <span>💎</span><b class="t-name">Мемори</b><small class="t-desc">найди пары карточек</small>
+        <span class="tag-badge duo-tag">✨ Новое</span>
+      </button>
+      <button class="tile" data-k="dots">
+        <span>✏️</span><b class="t-name">Точки и линии</b><small class="t-desc">захватывай квадраты</small>
+        <span class="tag-badge duo-tag">✨ Новое</span>
+      </button>
+      <button class="tile" data-k="wd">
+        <span>🔤</span><b class="t-name">Wordies</b><small class="t-desc">слово за 6 попыток</small>
+        <span class="tag-badge duo-tag">👥 для двоих</span>
+      </button>
+      <button class="tile" data-k="pk">
+        <span>🎒</span><b class="t-name">Я иду в поход…</b><small class="t-desc">угадай категорию</small>
+        <span class="tag-badge duo-tag">👥 для двоих</span>
+      </button>
+      <button class="tile" data-k="pt">
+        <span>🖌️</span><b class="t-name">Портреты</b><small class="t-desc">рисуем друг друга</small>
+        <span class="tag-badge duo-tag">👥 для двоих</span>
+      </button>
     </div>
   </div>
+
   <div id="board" hidden></div>
 </div>
 
 <div id="drawer" hidden>
-  <div class="dhead"><b>💬 Чат</b><button class="sm ghost" data-ui="cclose">✕</button></div>
+  <div class="dhead">
+    <b id="chatHead">💬 Чат</b>
+    <button class="sm ghost" data-ui="cclose">✕</button>
+  </div>
   <div id="cList"></div>
-  <div class="drow"><input id="chIn" maxlength="300" placeholder="Сообщение…" autocomplete="off"><button data-ui="csend">➤</button></div>
+  <div class="drow">
+    <input id="chIn" maxlength="300" placeholder="Сообщение…" autocomplete="off">
+    <button data-ui="csend">➤</button>
+  </div>
 </div>
+
 <div id="cPrev" hidden></div>
 
 <div id="over" class="sheet" hidden>
   <h2 id="res"></h2>
-  <div class="row"><button data-m='{"t":"again"}'>Ещё раз</button><button class="ghost" data-m='{"t":"menu"}'>Другая игра</button></div>
+  <div class="row">
+    <button data-m='{"t":"again"}' id="btnAgain">Ещё раз</button>
+    <button class="ghost" data-m='{"t":"menu"}' id="btnOther">Другая игра</button>
+  </div>
 </div>
+
+<!-- Модалка матчмейкинга -->
+<div id="mmSheet" class="sheet" hidden>
+  <h2 id="mmTitle">Поиск соперника</h2>
+  <div class="radar">⚡</div>
+  <p class="hint" id="mmDesc">Подбираем оппонента для сетевой дуэли…</p>
+  <button id="cancelMm" class="ghost">Отмена</button>
+</div>
+
+<!-- Модалка настроек сервера -->
+<div id="cfgSheet" class="sheet" hidden>
+  <h2 id="cfgTitle">Настройки сервера</h2>
+  <p class="hint" id="cfgDesc">Укажите адрес игрового сервера для сетевой игры на iPhone и iPad.</p>
+  <input id="srvInput" placeholder="wss://ваш-сервер.com или http://ip:3000">
+  <div class="row">
+    <button id="saveCfg">Сохранить</button>
+    <button class="ghost" id="resetCfg">Сбросить</button>
+    <button class="ghost" id="closeCfg">Закрыть</button>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script>
 const $ = id => document.getElementById(id);
-const SY = '♠♥♦♣', RK = {11:'В', 12:'Д', 13:'К', 14:'Т'};
-const GN = {durak:'Дурак', ttt:'Крестики-нолики', c4:'4 в ряд', rps:'Камень-ножницы'};
+const SY = '♠♥♦♣';
+
+// ---------- Мультиязычная локализация (RU / EN) ----------
+let lang = localStorage.getItem('twop_lang') || (navigator.language && navigator.language.startsWith('en') ? 'en' : 'ru');
+
+const I18N = {
+  ru: {
+    appTitle: 'Игры для двоих',
+    lobbyTitle: 'Игры<br>для двоих',
+    lobbyDesc: 'Карты, слова, мини-игры и рисование. Играйте с другом онлайн, против ИИ или ищите соперника!',
+    namePh: 'Ваше имя',
+    quickPlay: '⚡ Быстрая игра (Найти соперника)',
+    soloPlay: '🤖 Одиночная игра с ИИ',
+    orFriend: 'или игра по коду',
+    createRoom: '👥 Создать комнату',
+    codePh: 'Код',
+    joinBtn: 'Войти',
+    waitText: 'Ждём друга. Отправьте ему код или ссылку:',
+    shareBtn: 'Отправить ссылку',
+    menuTitle: 'Во что играем?',
+    oppDefault: 'Соперник',
+    menuBtn: 'Меню',
+    chatHead: '💬 Чат',
+    chatPh: 'Сообщение…',
+    chatEmpty: 'Пока пусто. Напишите что-нибудь 👋',
+    playAgain: 'Ещё раз',
+    otherGame: 'Другая игра',
+    mmTitle: 'Поиск соперника',
+    mmDesc: 'Подбираем оппонента для сетевой дуэли…',
+    cancel: 'Отмена',
+    cfgTitle: 'Настройки сервера',
+    cfgDesc: 'Укажите адрес игрового сервера для сетевой игры на iPhone и iPad.',
+    cfgSave: 'Сохранить',
+    cfgReset: 'Сбросить',
+    cfgClose: 'Закрыть',
+    youScore: 'Вы',
+    oppScore: 'Соп',
+    gameWin: '🎉 Вы победили!',
+    gameLose: 'Победил соперник',
+    gameTie: 'Ничья',
+    gameOver: 'Игра окончена',
+    yourTurn: '<b>Ваш ход</b>',
+    oppTurn: 'Ход соперника…',
+    online: 'онлайн',
+    connecting: 'Связь…',
+    connected: 'В сети',
+    disconnected: 'Отключен',
+    serverNotSet: 'Сервер не задан',
+    linkCopied: 'Ссылка скопирована',
+    settingsSaved: 'Настройки сохранены. Подключение…',
+    settingsReset: 'Сброшено к серверу по умолчанию',
+    matchFound: '⚡ Соперник найден! Начинаем',
+    enterCode4: 'Введите код из 4 букв',
+    enterText: 'Введите текст',
+    botOnly2P: 'Этот режим доступен только в игре для двоих 👥',
+    noServerConn: 'Нет связи с сервером, подключаемся…',
+    specifyServer: 'Укажите адрес игрового сервера в настройках ⚙️',
+    games: {
+      durak: { name: 'Дурак', desc: '36 карт, козырь' },
+      ttt: { name: 'Крестики-нолики', desc: '3×3' },
+      c4: { name: '4 в ряд', desc: 'собери четыре' },
+      rps: { name: 'Камень-ножницы', desc: 'до 3 побед' },
+      memo: { name: 'Мемори', desc: 'найди пары карточек' },
+      dots: { name: 'Точки и линии', desc: 'захватывай квадраты' },
+      wd: { name: 'Wordies', desc: 'слово за 6 попыток' },
+      pk: { name: 'Я иду в поход…', desc: 'угадай категорию' },
+      pt: { name: 'Портреты', desc: 'рисуем друг друга' }
+    },
+    tags: { ai: '🤖 с ИИ', new: '✨ Новое', duo: '👥 для двоих' }
+  },
+  en: {
+    appTitle: 'Two Player Games',
+    lobbyTitle: 'Two Player<br>Games',
+    lobbyDesc: 'Cards, words, mini-games & drawing. Play online with friends, challenge AI or find an opponent!',
+    namePh: 'Your name',
+    quickPlay: '⚡ Quick Play (Find Match)',
+    soloPlay: '🤖 Solo vs AI Bot',
+    orFriend: 'or join with code',
+    createRoom: '👥 Create Room',
+    codePh: 'Code',
+    joinBtn: 'Join',
+    waitText: 'Waiting for a friend. Send them the code or link:',
+    shareBtn: 'Share Link',
+    menuTitle: 'What are we playing?',
+    oppDefault: 'Opponent',
+    menuBtn: 'Menu',
+    chatHead: '💬 Chat',
+    chatPh: 'Message…',
+    chatEmpty: 'Empty for now. Say hi 👋',
+    playAgain: 'Play Again',
+    otherGame: 'Other Game',
+    mmTitle: 'Finding Opponent',
+    mmDesc: 'Matching you with a player for an online duel…',
+    cancel: 'Cancel',
+    cfgTitle: 'Server Settings',
+    cfgDesc: 'Specify game server address for multiplayer on iPhone & iPad.',
+    cfgSave: 'Save',
+    cfgReset: 'Reset',
+    cfgClose: 'Close',
+    youScore: 'You',
+    oppScore: 'Opp',
+    gameWin: '🎉 You won!',
+    gameLose: 'Opponent won',
+    gameTie: 'Tie game',
+    gameOver: 'Game over',
+    yourTurn: '<b>Your turn</b>',
+    oppTurn: 'Opponent’s turn…',
+    online: 'online',
+    connecting: 'Connecting…',
+    connected: 'Online',
+    disconnected: 'Offline',
+    serverNotSet: 'Server not set',
+    linkCopied: 'Link copied to clipboard',
+    settingsSaved: 'Settings saved. Connecting…',
+    settingsReset: 'Reset to default server',
+    matchFound: '⚡ Opponent found! Starting',
+    enterCode4: 'Enter a 4-letter room code',
+    enterText: 'Please enter text',
+    botOnly2P: 'This mode is only available for 2 players 👥',
+    noServerConn: 'No server connection, reconnecting…',
+    specifyServer: 'Specify game server address in settings ⚙️',
+    games: {
+      durak: { name: 'Durak', desc: '36 cards, trump' },
+      ttt: { name: 'Tic-Tac-Toe', desc: '3×3' },
+      c4: { name: 'Connect 4', desc: 'Four in a row' },
+      rps: { name: 'Rock-Paper-Scissors', desc: 'First to 3 wins' },
+      memo: { name: 'Memory', desc: 'Find matching pairs' },
+      dots: { name: 'Dots & Boxes', desc: 'Capture squares' },
+      wd: { name: 'Wordies', desc: 'Word in 6 tries' },
+      pk: { name: 'Camping trip…', desc: 'Guess category' },
+      pt: { name: 'Portraits', desc: 'Draw each other' }
+    },
+    tags: { ai: '🤖 vs AI', new: '✨ New', duo: '👥 2 Players' }
+  }
+};
+
+const RK_RU = {11:'В', 12:'Д', 13:'К', 14:'Т'};
+const RK_EN = {11:'J', 12:'Q', 13:'K', 14:'A'};
+const RK = () => lang === 'en' ? RK_EN : RK_RU;
+
+const ERR_MAP = {
+  'Комната не найдена': { ru: 'Комната не найдена', en: 'Room not found' },
+  'В комнате уже двое игроков': { ru: 'В комнате уже двое игроков', en: 'Room is already full' },
+  'Карты нет в руке': { ru: 'Карты нет в руке', en: 'Card not in hand' },
+  'Нельзя подкинуть эту карту': { ru: 'Нельзя подкинуть эту карту', en: 'Cannot toss this card' },
+  'Карта не бьет': { ru: 'Карта не бьет', en: 'Card does not beat' },
+  'Сначала отбейте все карты': { ru: 'Сначала отбейте все карты', en: 'Defend all cards first' },
+  'Этот режим доступен только для двоих игроков': { ru: 'Этот режим доступен только для двоих игроков', en: 'Mode only available for 2 players' },
+  'Максимум 6 карт на столе': { ru: 'Максимум 6 карт на столе', en: 'Maximum 6 cards on table' },
+  'У соперника недостаточно карт': { ru: 'У соперника недостаточно карт', en: 'Opponent has not enough cards' }
+};
+
+function setLanguage(l) {
+  lang = l === 'en' ? 'en' : 'ru';
+  localStorage.setItem('twop_lang', lang);
+  document.documentElement.lang = lang;
+  applyLanguage();
+  if (S) render();
+}
+
+function applyLanguage() {
+  const d = I18N[lang];
+  document.title = d.appTitle;
+  $('lobbyTitle').innerHTML = d.lobbyTitle;
+  $('lobbyDesc').textContent = d.lobbyDesc;
+  $('guest').placeholder = d.namePh;
+  $('quickPlay').textContent = d.quickPlay;
+  $('soloPlay').textContent = d.soloPlay;
+  $('orFriendTxt').textContent = d.orFriend;
+  $('create').textContent = d.createRoom;
+  $('codeIn').placeholder = d.codePh;
+  $('join').textContent = d.joinBtn;
+  $('langBtn').textContent = lang === 'en' ? '🌐 EN' : '🌐 RU';
+  $('gameLangBtn').textContent = lang === 'en' ? '🌐 EN' : '🌐 RU';
+  $('waitTxt').textContent = d.waitText;
+  $('share').textContent = d.shareBtn;
+  $('menuTitle').textContent = d.menuTitle;
+  $('menuBtn').textContent = d.menuBtn;
+  $('chatHead').textContent = d.chatHead;
+  $('chIn').placeholder = d.chatPh;
+  $('btnAgain').textContent = d.playAgain;
+  $('btnOther').textContent = d.otherGame;
+  $('mmTitle').textContent = d.mmTitle;
+  $('mmDesc').textContent = d.mmDesc;
+  $('cancelMm').textContent = d.cancel;
+  $('cfgTitle').textContent = d.cfgTitle;
+  $('cfgDesc').textContent = d.cfgDesc;
+  $('saveCfg').textContent = d.cfgSave;
+  $('resetCfg').textContent = d.cfgReset;
+  $('closeCfg').textContent = d.cfgClose;
+
+  // Обновление названий и описаний плиток в меню
+  document.querySelectorAll('.tiles .tile').forEach(t => {
+    const k = t.dataset.k;
+    const gInfo = d.games[k];
+    if (gInfo) {
+      const nameEl = t.querySelector('.t-name');
+      const descEl = t.querySelector('.t-desc');
+      if (nameEl) nameEl.textContent = gInfo.name;
+      if (descEl) descEl.textContent = gInfo.desc;
+    }
+    const aiTag = t.querySelector('.ai-tag');
+    if (aiTag) aiTag.textContent = d.tags.ai;
+    const duoTag = t.querySelector('.duo-tag');
+    if (duoTag) duoTag.textContent = (k === 'memo' || k === 'dots') ? d.tags.new : d.tags.duo;
+  });
+}
+
+function pluralRu(n, one, few, many) {
+  const mod10 = n % 10, mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return one;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return few;
+  return many;
+}
+
 const esc = s => String(s).replace(/[&<>"']/g, c => '&#' + c.charCodeAt(0) + ';');
 const tok = sessionStorage.t || (sessionStorage.t = Math.random().toString(36).slice(2));
+
 let ws, S = null, code = (new URLSearchParams(location.search).get('room') || '').toUpperCase() || null;
 let P = new Set(), cur = new Set(), lastGid = -1;
-const an = (key, cls) => { cur.add(key); return P.has(key) ? '' : ' ' + cls; }; // анимируем только новые элементы
+let reconnectTimer = null, onlineCount = 1;
 
-function toast(t){ const e = $('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => e.classList.remove('on'), 2600); }
-const send = o => { if (ws && ws.readyState === 1) ws.send(JSON.stringify(o)); else toast('Нет связи с сервером, подождите…'); };
-const myName = () => $('guest').value.trim() || 'Игрок';
+const haptics = window.IOSBridge ? window.IOSBridge.haptics : {
+  impactLight(){}, impactMedium(){}, impactHeavy(){},
+  notificationSuccess(){}, notificationWarning(){}, notificationError(){}
+};
+
+const an = (key, cls) => { cur.add(key); return P.has(key) ? '' : ' ' + cls; };
+
+function updateConnStatus(status, text) {
+  const dot = $('connDot'), txt = $('connTxt');
+  if (!dot || !txt) return;
+  dot.className = 'conn-dot ' + (status === 'on' ? 'on' : status === 'wait' ? 'wait' : '');
+  txt.textContent = text;
+}
+
+function toast(t) {
+  const e = $('toast');
+  e.textContent = t;
+  e.classList.add('on');
+  clearTimeout(toast.t);
+  toast.t = setTimeout(() => e.classList.remove('on'), 2600);
+}
+
+const send = o => {
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify(o));
+  } else {
+    haptics.notificationWarning();
+    toast(I18N[lang].noServerConn);
+    connect();
+  }
+};
+
+const myName = () => $('guest').value.trim() || (lang === 'en' ? 'Player' : 'Игрок');
 const joinRoom = () => send({t:'join', code, token:tok, name:myName()});
 
-function connect(){
-  if (location.protocol === 'file:') { toast('Откройте игру по ссылке сайта или http://localhost:3000, а не файлом'); return; }
-  ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host);
-  ws.onopen = () => { if (code) joinRoom(); };
-  ws.onerror = () => toast('Не удалось подключиться к серверу');
-  ws.onclose = () => setTimeout(connect, 1500);
-  ws.onmessage = e => {
-    const m = JSON.parse(e.data);
-    if (m.t === 'err') { toast(m.m); if (lastSent) { const el = $(lastSent.id); if (el && !el.value) el.value = lastSent.v; } if (!S && code) { code = null; history.replaceState(0, '', location.pathname); } return; }
-    if (m.t === 'chatlog') { chat = m.log; renderChat(); return; }
-    if (m.t === 'chat') { addChat(m.m); return; }
-    S = m; code = m.code;
-    history.replaceState(0, '', '?room=' + code); render();
-  };
+function resolveWsUrl() {
+  if (window.IOSBridge && window.IOSBridge.server) {
+    const bridgeUrl = window.IOSBridge.server.getWsUrl();
+    if (bridgeUrl) return bridgeUrl;
+  }
+  if (location.protocol === 'file:' || location.protocol === 'capacitor:' || location.protocol === 'ionic:') {
+    const saved = localStorage.getItem('twop_server_url');
+    if (saved) {
+      if (saved.startsWith('wss://') || saved.startsWith('ws://')) return saved;
+      return saved.replace(/^https?:\/\//, m => m.startsWith('https') ? 'wss://' : 'ws://');
+    }
+    return null;
+  }
+  return (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host;
 }
+
+function connect() {
+  clearTimeout(reconnectTimer);
+  const targetUrl = resolveWsUrl();
+
+  if (!targetUrl) {
+    updateConnStatus('', I18N[lang].serverNotSet);
+    toast(I18N[lang].specifyServer);
+    openConfigModal();
+    return;
+  }
+
+  updateConnStatus('wait', I18N[lang].connecting);
+
+  try {
+    if (ws) {
+      ws.onopen = ws.onclose = ws.onerror = ws.onmessage = null;
+      try { ws.close(); } catch(_) {}
+    }
+
+    ws = new WebSocket(targetUrl);
+
+    ws.onopen = () => {
+      const s = lang === 'en' ? `${onlineCount} online` : `${onlineCount} ${pluralRu(onlineCount, 'в сети', 'в сети', 'в сети')}`;
+      updateConnStatus('on', s);
+      if (code) joinRoom();
+    };
+
+    ws.onerror = () => updateConnStatus('', I18N[lang].disconnected);
+    ws.onclose = () => {
+      updateConnStatus('', I18N[lang].disconnected);
+      reconnectTimer = setTimeout(connect, 2000);
+    };
+
+    ws.onmessage = e => {
+      let m;
+      try { m = JSON.parse(e.data); } catch { return; }
+
+      if (m.t === 'online') {
+        onlineCount = m.count || 1;
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          const s = lang === 'en' ? `${onlineCount} online` : `${onlineCount} ${pluralRu(onlineCount, 'в сети', 'в сети', 'в сети')}`;
+          updateConnStatus('on', s);
+        }
+        return;
+      }
+
+      if (m.t === 'mm_waiting') {
+        $('mmSheet').hidden = false;
+        return;
+      }
+      if (m.t === 'mm_cancelled') {
+        $('mmSheet').hidden = true;
+        return;
+      }
+      if (m.t === 'mm_matched') {
+        $('mmSheet').hidden = true;
+        haptics.notificationSuccess();
+        toast(I18N[lang].matchFound);
+        return;
+      }
+
+      if (m.t === 'err') {
+        haptics.notificationWarning();
+        const msg = (ERR_MAP[m.m] && ERR_MAP[m.m][lang]) || m.m;
+        toast(msg);
+        if (lastSent) {
+          const el = $(lastSent.id);
+          if (el && !el.value) el.value = lastSent.v;
+        }
+        if (!S && code) {
+          code = null;
+          history.replaceState(0, '', location.pathname);
+        }
+        return;
+      }
+
+      if (m.t === 'chatlog') {
+        chat = m.log;
+        renderChat();
+        return;
+      }
+
+      if (m.t === 'chat') {
+        addChat(m.m);
+        return;
+      }
+
+      S = m;
+      code = m.code;
+      history.replaceState(0, '', '?room=' + code);
+      render();
+    };
+  } catch (err) {
+    updateConnStatus('', I18N[lang].disconnected);
+    reconnectTimer = setTimeout(connect, 2500);
+  }
+}
+
+// Lifecycle listeners
+window.addEventListener('app:resume', () => connect());
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    if (!ws || ws.readyState !== WebSocket.OPEN) connect();
+  }
+});
+window.addEventListener('pageshow', () => { if (!ws || ws.readyState !== WebSocket.OPEN) connect(); });
+window.addEventListener('online', () => connect());
 
 const M = o => `data-m='${JSON.stringify(o)}'`;
 const red = s => s === 1 || s === 2;
-const card = (c, cls = '', m = '', st = '') => `<div class="c ${red(c.s) ? 'r' : ''} ${cls}" ${m} style="${st}"><b>${RK[c.r] || c.r}</b><span>${SY[c.s]}</span></div>`;
-const turnTxt = (g, ok) => g.winner !== null ? 'Игра окончена' : ok ? '<b>Ваш ход</b>' : 'Ход соперника…';
+const card = (c, cls = '', m = '', st = '') => `<div class="c ${red(c.s) ? 'r' : ''} ${cls}" ${m} style="${st}"><b>${RK()[c.r] || c.r}</b><span>${SY[c.s]}</span></div>`;
+const turnTxt = (g, ok) => g.winner !== null ? I18N[lang].gameOver : ok ? I18N[lang].yourTurn : I18N[lang].oppTurn;
 
-function durak(g){
+// ---------- Игра: Дурак ----------
+function durak(g) {
   const tr = g.trump, att = S.me === g.att, und = g.table.some(x => !x.d), all = g.table.length && !und;
   const beats = (a, c) => (c.s === a.s && c.r > a.r) || (c.s === tr && a.s !== tr);
   const ok = c => att ? (!g.table.length || g.table.some(x => x.a.r === c.r || (x.d && x.d.r === c.r)))
                       : (!g.taking && g.table.some(x => !x.d && beats(x.a, c)));
   const key = c => (c.s === tr ? 20 : 0) + c.r + c.s / 10;
   let st, btn = null, act = null;
+
   if (att) {
-    if (g.taking) { st = 'Соперник берёт. Подкиньте карты или завершите'; btn = 'Готово'; act = 'done'; }
-    else if (!g.table.length) st = '<b>Ваш ход</b> — атакуйте';
-    else if (all) { st = 'Отбился. Подкиньте ещё или «Бито»'; btn = 'Бито'; act = 'done'; }
-    else st = 'Ждём, пока соперник отобьётся';
+    if (g.taking) {
+      st = lang === 'en' ? 'Opponent takes. Toss cards or finish' : 'Соперник берёт. Подкиньте карты или завершите';
+      btn = lang === 'en' ? 'Done' : 'Готово';
+      act = 'done';
+    } else if (!g.table.length) {
+      st = lang === 'en' ? '<b>Your turn</b> — attack' : '<b>Ваш ход</b> — атакуйте';
+    } else if (all) {
+      st = lang === 'en' ? 'Defended. Toss more or Pass' : 'Отбился. Подкиньте ещё или «Бито»';
+      btn = lang === 'en' ? 'Pass' : 'Бито';
+      act = 'done';
+    } else {
+      st = lang === 'en' ? 'Waiting for opponent to defend' : 'Ждём, пока соперник отобьётся';
+    }
   } else {
-    if (g.taking) st = 'Вы берёте карты…';
-    else if (!g.table.length) st = 'Ход соперника';
-    else if (und) { st = '<b>Отбейте</b> карту или возьмите'; btn = 'Беру'; act = 'take'; }
-    else st = 'Ждём соперника';
+    if (g.taking) {
+      st = lang === 'en' ? 'You are taking cards…' : 'Вы берёте карты…';
+    } else if (!g.table.length) {
+      st = lang === 'en' ? 'Opponent’s turn' : 'Ход соперника';
+    } else if (und) {
+      st = lang === 'en' ? '<b>Defend</b> or take' : '<b>Отбейте</b> карту или возьмите';
+      btn = lang === 'en' ? 'Take' : 'Беру';
+      act = 'take';
+    } else {
+      st = lang === 'en' ? 'Waiting for opponent' : 'Ждём соперника';
+    }
   }
+
   const turn = att ? (g.taking || !und) : (und && !g.taking);
-  const hand = [...g.hand].sort((a, b) => key(a) - key(b)).map((c, i) => card(c, (ok(c) ? 'ok' : 'no') + an('h' + c.r + '-' + c.s, 'deal'), M({t:'card', r:c.r, s:c.s}), `animation-delay:${i * 45}ms`)).join('');
+  const hand = [...g.hand].sort((a, b) => key(a) - key(b)).map((c, i) =>
+    card(c, (ok(c) ? 'ok' : 'no') + an('h' + c.r + '-' + c.s, 'deal'), M({t:'card', r:c.r, s:c.s}), `animation-delay:${i * 45}ms`)).join('');
   const opp = Array.from({length:g.opp}, (_, i) => `<div class="c back${an('o' + i, 'dealo')}" style="animation-delay:${i * 45}ms"></div>`).join('');
   const tbl = g.table.map(x => `<div class="pair">${card(x.a, an('a' + x.a.r + '-' + x.a.s, 'pop'))}${x.d ? card(x.d, an('d' + x.d.r + '-' + x.d.s, 'pop')) : ''}</div>`).join('');
+
+  const trumpTitle = lang === 'en' ? 'Trump' : 'Козырь';
+  const deckTitle = g.deck ? (lang === 'en' ? ` · in deck ${g.deck}` : ` · в колоде ${g.deck}`) : (lang === 'en' ? ' · deck is empty' : ' · колода пуста');
+
   return `<div class="hand opp">${opp}</div>
   <div class="mid">
     <div class="deckw">
       <div class="deck">${g.tc ? card(g.tc, 'tr') : ''}${g.deck > 1 ? `<div class="c back"><em>${g.deck}</em></div>` : ''}</div>
-      <div class="tb ${red(tr) ? 'r' : ''}">Козырь <b>${SY[tr]}</b>${g.deck ? ` · в колоде ${g.deck}` : ' · колода пуста'}</div>
+      <div class="tb ${red(tr) ? 'r' : ''}">${trumpTitle} <b>${SY[tr]}</b>${deckTitle}</div>
     </div>
     <div class="tbl">${tbl}</div>
   </div>
@@ -261,199 +1738,619 @@ function durak(g){
   <div class="hand me ${turn && g.winner === null ? 'turn' : ''}">${hand}</div>`;
 }
 
-function ttt(g){
+// ---------- Игра: Крестики-нолики ----------
+function ttt(g) {
   const mk = ['✕', '◯'], my = g.turn === S.me && g.winner === null;
   const cells = g.b.map((v, i) => `<button class="cell p${v} ${g.line && g.line.includes(i) ? 'win' : ''}${v >= 0 ? an('x' + i, 'pop') : ''}" ${v < 0 && my ? M({t:'cell', i}) : ''}>${v < 0 ? '' : mk[v]}</button>`).join('');
-  return `<div class="center"><div class="st">${turnTxt(g, my)} · вы — <span class="p${S.me}">${mk[S.me]}</span></div><div class="ttt">${cells}</div></div>`;
+  const youAreTxt = lang === 'en' ? 'you are' : 'вы —';
+  return `<div class="center"><div class="st">${turnTxt(g, my)} · ${youAreTxt} <span class="p${S.me}">${mk[S.me]}</span></div><div class="ttt">${cells}</div></div>`;
 }
 
-function c4(g){
+// ---------- Игра: 4 в ряд ----------
+function c4(g) {
   const my = g.turn === S.me && g.winner === null;
   let cols = '';
   for (let c = 0; c < 7; c++) {
     let d = '';
-    for (let r = 0; r < 6; r++) { const i = r * 7 + c, v = g.b[i]; d += `<i class="disc p${v} ${g.line && g.line.includes(i) ? 'win' : ''}${v >= 0 ? an('d' + i, 'drop') : ''}" style="--r:${r}"></i>`; }
+    for (let r = 0; r < 6; r++) {
+      const i = r * 7 + c, v = g.b[i];
+      d += `<i class="disc p${v} ${g.line && g.line.includes(i) ? 'win' : ''}${v >= 0 ? an('d' + i, 'drop') : ''}" style="--r:${r}"></i>`;
+    }
     cols += `<div class="col" ${my ? M({t:'col', c}) : ''}>${d}</div>`;
   }
-  return `<div class="center"><div class="st">${turnTxt(g, my)} · ваш цвет <i class="disc sm p${S.me}"></i></div><div class="c4">${cols}</div><div class="st hint">Коснитесь столбца, чтобы бросить фишку</div></div>`;
+  const colorTxt = lang === 'en' ? 'your color' : 'ваш цвет';
+  const hintTxt = lang === 'en' ? 'Tap a column to drop a disc' : 'Коснитесь столбца, чтобы бросить фишку';
+  return `<div class="center"><div class="st">${turnTxt(g, my)} · ${colorTxt} <i class="disc sm p${S.me}"></i></div><div class="c4">${cols}</div><div class="st hint">${hintTxt}</div></div>`;
 }
 
-function wd(g){
+// ---------- Игра: Камень-ножницы-бумага ----------
+const E = ['✊', '✋', '✌️'];
+const N_RU = ['Камень', 'Бумага', 'Ножницы'];
+const N_EN = ['Rock', 'Paper', 'Scissors'];
+function rps(g) {
+  const me = S.me, l = g.last, can = g.mine === null && g.winner === null;
+  const names = lang === 'en' ? N_EN : N_RU;
+  const roundTxt = l ? (l.w < 0 ? I18N[lang].gameTie : l.w === me ? (lang === 'en' ? 'Round won' : 'Раунд ваш') : (lang === 'en' ? 'Opponent’s round' : 'Раунд соперника')) : '';
+  const res = l ? `<div class="reveal"><span>${E[l.p[me]]}</span><em>${roundTxt}</em><span>${E[l.p[1 - me]]}</span></div>` : '';
+  const hint = g.winner !== null ? '' : g.mine !== null ? (lang === 'en' ? 'Waiting for opponent…' : 'Ждём соперника…') : g.opp ? (lang === 'en' ? 'Opponent already chose!' : 'Соперник уже выбрал!') : (lang === 'en' ? 'Make your choice' : 'Делайте выбор');
+  const winRule = lang === 'en' ? 'First to 3 wins:' : 'До 3 побед:';
+
+  return `<div class="center"><div class="st"><b>${winRule}</b> ${g.wins[me]} : ${g.wins[1 - me]}</div>${res}<div class="st">${hint}</div>
+  <div class="rps">${E.map((e, v) => `<button class="${g.mine === v ? 'sel' : ''}" ${can ? M({t:'rps', v}) : ''}>${e}<small>${names[v]}</small></button>`).join('')}</div></div>`;
+}
+
+// ---------- Игра: Мемори ----------
+function memo(g) {
+  const me = S.me, opp = 1 - me, my = g.turn === me && g.winner === null;
+  const cards = g.cards.map((val, i) => {
+    const matchedOwner = g.matched[i];
+    const isOpened = g.opened.includes(i);
+    const cls = matchedOwner >= 0 ? `m${matchedOwner}` : isOpened ? 'open flip' : 'back';
+    const content = val ? esc(val) : '';
+    const clickAttr = (matchedOwner < 0 && !isOpened && my && g.opened.length < 2) ? M({t:'flip', i}) : '';
+    return `<button class="memo-card ${cls}" ${clickAttr}>${content}</button>`;
+  }).join('');
+
+  const scoreTitle = lang === 'en' ? 'Score:' : 'Счёт:';
+  const youTxt = I18N[lang].youScore;
+  const hintTxt = lang === 'en' ? 'Find two matching cards in a row' : 'Найдите две одинаковые карточки подряд';
+
+  return `<div class="center">
+    <div class="st">${turnTxt(g, my)} · <b>${scoreTitle}</b> <span class="p${me}">${youTxt} ${g.scores[me]}</span> : <span class="p${opp}">${g.scores[opp]}</span></div>
+    <div class="memo-grid">${cards}</div>
+    <div class="st hint">${hintTxt}</div>
+  </div>`;
+}
+
+// ---------- Игра: Точки и линии ----------
+function dots(g) {
+  const me = S.me, opp = 1 - me, my = g.turn === me && g.winner === null;
+
+  let boxElements = '';
+  for (let br = 0; br < 3; br++) {
+    for (let bc = 0; bc < 3; bc++) {
+      const bi = br * 3 + bc, owner = g.boxes[bi];
+      const x = 20 + bc * 80, y = 20 + br * 80;
+      if (owner >= 0) {
+        const col = owner === 0 ? 'var(--p0)' : 'var(--p1)';
+        const initial = owner === me ? (lang === 'en' ? 'YOU' : 'ВЫ') : (lang === 'en' ? 'OPP' : 'СОП');
+        boxElements += `<rect x="${x + 6}" y="${y + 6}" width="68" height="68" rx="12" fill="${col}" fill-opacity="0.32" stroke="${col}" stroke-width="2"/>
+        <text x="${x + 40}" y="${y + 46}" font-size="16" font-weight="bold" fill="#fff" text-anchor="middle" dominant-baseline="middle">${initial}</text>`;
+      }
+    }
+  }
+
+  let lineElements = '';
+  for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 3; c++) {
+      const idx = r * 3 + c, owner = g.lines[idx];
+      const x1 = 20 + c * 80, y1 = 20 + r * 80, x2 = 20 + (c + 1) * 80, y2 = y1;
+      const strokeCol = owner === -1 ? 'rgba(255,255,255,0.18)' : owner === 0 ? 'var(--p0)' : 'var(--p1)';
+      const strokeW = owner === -1 ? 3 : 7;
+      const clickAttr = owner === -1 && my ? M({t:'line', i:idx}) : '';
+      lineElements += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${strokeCol}" stroke-width="${strokeW}" stroke-linecap="round"/>`;
+      if (owner === -1 && my) {
+        lineElements += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="transparent" stroke-width="32" ${clickAttr} cursor="pointer"/>`;
+      }
+    }
+  }
+
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 4; c++) {
+      const idx = 12 + r * 4 + c, owner = g.lines[idx];
+      const x1 = 20 + c * 80, y1 = 20 + r * 80, x2 = x1, y2 = 20 + (r + 1) * 80;
+      const strokeCol = owner === -1 ? 'rgba(255,255,255,0.18)' : owner === 0 ? 'var(--p0)' : 'var(--p1)';
+      const strokeW = owner === -1 ? 3 : 7;
+      const clickAttr = owner === -1 && my ? M({t:'line', i:idx}) : '';
+      lineElements += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${strokeCol}" stroke-width="${strokeW}" stroke-linecap="round"/>`;
+      if (owner === -1 && my) {
+        lineElements += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="transparent" stroke-width="32" ${clickAttr} cursor="pointer"/>`;
+      }
+    }
+  }
+
+  let dotElements = '';
+  for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 4; c++) {
+      dotElements += `<circle cx="${20 + c * 80}" cy="${20 + r * 80}" r="6" fill="#ecebff"/>`;
+    }
+  }
+
+  const boxesTitle = lang === 'en' ? 'Boxes:' : 'Квадраты:';
+  const youTxt = I18N[lang].youScore;
+  const hintTxt = lang === 'en' ? 'Connect the dots. Closing a 1×1 box gives a bonus turn!' : 'Соединяйте точки. Кто закрывает квадрат 1×1 — ходит снова!';
+
+  return `<div class="center dots-box">
+    <div class="st">${turnTxt(g, my)} · <b>${boxesTitle}</b> <span class="p${me}">${youTxt} ${g.scores[me]}</span> : <span class="p${opp}">${g.scores[opp]}</span></div>
+    <svg class="dots-svg" viewBox="0 0 280 280">
+      ${boxElements}
+      ${lineElements}
+      ${dotElements}
+    </svg>
+    <div class="st hint">${hintTxt}</div>
+  </div>`;
+}
+
+// ---------- Игра: Wordies ----------
+function wd(g) {
   const me = S.me, o = 1 - me, nm = i => esc(S.names[i]), setter = g.setter === me;
   const form = (id, act, ph, btn, hint) => `<div class="frm"><input id="${id}" maxlength="15" placeholder="${ph}" autocomplete="off"><button class="go" data-f="${act}" data-in="${id}">${btn}</button></div>${hint ? `<div class="hint">${hint}</div>` : ''}`;
-  if (g.phase === 'who') return `<div class="center"><h2 style="margin:0">Wordies</h2><p class="st">Кто будет загадывать слово?<br>Второй игрок отгадывает за 6 попыток.</p><div class="row"><button ${M({t:'wsetter', who:'me'})}>Я загадываю</button><button class="ghost" ${M({t:'wsetter', who:'other'})}>Пусть загадывает ${nm(o)}</button></div></div>`;
-  if (g.phase === 'set') return `<div class="center">${setter ? `<div class="st"><b>Загадайте слово или фразу</b><br>3–15 символов, пробелы можно</div>${form('wIn', 'word', 'например: белый медведь', 'Готово', 'Только буквы и пробелы')}` : `<div class="st">${nm(g.setter)} загадывает слово…</div>`}</div>`;
+
+  if (g.phase === 'who') {
+    const qTitle = lang === 'en' ? 'Who will set the word?<br>The other player guesses in 6 tries.' : 'Кто будет загадывать слово?<br>Второй игрок отгадывает за 6 попыток.';
+    const btnMe = lang === 'en' ? 'I will set it' : 'Я загадываю';
+    const btnOther = lang === 'en' ? `Let ${nm(o)} set it` : `Пусть загадывает ${nm(o)}`;
+    return `<div class="center"><h2 style="margin:0">Wordies</h2><p class="st">${qTitle}</p><div class="row"><button ${M({t:'wsetter', who:'me'})}>${btnMe}</button><button class="ghost" ${M({t:'wsetter', who:'other'})}>${btnOther}</button></div></div>`;
+  }
+
+  if (g.phase === 'set') {
+    const setTitle = lang === 'en' ? '<b>Set a word or phrase</b><br>3–15 characters, spaces allowed' : '<b>Загадайте слово или фразу</b><br>3–15 символов, пробелы можно';
+    const setHint = lang === 'en' ? 'Letters and spaces only' : 'Только буквы и пробелы';
+    const exPh = lang === 'en' ? 'e.g. golden eagle' : 'например: белый медведь';
+    const readyBtn = lang === 'en' ? 'Done' : 'Готово';
+    const waitTxt = lang === 'en' ? `${nm(g.setter)} is setting a word…` : `${nm(g.setter)} загадывает слово…`;
+    return `<div class="center">${setter ? `<div class="st">${setTitle}</div>${form('wIn', 'word', exPh, readyBtn, setHint)}` : `<div class="st">${waitTxt}</div>`}</div>`;
+  }
+
   const n = g.pat.length, letters = g.pat.replace(/ /g, '').length, cs = `--cs:min(46px,calc((100vw - 36px) / ${n} - 4px))`;
   const row = (r, i) => '<div class="wrow">' + [...g.pat].map((ch, j) => ch === ' ' ? '<i class="wgap"></i>' : `<i class="wc ${r ? ['x', 'y', 'g'][r.r[j]] + an('w' + i, 'flip') : ''}" ${r ? `style="animation-delay:${j * 80}ms"` : ''}>${r ? esc(r.w[j]) : ''}</i>`).join('') + '</div>';
   const best = {};
   g.guesses.forEach(x => [...x.w].forEach((ch, j) => { if (ch !== ' ' && x.r[j] > (best[ch] ?? -1)) best[ch] = x.r[j]; }));
   const keys = Object.keys(best).sort().map(ch => `<i class="${['x', 'y', 'g'][best[ch]]}">${esc(ch)}</i>`).join('');
-  const info = g.phase === 'done' ? `Слово: <b>${esc(g.word)}</b>` : setter ? `Ваше слово: <b>${esc(g.word)}</b>` : `Букв: ${letters}${n > letters ? ' (пробелы показаны)' : ''}`;
-  const ctl = g.phase === 'guess' ? (setter ? `<div class="st">${nm(o)} угадывает… осталось попыток: ${6 - g.guesses.length}</div>`
-    : form('gIn', 'guess', `Ваш вариант (${letters} букв)`, 'Проверить', `Осталось попыток: ${6 - g.guesses.length}`)) : '';
+
+  const wordWord = lang === 'en' ? 'Word' : 'Слово';
+  const yourWord = lang === 'en' ? 'Your word' : 'Ваше слово';
+  const lettersWord = lang === 'en' ? 'Letters' : 'Букв';
+  const spacesShown = lang === 'en' ? ' (spaces shown)' : ' (пробелы показаны)';
+  const triesLeft = lang === 'en' ? 'Attempts left' : 'Осталось попыток';
+
+  const info = g.phase === 'done' ? `${wordWord}: <b>${esc(g.word)}</b>` : setter ? `${yourWord}: <b>${esc(g.word)}</b>` : `${lettersWord}: ${letters}${n > letters ? spacesShown : ''}`;
+  const ctl = g.phase === 'guess' ? (setter ? `<div class="st">${nm(o)} ${lang === 'en' ? 'is guessing… attempts left:' : 'угадывает… осталось попыток:'} ${6 - g.guesses.length}</div>`
+    : form('gIn', 'guess', `${lang === 'en' ? 'Your guess' : 'Ваш вариант'} (${letters} ${lang === 'en' ? 'letters' : 'букв'})`, lang === 'en' ? 'Check' : 'Проверить', `${triesLeft}: ${6 - g.guesses.length}`)) : '';
+
   return `<div class="center wd" style="${cs}"><div class="st">${info}</div>${Array.from({length:6}, (_, i) => row(g.guesses[i], i)).join('')}<div class="keys">${keys}</div>${ctl}</div>`;
 }
 
-function pk(g){
+// ---------- Игра: Поход ----------
+function pk(g) {
   const me = S.me, o = 1 - me, nm = i => esc(S.names[i]), q = s => `«${esc(s)}»`;
   const form = (id, act, ph, btn) => `<div class="frm"><input id="${id}" maxlength="40" placeholder="${ph}" autocomplete="off"><button class="go" data-f="${act}" data-in="${id}">${btn}</button></div>`;
-  if (g.phase === 'prep') return `<div class="center"><p class="sent">Я иду в поход и беру с собой…</p>${g.ready[me]
-    ? `<div class="st">Ваша категория: <b>${q(g.mine)}</b><br>Ждём, пока ${nm(o)} придумает свою…</div>`
-    : `${form('cIn', 'cat', 'категорию предметов', 'Готово')}<div class="hint">Например: всё красное · на букву К · съедобное · круглое.<br>Соперник не узнает её до конца игры.</div>`}</div>`;
-  const log = g.log.map(e => {
-    const t = e.k === 'item' ? `берёт с собой: ${q(e.txt)}` : e.k === 'ans' ? (e.v ? '✅ Ты идёшь в поход' : '❌ Ты не идёшь в поход')
-      : e.k === 'guess' ? `пробует угадать категорию: ${q(e.txt)}` : (e.v ? '✅ Верно!' : '❌ Неверно');
-    return `<div class="msg ${e.by === me ? 'mine' : ''}"><b>${nm(e.by)}</b>${t}</div>`;
-  }).join('') || `<div class="hint">Игра началась. Первым ходит ${nm(g.turn)}</div>`;
-  const t = g.turn === me;
-  const mineCat = `<div class="chip2">Ваша категория: ${q(g.mine)}</div>`;
-  let act = '';
-  if (g.phase === 'done') act = `<h3>Категории раскрыты</h3><div>${nm(0)}: <b>${q(g.cats[0])}</b></div><div>${nm(1)}: <b>${q(g.cats[1])}</b></div>`;
-  else if (g.step === 'item') act = t ? `<h3>Что ты берёшь с собой в поход?</h3>${form('iIn', 'item', 'Название предмета', 'Отправить')}` : `<div>${nm(g.turn)} выбирает предмет…</div>`;
-  else if (g.step === 'judge') act = t ? `<div>Ждём ответа ${nm(o)}…</div>` : `<h3>${nm(g.turn)} берёт с собой ${q(g.item)}</h3><div class="row"><button ${M({t:'judge', v:true})}>Ты идёшь в поход</button><button class="ghost" ${M({t:'judge', v:false})}>Ты не идёшь в поход</button></div>${mineCat}`;
-  else if (g.step === 'decide') act = t ? `<h3>${g.ans ? '✅ Ты идёшь в поход' : '❌ Ты не идёшь в поход'}</h3><div>${q(g.item)}</div><div class="row"><button ${M({t:'try'})}>Попробовать угадать категорию</button><button class="ghost" ${M({t:'skip'})}>Пропустить</button></div>` : `<div>${nm(g.turn)} решает, пробовать ли угадать вашу категорию…</div>`;
-  else if (g.step === 'guess') act = t ? `<h3>Какая категория у ${nm(o)}?</h3>${form('gIn', 'pguess', 'Ваш вариант', 'Отправить')}` : `<div>${nm(g.turn)} пишет догадку…</div>`;
-  else act = t ? `<div>Ждём ответа ${nm(o)}…</div>` : `<h3>${nm(g.turn)} думает: ${q(g.guess)}</h3><div class="row"><button ${M({t:'verify', v:true})}>Верно ✅</button><button class="ghost" ${M({t:'verify', v:false})}>Неверно ❌</button></div>${mineCat}`;
-  return `<div class="pkbox">${mineCat}<div class="chat" id="chat">${log}</div><div class="act">${act}</div>${g.phase === 'play' ? `<button class="sm ghost" ${M({t:'giveup'})}>Сдаться и раскрыть категории</button>` : ''}</div>`;
-}
 
-const E = ['✊', '✋', '✌️'], N = ['Камень', 'Бумага', 'Ножницы'];
-function rps(g){
-  const me = S.me, l = g.last, can = g.mine === null && g.winner === null;
-  const res = l ? `<div class="reveal"><span>${E[l.p[me]]}</span><em>${l.w < 0 ? 'Ничья' : l.w === me ? 'Раунд ваш' : 'Раунд соперника'}</em><span>${E[l.p[1 - me]]}</span></div>` : '';
-  const hint = g.winner !== null ? '' : g.mine !== null ? 'Ждём соперника…' : g.opp ? 'Соперник уже выбрал!' : 'Делайте выбор';
-  return `<div class="center"><div class="st"><b>До 3 побед:</b> ${g.wins[me]} : ${g.wins[1 - me]}</div>${res}<div class="st">${hint}</div>
-  <div class="rps">${E.map((e, v) => `<button class="${g.mine === v ? 'sel' : ''}" ${can ? M({t:'rps', v}) : ''}>${e}<small>${N[v]}</small></button>`).join('')}</div></div>`;
-}
-
-// ---------- чат ----------
-let chat = [], unread = 0, chatOpen = false;
-function setChat(open, focus){
-  chatOpen = open; $('drawer').hidden = !open; document.body.classList.toggle('chat-open', open);
-  if (open) { unread = 0; $('cPrev').hidden = true; renderChat(); if (focus) $('chIn').focus(); }
-  $('badge').hidden = !unread; $('badge').textContent = unread;
-}
-function renderChat(){
-  const l = $('cList');
-  l.innerHTML = chat.length ? chat.map(m => `<div class="cm ${S && m.from === S.me ? 'me' : ''}"><b>${esc(m.name)}</b>${esc(m.text)}</div>`).join('') : '<div class="hint" style="text-align:center">Пока пусто. Напишите что-нибудь 👋</div>';
-  l.scrollTop = l.scrollHeight;
-}
-function addChat(m){
-  chat.push(m); if (chat.length > 100) chat.shift();
-  if (chatOpen) return renderChat();
-  if (S && m.from !== S.me) {
-    unread++; setChat(false);
-    const p = $('cPrev'); p.textContent = m.name + ': ' + m.text; p.hidden = false;
-    clearTimeout(addChat.t); addChat.t = setTimeout(() => { p.hidden = true; }, 3500);
+  if (g.phase === 'prep') {
+    const mainTitle = lang === 'en' ? 'I am going on a trip and taking with me…' : 'Я иду в поход и беру с собой…';
+    const catPh = lang === 'en' ? 'item category' : 'категорию предметов';
+    const catDone = lang === 'en' ? 'Done' : 'Готово';
+    const catHint = lang === 'en' ? 'E.g.: red things · starts with K · edible · round objects.<br>Opponent will not see it until end.' : 'Например: всё красное · на букву К · съедобное · круглое.<br>Соперник не узнает её до конца игры.';
+    return `<div class="center"><p class="sent">${mainTitle}</p>${g.ready[me]
+      ? `<div class="st">${lang === 'en' ? 'Your category:' : 'Ваша категория:'} <b>${q(g.mine)}</b><br>${lang === 'en' ? `Waiting for ${nm(o)} to set theirs…` : `Ждём, пока ${nm(o)} придумает свою…`}</div>`
+      : `${form('cIn', 'cat', catPh, catDone)}<div class="hint">${catHint}</div>`}</div>`;
   }
-}
-function sendChat(){ const v = $('chIn').value.trim(); if (!v) return; send({t:'chat', text:v}); $('chIn').value = ''; }
 
-// ---------- Портреты: холст ----------
-const cv = document.createElement('canvas'); cv.width = cv.height = 600; cv.id = 'cv';
+  const log = g.log.map(e => {
+    let t;
+    if (e.k === 'item') t = lang === 'en' ? `takes: ${q(e.txt)}` : `берёт с собой: ${q(e.txt)}`;
+    else if (e.k === 'ans') t = e.v ? (lang === 'en' ? '✅ You can go on the trip' : '✅ Ты идёшь в поход') : (lang === 'en' ? '❌ You cannot go on the trip' : '❌ Ты не идёшь в поход');
+    else if (e.k === 'guess') t = lang === 'en' ? `guesses category: ${q(e.txt)}` : `пробует угадать категорию: ${q(e.txt)}`;
+    else t = e.v ? (lang === 'en' ? '✅ Correct!' : '✅ Верно!') : (lang === 'en' ? '❌ Incorrect' : '❌ Неверно');
+    return `<div class="msg ${e.by === me ? 'mine' : ''}"><b>${nm(e.by)}</b>${t}</div>`;
+  }).join('') || `<div class="hint">${lang === 'en' ? `Game started. First turn: ${nm(g.turn)}` : `Игра началась. Первым ходит ${nm(g.turn)}`}</div>`;
+
+  const t = g.turn === me;
+  const mineCat = `<div class="chip2">${lang === 'en' ? 'Your category:' : 'Ваша категория:'} ${q(g.mine)}</div>`;
+  let act = '';
+
+  if (g.phase === 'done') {
+    act = `<h3>${lang === 'en' ? 'Categories revealed' : 'Категории раскрыты'}</h3><div>${nm(0)}: <b>${q(g.cats[0])}</b></div><div>${nm(1)}: <b>${q(g.cats[1])}</b></div>`;
+  } else if (g.step === 'item') {
+    act = t ? `<h3>${lang === 'en' ? 'What are you taking on the trip?' : 'Что ты берёшь с собой в поход?'}</h3>${form('iIn', 'item', lang === 'en' ? 'Item name' : 'Название предмета', lang === 'en' ? 'Send' : 'Отправить')}` : `<div>${nm(g.turn)} ${lang === 'en' ? 'is picking an item…' : 'выбирает предмет…'}</div>`;
+  } else if (g.step === 'judge') {
+    act = t ? `<div>${lang === 'en' ? `Waiting for ${nm(o)}’s answer…` : `Ждём ответа ${nm(o)}…`}</div>` : `<h3>${nm(g.turn)} ${lang === 'en' ? 'takes' : 'берёт с собой'} ${q(g.item)}</h3><div class="row"><button ${M({t:'judge', v:true})}>${lang === 'en' ? 'You can go' : 'Ты идёшь в поход'}</button><button class="ghost" ${M({t:'judge', v:false})}>${lang === 'en' ? 'You cannot go' : 'Ты не идёшь в поход'}</button></div>${mineCat}`;
+  } else if (g.step === 'decide') {
+    const verdict = g.ans ? (lang === 'en' ? '✅ You can go' : '✅ Ты идёшь в поход') : (lang === 'en' ? '❌ You cannot go' : '❌ Ты не идёшь в поход');
+    act = t ? `<h3>${verdict}</h3><div>${q(g.item)}</div><div class="row"><button ${M({t:'try'})}>${lang === 'en' ? 'Try to guess category' : 'Попробовать угадать категорию'}</button><button class="ghost" ${M({t:'skip'})}>${lang === 'en' ? 'Skip' : 'Пропустить'}</button></div>` : `<div>${nm(g.turn)} ${lang === 'en' ? 'is deciding whether to guess…' : 'решает, пробовать ли угадать вашу категорию…'}</div>`;
+  } else if (g.step === 'guess') {
+    act = t ? `<h3>${lang === 'en' ? `What is ${nm(o)}’s category?` : `Какая категория у ${nm(o)}?`}</h3>${form('gIn', 'pguess', lang === 'en' ? 'Your guess' : 'Ваш вариант', lang === 'en' ? 'Send' : 'Отправить')}` : `<div>${nm(g.turn)} ${lang === 'en' ? 'is writing a guess…' : 'пишет догадку…'}</div>`;
+  } else {
+    act = t ? `<div>${lang === 'en' ? `Waiting for ${nm(o)}’s answer…` : `Ждём ответа ${nm(o)}…`}</div>` : `<h3>${nm(g.turn)} ${lang === 'en' ? 'thinks:' : 'думает:'} ${q(g.guess)}</h3><div class="row"><button ${M({t:'verify', v:true})}>${lang === 'en' ? 'Correct ✅' : 'Верно ✅'}</button><button class="ghost" ${M({t:'verify', v:false})}>${lang === 'en' ? 'Incorrect ❌' : 'Неверно ❌'}</button></div>${mineCat}`;
+  }
+
+  const giveupBtn = lang === 'en' ? 'Give up & reveal categories' : 'Сдаться и раскрыть категории';
+  return `<div class="pkbox">${mineCat}<div class="chat" id="chat">${log}</div><div class="act">${act}</div>${g.phase === 'play' ? `<button class="sm ghost" ${M({t:'giveup'})}>${giveupBtn}</button>` : ''}</div>`;
+}
+
+// ---------- Игра: Портреты ----------
+const cv = document.createElement('canvas');
+cv.width = cv.height = 600;
+cv.id = 'cv';
 const cx = cv.getContext('2d');
 const pen = {col:'#1b1a3d', sz:7, tool:'pen'};
 let undo = [], drawing = false, last = null, myImg = null;
-function cvClear(){ cx.fillStyle = '#fff'; cx.fillRect(0, 0, 600, 600); undo = []; myImg = null; }
+
+function cvClear() {
+  cx.fillStyle = '#fff';
+  cx.fillRect(0, 0, 600, 600);
+  undo = [];
+  myImg = null;
+}
 cvClear();
-const cpos = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * 600 / r.width, (e.clientY - r.top) * 600 / r.height]; };
-function stroke(){ cx.lineCap = cx.lineJoin = 'round'; cx.lineWidth = pen.tool === 'eraser' ? pen.sz * 3 : pen.sz; cx.strokeStyle = pen.tool === 'eraser' ? '#fff' : pen.col; cx.stroke(); }
+
+const cpos = e => {
+  const r = cv.getBoundingClientRect();
+  return [(e.clientX - r.left) * 600 / r.width, (e.clientY - r.top) * 600 / r.height];
+};
+
+function stroke() {
+  cx.lineCap = cx.lineJoin = 'round';
+  cx.lineWidth = pen.tool === 'eraser' ? pen.sz * 3 : pen.sz;
+  cx.strokeStyle = pen.tool === 'eraser' ? '#fff' : pen.col;
+  cx.stroke();
+}
+
 cv.addEventListener('pointerdown', e => {
   cv.setPointerCapture(e.pointerId);
-  undo.push(cx.getImageData(0, 0, 600, 600)); if (undo.length > 15) undo.shift();
-  drawing = true; last = cpos(e); cx.beginPath(); cx.moveTo(last[0], last[1]); cx.lineTo(last[0] + .01, last[1]); stroke();
+  undo.push(cx.getImageData(0, 0, 600, 600));
+  if (undo.length > 15) undo.shift();
+  drawing = true;
+  last = cpos(e);
+  cx.beginPath();
+  cx.moveTo(last[0], last[1]);
+  cx.lineTo(last[0] + .01, last[1]);
+  stroke();
 });
+
 cv.addEventListener('pointermove', e => {
   if (!drawing) return;
-  const p = cpos(e); cx.beginPath(); cx.moveTo(last[0], last[1]); cx.lineTo(p[0], p[1]); stroke(); last = p;
+  const p = cpos(e);
+  cx.beginPath();
+  cx.moveTo(last[0], last[1]);
+  cx.lineTo(p[0], p[1]);
+  stroke();
+  last = p;
 });
+
 ['pointerup', 'pointercancel'].forEach(t => cv.addEventListener(t, () => { drawing = false; }));
 cv.addEventListener('touchmove', e => e.preventDefault(), {passive:false});
 
-function pt(g){
+function pt(g) {
   const me = S.me, o = 1 - me, nm = i => esc(S.names[i]);
-  if (g.phase === 'mode') return `<div class="center"><h2 class="ttl">Портреты</h2><p class="st hint">Не соревнование: рисуем и смотрим, что получилось.</p><div class="modes">
-    <button class="mode" ${M({t:'pmode', mode:'each'})}><span>🪞</span><b>Нарисовать друг друга</b><small>в случайном стиле: киберпанк, аниме…</small></button>
-    <button class="mode" ${M({t:'pmode', mode:'topic'})}><span>🎨</span><b>Одна тема на двоих</b><small>например «бурундук» или «Президент»</small></button></div></div>`;
-  if (g.phase === 'done') {
-    const cards = g.imgs.map((img, i) => `<div class="pic"><img src="${img}" alt=""><div class="st">${g.mode === 'each' ? `Портрет ${nm(1 - i)} от ${nm(i)}` : `Работа ${nm(i)}`}</div><a class="btn" href="${img}" download="portrait-${i + 1}.jpg">💾 Сохранить</a></div>`).join('');
-    return `<div class="center"><div class="st">${g.mode === 'each' ? 'Стиль' : 'Тема'}: «<b>${esc(g.theme)}</b>»</div><div class="pics">${cards}</div><div class="hint">На iPhone: нажмите на картинку и удерживайте, затем «Сохранить»</div><div class="row"><button ${M({t:'again'})}>Ещё раз</button><button class="ghost" ${M({t:'menu'})}>Другая игра</button></div></div>`;
+
+  if (g.phase === 'mode') {
+    const hint = lang === 'en' ? 'Not a competition: draw and see what happens.' : 'Не соревнование: рисуем и смотрим, что получилось.';
+    const btn1 = lang === 'en' ? '<span>🪞</span><b>Draw each other</b><small>in a random style: cyberpunk, anime…</small>' : '<span>🪞</span><b>Нарисовать друг друга</b><small>в случайном стиле: киберпанк, аниме…</small>';
+    const btn2 = lang === 'en' ? '<span>🎨</span><b>One topic for both</b><small>e.g. chipmunk or President</small>' : '<span>🎨</span><b>Одна тема на двоих</b><small>например «бурундук» или «Президент»</small>';
+    return `<div class="center"><h2 class="ttl">${I18N[lang].games.pt.name}</h2><p class="st hint">${hint}</p><div class="modes">
+      <button class="mode" ${M({t:'pmode', mode:'each'})}>${btn1}</button>
+      <button class="mode" ${M({t:'pmode', mode:'topic'})}>${btn2}</button></div></div>`;
   }
-  const task = g.mode === 'each' ? `Нарисуйте <b>${nm(o)}</b> в стиле «<b>${esc(g.theme)}</b>»` : `Нарисуйте: «<b>${esc(g.theme)}</b>»`;
-  if (g.done[me] || myImg) return `<div class="center"><div class="st">${task}</div>${myImg ? `<img class="pv" src="${myImg}" alt="">` : ''}<div class="st">Рисунок отправлен ✔<br>Ждём, пока ${nm(o)} закончит…</div></div>`;
+
+  if (g.phase === 'done') {
+    const saveTxt = lang === 'en' ? '💾 Save' : '💾 Сохранить';
+    const cards = g.imgs.map((img, i) => `<div class="pic"><img src="${img}" alt=""><div class="st">${g.mode === 'each' ? (lang === 'en' ? `Portrait of ${nm(1 - i)} by ${nm(i)}` : `Портрет ${nm(1 - i)} от ${nm(i)}`) : (lang === 'en' ? `Artwork by ${nm(i)}` : `Работа ${nm(i)}`)}</div><a class="btn" href="${img}" download="portrait-${i + 1}.jpg">${saveTxt}</a></div>`).join('');
+    const topicLabel = g.mode === 'each' ? (lang === 'en' ? 'Style' : 'Стиль') : (lang === 'en' ? 'Topic' : 'Тема');
+    const saveHint = lang === 'en' ? 'Press and hold image to save' : 'Нажмите и удерживайте картинку для сохранения';
+    return `<div class="center"><div class="st">${topicLabel}: «<b>${esc(g.theme)}</b>»</div><div class="pics">${cards}</div><div class="hint">${saveHint}</div><div class="row"><button ${M({t:'again'})}>${I18N[lang].playAgain}</button><button class="ghost" ${M({t:'menu'})}>${I18N[lang].otherGame}</button></div></div>`;
+  }
+
+  const task = g.mode === 'each' ? (lang === 'en' ? `Draw <b>${nm(o)}</b> in style «<b>${esc(g.theme)}</b>»` : `Нарисуйте <b>${nm(o)}</b> в стиле «<b>${esc(g.theme)}</b>»`) : (lang === 'en' ? `Draw: «<b>${esc(g.theme)}</b>»` : `Нарисуйте: «<b>${esc(g.theme)}</b>»`);
+  if (g.done[me] || myImg) {
+    const sentTxt = lang === 'en' ? `Drawing submitted ✔<br>Waiting for ${nm(o)} to finish…` : `Рисунок отправлен ✔<br>Ждём, пока ${nm(o)} закончит…`;
+    return `<div class="center"><div class="st">${task}</div>${myImg ? `<img class="pv" src="${myImg}" alt="">` : ''}<div class="st">${sentTxt}</div></div>`;
+  }
+
   const cols = ['#1b1a3d', '#6c5ce7', '#3b82f6', '#14b8a6', '#22c55e', '#eab308', '#f97316', '#ef4444', '#ec4899', '#92400e', '#9ca3af'];
+  const doneBtn = lang === 'en' ? 'Done' : 'Готово';
+
   return `<div class="center" style="gap:10px;padding:10px"><div class="st">${task}</div><div id="cvHost"></div>
     <div class="tools">${cols.map(c => `<button class="sw ${pen.tool === 'pen' && pen.col === c ? 'on' : ''}" style="background:${c}" data-col="${c}"></button>`).join('')}</div>
     <div class="tools">${[3, 7, 14].map(z => `<button class="sz ${pen.sz === z ? 'on' : ''}" data-sz="${z}"><i style="width:${z + 4}px;height:${z + 4}px"></i></button>`).join('')}<button class="sz ${pen.tool === 'eraser' ? 'on' : ''}" data-tool="eraser">🧽</button><button class="sz" data-ui="pundo">↩️</button><button class="sz" data-ui="pclear">🗑</button></div>
-    <button data-ui="psubmit">Готово</button></div>`;
+    <button data-ui="psubmit">${doneBtn}</button></div>`;
 }
 
-function render(){
-  $('lobby').hidden = true; $('game').hidden = false;
+// ---------- Чат ----------
+let chat = [], unread = 0, chatOpen = false;
+
+function setChat(open, focus) {
+  chatOpen = open;
+  $('drawer').hidden = !open;
+  document.body.classList.toggle('chat-open', open);
+  if (open) {
+    unread = 0;
+    $('cPrev').hidden = true;
+    renderChat();
+    if (focus) $('chIn').focus();
+  }
+  $('badge').hidden = !unread;
+  $('badge').textContent = unread;
+}
+
+function renderChat() {
+  const l = $('cList');
+  l.innerHTML = chat.length ? chat.map(m => `<div class="cm ${S && m.from === S.me ? 'me' : ''}"><b>${esc(m.name)}</b>${esc(m.text)}</div>`).join('') : `<div class="hint" style="text-align:center">${I18N[lang].chatEmpty}</div>`;
+  l.scrollTop = l.scrollHeight;
+}
+
+function addChat(m) {
+  chat.push(m);
+  if (chat.length > 100) chat.shift();
+  if (chatOpen) return renderChat();
+  if (S && m.from !== S.me) {
+    unread++;
+    haptics.impactLight();
+    setChat(false);
+    const p = $('cPrev');
+    p.textContent = m.name + ': ' + m.text;
+    p.hidden = false;
+    clearTimeout(addChat.t);
+    addChat.t = setTimeout(() => { p.hidden = true; }, 3500);
+  }
+}
+
+function sendChat() {
+  const v = $('chIn').value.trim();
+  if (!v) return;
+  haptics.impactLight();
+  send({t:'chat', text:v});
+  $('chIn').value = '';
+}
+
+// ---------- Отрисовка состояния ----------
+function render() {
+  $('lobby').hidden = true;
+  $('game').hidden = false;
   const me = S.me, both = S.peers[0] && S.peers[1], g = S.g, opp = 1 - me;
-  $('code').textContent = S.code; $('wcode').textContent = S.code;
+  $('code').textContent = S.code;
+  $('wcode').textContent = S.code;
   $('dot').className = S.on[opp] ? 'on' : '';
-  $('oppn').textContent = both ? S.names[opp] : 'Соперник';
-  $('score').textContent = `Вы ${S.score[me]} : ${S.score[opp]}`;
-  $('wait').hidden = both; $('menu').hidden = !both || !!S.kind;
-  $('board').hidden = !S.kind; $('menuBtn').hidden = !S.kind;
+  $('oppn').textContent = both ? S.names[opp] : I18N[lang].oppDefault;
+  $('score').textContent = `${I18N[lang].youScore} ${S.score[me]} : ${S.score[opp]}`;
+  $('wait').hidden = both;
+  $('menu').hidden = !both || !!S.kind;
+  $('board').hidden = !S.kind;
+  $('menuBtn').hidden = !S.kind;
+
+  if (S.isBot) {
+    document.querySelectorAll('.tiles .tile').forEach(t => {
+      const k = t.dataset.k;
+      const isBotSupported = ['durak', 'ttt', 'c4', 'rps'].includes(k);
+      t.style.opacity = isBotSupported ? '1' : '0.45';
+    });
+  } else {
+    document.querySelectorAll('.tiles .tile').forEach(t => t.style.opacity = '1');
+  }
 
   const over = !!g && g.winner !== null;
   $('over').hidden = !over || S.kind === 'pt';
-  if (!S.kind) { $('board').innerHTML = ''; return; }
-  if (S.gid !== lastGid) { P = new Set(); lastGid = S.gid; cvClear(); }
+
+  if (!S.kind) {
+    $('board').innerHTML = '';
+    return;
+  }
+
+  if (S.gid !== lastGid) {
+    P = new Set();
+    lastGid = S.gid;
+    cvClear();
+  }
   cur = new Set();
+
   const keep = [...$('board').querySelectorAll('input')].map(i => [i.id, i.value, document.activeElement === i]);
-  $('board').innerHTML = {durak, ttt, c4, rps, wd, pk, pt}[S.kind](g);
-  keep.forEach(([id, v, f]) => { const el = $(id); if (el) { el.value = v; if (f) el.focus(); } });
-  const host = $('cvHost'); if (host) host.appendChild(cv);
-  const ch = $('chat'); if (ch) ch.scrollTop = ch.scrollHeight;
+  $('board').innerHTML = {durak, ttt, c4, rps, memo, dots, wd, pk, pt}[S.kind](g);
+  keep.forEach(([id, v, f]) => {
+    const el = $(id);
+    if (el) { el.value = v; if (f) el.focus(); }
+  });
+
+  const host = $('cvHost');
+  if (host) host.appendChild(cv);
+  const ch = $('chat');
+  if (ch) ch.scrollTop = ch.scrollHeight;
+
   P = cur;
+
   if (over) {
-    const pkk = S.kind === 'pk', L = {durak:'Вы остались в дураках', pk:'Соперник угадал вашу категорию'};
-    $('res').textContent = g.winner === -1 ? (pkk ? 'Игра окончена' : 'Ничья') : g.winner === me ? (pkk ? '🎉 Вы угадали категорию!' : '🎉 Вы победили!') : (L[S.kind] || 'Победил соперник');
+    const pkk = S.kind === 'pk';
+    const L_RU = {
+      durak:'Вы остались в дураках', pk:'Соперник угадал вашу категорию',
+      memo:'Соперник набрал больше пар', dots:'Соперник захватил больше квадратов'
+    };
+    const L_EN = {
+      durak:'You are the fool', pk:'Opponent guessed your category',
+      memo:'Opponent found more pairs', dots:'Opponent captured more boxes'
+    };
+    const L = lang === 'en' ? L_EN : L_RU;
+    const won = g.winner === me;
+    if (won) haptics.notificationSuccess();
+    else if (g.winner >= 0) haptics.notificationWarning();
+
+    $('res').textContent = g.winner === -1 ? (pkk ? I18N[lang].gameOver : I18N[lang].gameTie) : won ? I18N[lang].gameWin : (L[S.kind] || I18N[lang].gameLose);
   }
 }
 
 let lastSent = null;
 const UI = {
-  chat: () => setChat(!chatOpen, true), cclose: () => setChat(false), csend: sendChat,
-  psubmit: () => { if (confirm('Отправить рисунок? Изменить его будет нельзя.')) { myImg = cv.toDataURL('image/jpeg', .88); send({t:'pimg', img:myImg}); render(); } },
-  pundo: () => { const u = undo.pop(); if (u) cx.putImageData(u, 0, 0); },
-  pclear: () => { if (confirm('Стереть весь рисунок?')) { undo.push(cx.getImageData(0, 0, 600, 600)); cx.fillStyle = '#fff'; cx.fillRect(0, 0, 600, 600); } },
+  chat: () => setChat(!chatOpen, true),
+  cclose: () => setChat(false),
+  csend: sendChat,
+  psubmit: () => {
+    const confirmTxt = lang === 'en' ? 'Submit drawing? You won’t be able to edit it.' : 'Отправить рисунок? Изменить его будет нельзя.';
+    if (confirm(confirmTxt)) {
+      haptics.impactMedium();
+      myImg = cv.toDataURL('image/jpeg', .88);
+      send({t:'pimg', img:myImg});
+      render();
+    }
+  },
+  pundo: () => {
+    haptics.impactLight();
+    const u = undo.pop();
+    if (u) cx.putImageData(u, 0, 0);
+  },
+  pclear: () => {
+    const confirmTxt = lang === 'en' ? 'Clear the whole drawing?' : 'Стереть весь рисунок?';
+    if (confirm(confirmTxt)) {
+      haptics.impactMedium();
+      undo.push(cx.getImageData(0, 0, 600, 600));
+      cx.fillStyle = '#fff';
+      cx.fillRect(0, 0, 600, 600);
+    }
+  },
 };
+
 document.addEventListener('click', e => {
-  if (e.target.closest('#cPrev')) { $('cPrev').hidden = true; return setChat(true, true); }
+  if (e.target.closest('#cPrev')) {
+    $('cPrev').hidden = true;
+    return setChat(true, true);
+  }
+
   const x = e.target.closest('[data-m],[data-k],[data-f],[data-ui],[data-col],[data-sz],[data-tool]');
   if (!x) return;
   const d = x.dataset;
+
   if (d.ui) return UI[d.ui]();
-  if (d.col) { pen.col = d.col; pen.tool = 'pen'; return render(); }
-  if (d.sz) { pen.sz = +d.sz; return render(); }
-  if (d.tool) { pen.tool = 'eraser'; return render(); }
-  if (d.k) return send({t:'pick', k:d.k});
+  if (d.col) {
+    haptics.impactLight();
+    pen.col = d.col;
+    pen.tool = 'pen';
+    return render();
+  }
+  if (d.sz) {
+    haptics.impactLight();
+    pen.sz = +d.sz;
+    return render();
+  }
+  if (d.tool) {
+    haptics.impactLight();
+    pen.tool = 'eraser';
+    return render();
+  }
+  if (d.k) {
+    if (S && S.isBot && !['durak', 'ttt', 'c4', 'rps'].includes(d.k)) {
+      haptics.notificationWarning();
+      return toast(I18N[lang].botOnly2P);
+    }
+    haptics.impactMedium();
+    return send({t:'pick', k:d.k});
+  }
   if (d.f) {
     const el = $(d.in);
-    if (!el.value.trim()) return toast('Введите текст');
-    lastSent = {id:el.id, v:el.value}; send({t:d.f, w:el.value}); el.value = ''; return;
+    if (!el.value.trim()) return toast(I18N[lang].enterText);
+    haptics.impactLight();
+    lastSent = {id:el.id, v:el.value};
+    send({t:d.f, w:el.value});
+    el.value = '';
+    return;
   }
+
   const o = JSON.parse(d.m);
-  if (o.t === 'giveup' && !confirm('Закончить игру и раскрыть категории?')) return;
+  if (o.t === 'giveup') {
+    const confirmTxt = lang === 'en' ? 'End game and reveal categories?' : 'Закончить игру и раскрыть категории?';
+    if (!confirm(confirmTxt)) return;
+  }
+  haptics.impactLight();
   send(o);
 });
+
 $('chIn').addEventListener('keydown', e => { if (e.key === 'Enter') sendChat(); });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && e.target.matches('.frm input')) e.target.parentElement.querySelector('[data-f]').click();
+  if (e.key === 'Enter' && e.target.matches('.frm input')) {
+    e.target.parentElement.querySelector('[data-f]').click();
+  }
 });
+
 $('guest').value = localStorage.dname || '';
 $('guest').oninput = () => { localStorage.dname = $('guest').value; };
-$('create').onclick = () => { code = null; joinRoom(); };
-$('join').onclick = () => { const v = $('codeIn').value.trim().toUpperCase(); if (v.length === 4) { code = v; joinRoom(); } else toast('Введите код из 4 букв'); };
-$('share').onclick = () => {
-  const url = location.origin + location.pathname + '?room=' + S.code;
-  if (navigator.share) navigator.share({title:'Игры для двоих', text:'Сыграем?', url}).catch(() => {});
-  else navigator.clipboard.writeText(url).then(() => toast('Ссылка скопирована'));
+
+// Быстрая игра (Матчмейкинг)
+$('quickPlay').onclick = () => {
+  haptics.impactMedium();
+  send({t:'mm_join', token:tok, name:myName()});
 };
+$('cancelMm').onclick = () => {
+  haptics.impactLight();
+  send({t:'mm_leave', token:tok});
+};
+
+// Одиночная игра с ИИ
+$('soloPlay').onclick = () => {
+  haptics.impactMedium();
+  send({t:'bot_room', token:tok, name:myName()});
+};
+
+// Создать стандартную комнату для друга
+$('create').onclick = () => {
+  haptics.impactMedium();
+  code = null;
+  joinRoom();
+};
+
+$('join').onclick = () => {
+  const v = $('codeIn').value.trim().toUpperCase();
+  if (v.length === 4) {
+    haptics.impactMedium();
+    code = v;
+    joinRoom();
+  } else {
+    haptics.notificationWarning();
+    toast(I18N[lang].enterCode4);
+  }
+};
+
+$('share').onclick = async () => {
+  haptics.impactLight();
+  if (window.IOSBridge) {
+    const res = await window.IOSBridge.shareRoom(S.code);
+    if (res === 'copied') toast(I18N[lang].linkCopied);
+  } else {
+    const url = location.origin + location.pathname + '?room=' + S.code;
+    const title = I18N[lang].appTitle;
+    const text = lang === 'en' ? 'Let’s play?' : 'Сыграем?';
+    if (navigator.share) navigator.share({title, text, url}).catch(() => {});
+    else navigator.clipboard.writeText(url).then(() => toast(I18N[lang].linkCopied));
+  }
+};
+
+// Переключатель языка (RU / EN)
+function toggleLang() {
+  haptics.impactLight();
+  setLanguage(lang === 'ru' ? 'en' : 'ru');
+}
+$('langBtn').onclick = toggleLang;
+$('gameLangBtn').onclick = toggleLang;
+
+// Настройки сервера
+function openConfigModal() {
+  const current = (window.IOSBridge ? window.IOSBridge.server.get() : localStorage.getItem('twop_server_url')) || '';
+  $('srvInput').value = current;
+  $('cfgSheet').hidden = false;
+}
+function closeConfigModal() { $('cfgSheet').hidden = true; }
+
+$('openCfg').onclick = openConfigModal;
+$('gameCfgBtn').onclick = openConfigModal;
+$('closeCfg').onclick = closeConfigModal;
+
+$('saveCfg').onclick = () => {
+  haptics.impactMedium();
+  const val = $('srvInput').value.trim();
+  if (window.IOSBridge) window.IOSBridge.server.set(val);
+  else localStorage.setItem('twop_server_url', val);
+  closeConfigModal();
+  toast(I18N[lang].settingsSaved);
+  connect();
+};
+
+$('resetCfg').onclick = () => {
+  haptics.impactLight();
+  if (window.IOSBridge) window.IOSBridge.server.set('');
+  else localStorage.removeItem('twop_server_url');
+  $('srvInput').value = '';
+  closeConfigModal();
+  toast(I18N[lang].settingsReset);
+  connect();
+};
+
+// Инициализация языка и подключение
+applyLanguage();
 connect();
 </script>
 </body>
