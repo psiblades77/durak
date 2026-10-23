@@ -620,7 +620,7 @@ const view = (room, p) => ({
   me: p,
   code: room.code,
   peers: room.ids.map(Boolean),
-  on: room.ws.map((w, idx) => room.isBot && idx === 1 ? true : Boolean(w)),
+  on: room.ws.map((w, idx) => room.isBot && idx === 1 ? true : Boolean(w && w.readyState === 1)),
   names: room.names,
   score: room.score,
   kind: room.kind,
@@ -643,7 +643,8 @@ const genCode = () => {
 };
 
 wss.on('connection', ws => {
-  let room = null, seat = -1;
+  ws.room = null;
+  ws.seat = -1;
   let msgCount = 0;
   let lastRateReset = Date.now();
 
@@ -672,7 +673,7 @@ wss.on('connection', ws => {
       if (rooms.size > 2500) return err(ws, 'Сервер временно перегружен');
       const code = genCode();
       const pName = clean(m.name) || 'Игрок';
-      room = {
+      const room = {
         code,
         ids: [clean(m.token) || Math.random().toString(36).slice(2), 'bot_ai'],
         names: [pName, 'ИИ Бот 🤖'],
@@ -685,7 +686,8 @@ wss.on('connection', ws => {
         last: Date.now(),
         isBot: true
       };
-      seat = 0;
+      ws.room = room;
+      ws.seat = 0;
       rooms.set(code, room);
       push(room);
       return ws.send(JSON.stringify({ t: 'chatlog', log: room.chat }));
@@ -708,7 +710,7 @@ wss.on('connection', ws => {
       if (mmQueue.length > 0) {
         const opp = mmQueue.shift();
         const code = genCode();
-        room = {
+        const room = {
           code,
           ids: [opp.token, token],
           names: [opp.name, pName],
@@ -722,7 +724,10 @@ wss.on('connection', ws => {
           isBot: false
         };
         rooms.set(code, room);
-        seat = 1;
+        opp.ws.room = room;
+        opp.ws.seat = 0;
+        ws.room = room;
+        ws.seat = 1;
         push(room);
         ws.send(JSON.stringify({ t: 'mm_matched', code }));
         if (opp.ws.readyState === 1) opp.ws.send(JSON.stringify({ t: 'mm_matched', code }));
@@ -745,6 +750,7 @@ wss.on('connection', ws => {
     // 3. Стандартный вход / создание комнаты
     if (m.t === 'join') {
       const code = m.code ? String(m.code).toUpperCase().slice(0, 8) : null;
+      let room;
       if (code) {
         room = rooms.get(code);
       } else {
@@ -753,19 +759,37 @@ wss.on('connection', ws => {
         rooms.set(room.code, room);
       }
       if (!room) return err(ws, 'Комната не найдена');
-      const id = clean(m.token) || Math.random().toString(36).slice(2);
-      seat = room.ids.indexOf(id);
-      if (seat < 0) seat = room.ids.indexOf(null);
-      if (seat < 0) { room = null; return err(ws, 'В комнате уже двое игроков'); }
+      let id = clean(m.token) || Math.random().toString(36).slice(2);
+      let seat = room.ids.indexOf(id);
+
+      // Handle duplicate token (e.g. testing in two tabs of same browser)
+      if (seat >= 0 && room.ws[seat] && room.ws[seat] !== ws && room.ws[seat].readyState === 1) {
+        const openSeat = room.ids.indexOf(null);
+        if (openSeat >= 0) {
+          seat = openSeat;
+          id = Math.random().toString(36).slice(2) + Date.now().toString(36);
+        }
+      } else if (seat < 0) {
+        seat = room.ids.indexOf(null);
+      }
+
+      if (seat < 0) {
+        return err(ws, 'В комнате уже двое игроков');
+      }
+
       room.ids[seat] = id;
       room.names[seat] = clean(m.name) || 'Игрок ' + (seat + 1);
       if (room.ws[seat] && room.ws[seat] !== ws) room.ws[seat].close();
       room.ws[seat] = ws;
+      ws.room = room;
+      ws.seat = seat;
       push(room);
       return ws.send(JSON.stringify({ t: 'chatlog', log: room.chat }));
     }
 
-    if (!room) return;
+    const room = ws.room;
+    const seat = ws.seat !== undefined ? ws.seat : -1;
+    if (!room || seat < 0) return;
     room.last = Date.now();
 
     if (m.t === 'chat') {
@@ -803,9 +827,11 @@ wss.on('connection', ws => {
     const qIdx = mmQueue.findIndex(q => q.ws === ws);
     if (qIdx >= 0) mmQueue.splice(qIdx, 1);
 
-    if (room && room.ws[seat] === ws) {
-      room.ws[seat] = null;
-      push(room);
+    const curRoom = ws.room;
+    const curSeat = ws.seat;
+    if (curRoom && curSeat >= 0 && curRoom.ws[curSeat] === ws) {
+      curRoom.ws[curSeat] = null;
+      push(curRoom);
     }
     broadcastOnline();
   });

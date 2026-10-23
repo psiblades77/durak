@@ -25,30 +25,29 @@
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left, 0px);
   --sar: env(safe-area-inset-right, 0px);
-  --keyboard-height: 0px;
 
-  /* Темная палитра */
+  /* Темная обсидиановая палитра */
   --bg: #090a10;
   --bg-gradient: radial-gradient(1100px 550px at 50% -10%, rgba(99, 102, 241, 0.12), transparent 70%),
                  radial-gradient(800px 400px at 95% 25%, rgba(56, 189, 248, 0.07), transparent 60%),
                  #090a10;
 
-  /* Жидкое стекло (Liquid Glass) */
-  --surf-glass: rgba(255, 255, 255, 0.04);
-  --surf-glass-hover: rgba(255, 255, 255, 0.07);
-  --surf-glass-active: rgba(255, 255, 255, 0.1);
-  --surf-card: rgba(255, 255, 255, 0.035);
-  --surf-elevated: rgba(255, 255, 255, 0.06);
+  /* Жидкое стекло (Liquid Glass Dark) */
+  --surf-glass: rgba(255, 255, 255, 0.05);
+  --surf-glass-hover: rgba(255, 255, 255, 0.09);
+  --surf-glass-active: rgba(255, 255, 255, 0.13);
+  --surf-card: rgba(255, 255, 255, 0.04);
+  --surf-elevated: rgba(255, 255, 255, 0.07);
 
-  /* Границы и преломления света */
-  --line: rgba(255, 255, 255, 0.09);
-  --line-strong: rgba(255, 255, 255, 0.18);
-  --glass-specular: rgba(255, 255, 255, 0.22);
+  /* Отражения и границы */
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.2);
+  --glass-specular: rgba(255, 255, 255, 0.24);
   --glass-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.55), inset 0 1px 0.5px var(--glass-specular);
   --glass-panel-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0.5px var(--glass-specular);
   --glass-tile-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.35), inset 0 1px 0.5px var(--glass-specular);
 
-  /* Типографика */
+  /* Текст */
   --txt: #f8fafc;
   --mut: #94a3b8;
   --faint: #64748b;
@@ -56,7 +55,7 @@
   /* Акценты */
   --acc: #6366f1;
   --acc-hover: #4f46e5;
-  --acc-glow: rgba(99, 102, 241, 0.3);
+  --acc-glow: rgba(99, 102, 241, 0.35);
   --p0: #38bdf8;
   --p1: #c084fc;
   --win: #10b981;
@@ -72,7 +71,7 @@
   --c-back-border: rgba(255, 255, 255, 0.18);
   --c-back-txt: rgba(255, 255, 255, 0.7);
 
-  --w: clamp(44px, 12.5vw, 66px);
+  --w: clamp(44px, 12.5vw, 68px);
   --ds: clamp(34px, 10vw, 52px);
   --ch: min(44dvh, 340px);
 }
@@ -80,28 +79,28 @@
 [data-theme="light"] {
   --theme: light;
 
-  /* Светлая палитра (Apple Frosted Glass) */
+  /* Светлая жемчужная палитра */
   --bg: #f5f7fb;
   --bg-gradient: radial-gradient(1100px 550px at 50% -10%, rgba(99, 102, 241, 0.09), transparent 70%),
                  radial-gradient(800px 400px at 95% 25%, rgba(14, 165, 233, 0.08), transparent 60%),
                  #f5f7fb;
 
   /* Жидкое стекло (Liquid Glass Light) */
-  --surf-glass: rgba(255, 255, 255, 0.72);
-  --surf-glass-hover: rgba(255, 255, 255, 0.9);
-  --surf-glass-active: rgba(255, 255, 255, 0.98);
-  --surf-card: rgba(255, 255, 255, 0.78);
+  --surf-glass: rgba(255, 255, 255, 0.78);
+  --surf-glass-hover: rgba(255, 255, 255, 0.92);
+  --surf-glass-active: #ffffff;
+  --surf-card: rgba(255, 255, 255, 0.82);
   --surf-elevated: rgba(255, 255, 255, 0.92);
 
-  /* Границы и преломления света */
-  --line: rgba(15, 23, 42, 0.08);
-  --line-strong: rgba(15, 23, 42, 0.16);
+  /* Отражения и границы */
+  --line: rgba(15, 23, 42, 0.09);
+  --line-strong: rgba(15, 23, 42, 0.18);
   --glass-specular: rgba(255, 255, 255, 0.95);
   --glass-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.08), inset 0 1px 0.5px var(--glass-specular);
-  --glass-panel-shadow: 0 20px 48px -10px rgba(15, 23, 42, 0.1), inset 0 1px 0.5px var(--glass-specular);
+  --glass-panel-shadow: 0 20px 48px -10px rgba(15, 23, 42, 0.11), inset 0 1px 0.5px var(--glass-specular);
   --glass-tile-shadow: 0 6px 18px -3px rgba(15, 23, 42, 0.06), inset 0 1px 0.5px var(--glass-specular);
 
-  /* Типографика */
+  /* Текст */
   --txt: #0f172a;
   --mut: #64748b;
   --faint: #94a3b8;
@@ -109,7 +108,7 @@
   /* Акценты */
   --acc: #4f46e5;
   --acc-hover: #4338ca;
-  --acc-glow: rgba(79, 70, 229, 0.22);
+  --acc-glow: rgba(79, 70, 229, 0.25);
   --p0: #0284c7;
   --p1: #9333ea;
   --win: #059669;
@@ -154,8 +153,8 @@ body {
 
 [hidden] { display: none !important; }
 
-/* ---------- Векторные иконки ---------- */
-.svg-icon {
+/* ---------- Векторные иконки (Прямые SVG без багов sprite) ---------- */
+.svg-ico {
   display: inline-block;
   width: 18px;
   height: 18px;
@@ -167,18 +166,8 @@ body {
   vertical-align: middle;
   flex-shrink: 0;
 }
-.svg-icon.sm { width: 15px; height: 15px; stroke-width: 2; }
-.svg-icon.fill { fill: currentColor; stroke: none; }
-
-/* ---------- Жидкое стекло (Liquid Glass Utilities) ---------- */
-.liquid-glass {
-  background: var(--surf-glass);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid var(--line);
-  box-shadow: var(--glass-shadow);
-  transition: background-color .18s, border-color .18s, transform .12s, box-shadow .18s;
-}
+.svg-ico.sm { width: 16px; height: 16px; }
+.svg-ico.fill { fill: currentColor; stroke: none; }
 
 /* ---------- Кнопки и контролы ---------- */
 button, .btn {
@@ -189,8 +178,8 @@ button, .btn {
   border-radius: 14px;
   padding: 12px 18px;
   background: var(--surf-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
   color: var(--txt);
   cursor: pointer;
   text-decoration: none;
@@ -204,7 +193,7 @@ button, .btn {
 }
 
 button:active, .btn:active {
-  transform: scale(0.975);
+  transform: scale(0.97);
 }
 
 button:disabled {
@@ -225,7 +214,7 @@ button.mm-btn {
   border-color: rgba(255, 255, 255, 0.25);
   color: #ffffff;
   font-size: 15px;
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
 button.solo-btn {
@@ -246,18 +235,33 @@ button.ghost {
 }
 
 button.icon-btn {
-  padding: 8px 10px;
-  font-size: 13px;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 12px;
-  color: var(--mut);
+  color: var(--txt);
   background: var(--surf-glass);
   box-shadow: var(--glass-tile-shadow);
+  flex-shrink: 0;
+}
+
+button.icon-btn.pill {
+  width: auto;
+  padding: 6px 12px;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  border-radius: 99px;
 }
 
 @media (hover: hover) and (pointer: fine) {
   button:hover:not(:disabled), .btn:hover:not(:disabled) {
     background: var(--surf-glass-hover);
     border-color: var(--line-strong);
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.15), inset 0 1px 0.5px var(--glass-specular);
   }
   button.primary:hover:not(:disabled) {
     background: var(--acc-hover);
@@ -350,7 +354,7 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: safe center;
+  justify-content: center;
   gap: 18px;
   padding: max(24px, calc(var(--sat) + 16px)) max(18px, var(--sar)) max(24px, calc(var(--sab) + 16px)) max(18px, var(--sal));
   text-align: center;
@@ -371,15 +375,15 @@ h1, h2, h3 {
 .conn-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 13px;
+  gap: 7px;
+  padding: 7px 14px;
   background: var(--surf-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--line);
   border-radius: 99px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--mut);
   box-shadow: var(--glass-tile-shadow);
 }
@@ -401,7 +405,7 @@ h1, h2, h3 {
 
 #lobby h1 {
   font-size: clamp(34px, 8.5vw, 54px);
-  line-height: 1.04;
+  line-height: 1.05;
   letter-spacing: -0.04em;
   color: var(--txt);
 }
@@ -418,13 +422,10 @@ h1, h2, h3 {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  font-size: 18px;
+  gap: 14px;
+  font-size: 20px;
   color: var(--faint);
   letter-spacing: .2em;
-}
-.suits-banner span {
-  transition: transform .2s ease;
 }
 .suits-banner span:nth-child(2), .suits-banner span:nth-child(3) {
   color: var(--red);
@@ -433,14 +434,14 @@ h1, h2, h3 {
 .panel {
   display: flex;
   flex-direction: column;
-  gap: 11px;
-  width: min(340px, 100%);
-  padding: 20px;
+  gap: 12px;
+  width: min(360px, 100%);
+  padding: 22px;
   background: var(--surf-card);
   backdrop-filter: blur(28px) saturate(190%);
   -webkit-backdrop-filter: blur(28px) saturate(190%);
   border: 1px solid var(--line);
-  border-radius: 22px;
+  border-radius: 24px;
   box-shadow: var(--glass-panel-shadow);
 }
 
@@ -457,7 +458,7 @@ h1, h2, h3 {
   padding-left: var(--sal);
   padding-right: var(--sar);
   position: relative;
-  max-width: 980px;
+  max-width: 900px;
   margin: 0 auto;
   width: 100%;
 }
@@ -482,7 +483,7 @@ h1, h2, h3 {
 #bar > span {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -490,8 +491,8 @@ h1, h2, h3 {
   background: var(--surf-elevated);
   border: 1px solid var(--line);
   border-radius: 99px;
-  padding: 4px 11px;
-  font-weight: 600;
+  padding: 4px 12px;
+  font-weight: 700;
   white-space: nowrap;
   font-size: 12.5px;
 }
@@ -526,13 +527,12 @@ h1, h2, h3 {
 
 #chatBtn {
   position: relative;
-  padding: 7px 11px;
 }
 
 #badge {
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -4px;
+  right: -4px;
   min-width: 17px;
   height: 17px;
   border-radius: 99px;
@@ -570,12 +570,14 @@ h1, h2, h3 {
   margin-bottom: 4px;
 }
 
-/* Сетка режимов */
+/* ==========================================================================
+   СЕТКА РЕЖИМОВ И КРАСИВЫЕ ИКОНКИ ИГР
+   ========================================================================== */
 .tiles {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 11px;
-  width: min(480px, 100%);
+  gap: 12px;
+  width: min(500px, 100%);
 }
 
 .tile {
@@ -583,45 +585,55 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  padding: 16px 10px;
+  gap: 4px;
+  padding: 16px 12px;
   background: var(--surf-card);
   backdrop-filter: blur(28px) saturate(190%);
   -webkit-backdrop-filter: blur(28px) saturate(190%);
   color: var(--txt);
   border: 1px solid var(--line);
   box-shadow: var(--glass-tile-shadow);
-  border-radius: 18px;
+  border-radius: 20px;
   transition: transform .14s cubic-bezier(0.2, 0.8, 0.4, 1), border-color .15s, background-color .15s, box-shadow .15s;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .tile:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
     border-color: var(--line-strong);
     background: var(--surf-glass-hover);
-    box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.2), inset 0 1px 0.5px var(--glass-specular);
+    box-shadow: 0 14px 28px -6px rgba(0, 0, 0, 0.22), inset 0 1px 0.5px var(--glass-specular);
   }
 }
 
-.tile-icon-wrap {
-  width: 44px;
-  height: 44px;
-  border-radius: 13px;
-  background: var(--surf-elevated);
-  border: 1px solid var(--line);
+/* Живые, четкие бейджи иконок мини-игр */
+.game-ico-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
   display: grid;
   place-items: center;
-  margin-bottom: 2px;
-  color: var(--acc);
+  font-size: 30px;
+  background: var(--surf-elevated);
+  border: 1px solid var(--line);
+  box-shadow: var(--glass-tile-shadow);
+  margin-bottom: 4px;
+  transition: transform .18s cubic-bezier(0.2, 0.8, 0.4, 1);
 }
-.tile-icon-wrap svg {
-  width: 24px;
-  height: 24px;
+
+.tile:hover .game-ico-badge {
+  transform: scale(1.08) translateY(-2px);
+}
+
+.ttt-glyph {
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 2px;
+  color: var(--p0);
 }
 
 .tile .t-name {
-  font-size: 14.5px;
+  font-size: 15px;
   font-weight: 600;
   letter-spacing: -0.015em;
 }
@@ -640,9 +652,9 @@ h1, h2, h3 {
   letter-spacing: .02em;
 }
 .ai-tag {
-  background: rgba(99, 102, 241, 0.12);
+  background: rgba(99, 102, 241, 0.14);
   color: var(--acc);
-  border: 1px solid rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(99, 102, 241, 0.28);
 }
 .duo-tag {
   background: var(--surf-elevated);
@@ -666,9 +678,10 @@ h1, h2, h3 {
    ========================================================================== */
 .hand {
   display: flex;
-  justify-content: safe center;
-  padding: 8px 14px;
+  justify-content: center;
+  padding: 8px 16px;
   overflow-x: auto;
+  max-width: 100%;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -693,9 +706,9 @@ h1, h2, h3 {
 
 @media (hover: hover) and (pointer: fine) {
   .me .c.ok:hover {
-    transform: translateY(-20px) scale(1.06);
-    z-index: 20;
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
+    transform: translateY(-22px) scale(1.08);
+    z-index: 50;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -1318,7 +1331,6 @@ body.chat-open .sheet { bottom: var(--ch); }
   animation: pulseRadar 1.6s infinite;
   margin: 6px 0;
 }
-.radar svg { width: 34px; height: 34px; }
 @keyframes pulseRadar {
   0% { transform: scale(.92); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
   70% { transform: scale(1.04); box-shadow: 0 0 0 20px rgba(245, 158, 11, 0); }
@@ -1359,11 +1371,11 @@ body.chat-open .sheet { bottom: var(--ch); }
   #lobby .panel { width: 380px; padding: 24px; }
   .tiles {
     grid-template-columns: 1fr 1fr;
-    width: min(540px, 90vw);
+    width: min(520px, 90vw);
     gap: 14px;
   }
-  .tile { padding: 20px 14px; }
-  .tile-icon-wrap { width: 48px; height: 48px; }
+  .tile { padding: 18px 14px; }
+  .game-ico-badge { width: 56px; height: 56px; font-size: 32px; }
   .ttt {
     grid-template-columns: repeat(3, clamp(90px, 14vw, 120px));
     gap: 10px;
@@ -1391,12 +1403,10 @@ body.chat-open .sheet { bottom: var(--ch); }
     right: max(24px, var(--sar));
     bottom: max(24px, var(--sab));
     width: 360px;
-    height: min(72dvh, 560px);
+    height: min(72dvh, 520px);
     border-radius: 22px;
     border: 1px solid var(--line);
   }
-  body.chat-open #game { padding-bottom: 0; padding-right: 390px; }
-  body.chat-open .sheet { bottom: 0; right: 390px; }
 }
 
 @media (min-width: 1024px) {
@@ -1404,7 +1414,7 @@ body.chat-open .sheet { bottom: var(--ch); }
     --w: clamp(68px, 6.5vw, 94px);
     --ds: clamp(50px, 4.5vw, 70px);
   }
-  .tiles { width: 580px; }
+  .tiles { width: 540px; }
   #lobby {
     gap: 22px;
     padding-top: 40px;
@@ -1446,150 +1456,6 @@ body.chat-open .sheet { bottom: var(--ch); }
 </head>
 <body>
 
-<!-- SVG Definition Sprite (Shared Handcrafted Vector Icons) -->
-<svg style="display:none;" aria-hidden="true">
-  <defs>
-    <!-- Sun -->
-    <g id="ico-sun">
-      <circle cx="12" cy="12" r="5"></circle>
-      <line x1="12" y1="1" x2="12" y2="3"></line>
-      <line x1="12" y1="21" x2="12" y2="23"></line>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-      <line x1="1" y1="12" x2="3" y2="12"></line>
-      <line x1="21" y1="12" x2="23" y2="12"></line>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-    </g>
-    <!-- Moon -->
-    <g id="ico-moon">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-    </g>
-    <!-- Globe -->
-    <g id="ico-globe">
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="2" y1="12" x2="22" y2="12"></line>
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-    </g>
-    <!-- Gear -->
-    <g id="ico-gear">
-      <circle cx="12" cy="12" r="3"></circle>
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-    </g>
-    <!-- Lightning -->
-    <g id="ico-lightning">
-      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-    </g>
-    <!-- Robot -->
-    <g id="ico-robot">
-      <rect x="3" y="11" width="18" height="10" rx="3"></rect>
-      <circle cx="12" cy="5" r="2"></circle>
-      <path d="M12 7v4"></path>
-      <line x1="8" y1="16" x2="8.01" y2="16"></line>
-      <line x1="16" y1="16" x2="16.01" y2="16"></line>
-    </g>
-    <!-- Users -->
-    <g id="ico-users">
-      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-      <circle cx="9" cy="7" r="4"></circle>
-      <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-    </g>
-    <!-- Chat -->
-    <g id="ico-chat">
-      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
-    </g>
-    <!-- Share -->
-    <g id="ico-share">
-      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-      <polyline points="16 6 12 2 8 6"></polyline>
-      <line x1="12" y1="2" x2="12" y2="15"></line>
-    </g>
-    <!-- Cross -->
-    <g id="ico-cross">
-      <line x1="18" y1="6" x2="6" y2="18"></line>
-      <line x1="6" y1="6" x2="18" y2="18"></line>
-    </g>
-    <!-- Send -->
-    <g id="ico-send">
-      <line x1="22" y1="2" x2="11" y2="13"></line>
-      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-    </g>
-
-    <!-- Иконки игр -->
-    <!-- Durak -->
-    <g id="game-durak">
-      <rect x="3" y="7" width="16" height="22" rx="3"></rect>
-      <rect x="11" y="3" width="16" height="22" rx="3"></rect>
-      <path d="M19 12c-1.3-1.6-2.6-.8-2.6 0 0 1.6 2.6 3.5 2.6 3.5s2.6-1.9 2.6-3.5c0-.8-1.3-1.6-2.6 0z" fill="currentColor"></path>
-    </g>
-    <!-- Tic-Tac-Toe -->
-    <g id="game-ttt">
-      <line x1="6" y1="6" x2="16" y2="16"></line>
-      <line x1="16" y1="6" x2="6" y2="16"></line>
-      <circle cx="22" cy="22" r="5"></circle>
-    </g>
-    <!-- Connect 4 -->
-    <g id="game-c4">
-      <rect x="4" y="4" width="24" height="24" rx="4"></rect>
-      <circle cx="10" cy="11" r="2.5" fill="currentColor"></circle>
-      <circle cx="16" cy="11" r="2.5"></circle>
-      <circle cx="22" cy="11" r="2.5" fill="currentColor"></circle>
-      <circle cx="10" cy="18" r="2.5"></circle>
-      <circle cx="16" cy="18" r="2.5" fill="currentColor"></circle>
-      <circle cx="22" cy="18" r="2.5" fill="currentColor"></circle>
-    </g>
-    <!-- RPS -->
-    <g id="game-rps">
-      <circle cx="9" cy="22" r="3.5"></circle>
-      <circle cx="23" cy="22" r="3.5"></circle>
-      <line x1="11.5" y1="19.5" x2="22" y2="6"></line>
-      <line x1="20.5" y1="19.5" x2="10" y2="6"></line>
-    </g>
-    <!-- Memory -->
-    <g id="game-memo">
-      <rect x="4" y="5" width="11" height="18" rx="2.5"></rect>
-      <rect x="17" y="9" width="11" height="18" rx="2.5"></rect>
-      <polygon points="9.5 12 11 15 8 15" fill="currentColor"></polygon>
-      <polygon points="22.5 16 24 19 21 19" fill="currentColor"></polygon>
-    </g>
-    <!-- Dots -->
-    <g id="game-dots">
-      <rect x="7" y="7" width="10" height="10" fill="currentColor" fill-opacity="0.25"></rect>
-      <line x1="7" y1="7" x2="17" y2="7"></line>
-      <line x1="17" y1="7" x2="17" y2="17"></line>
-      <line x1="17" y1="17" x2="7" y2="17"></line>
-      <line x1="7" y1="17" x2="7" y2="7"></line>
-      <circle cx="7" cy="7" r="2" fill="currentColor"></circle>
-      <circle cx="17" cy="7" r="2" fill="currentColor"></circle>
-      <circle cx="25" cy="7" r="2" fill="currentColor"></circle>
-      <circle cx="7" cy="17" r="2" fill="currentColor"></circle>
-      <circle cx="17" cy="17" r="2" fill="currentColor"></circle>
-      <circle cx="25" cy="17" r="2" fill="currentColor"></circle>
-    </g>
-    <!-- Wordies -->
-    <g id="game-wd">
-      <rect x="4" y="7" width="11" height="15" rx="2.5"></rect>
-      <text x="9.5" y="18" font-size="11" font-weight="700" fill="currentColor" text-anchor="middle" font-family="sans-serif">A</text>
-      <rect x="17" y="10" width="11" height="15" rx="2.5"></rect>
-      <text x="22.5" y="21" font-size="11" font-weight="700" fill="currentColor" text-anchor="middle" font-family="sans-serif">B</text>
-    </g>
-    <!-- Camping Trip -->
-    <g id="game-pk">
-      <path d="M8 26V13a5 5 0 0 1 5-5h6a5 5 0 0 1 5 5v13a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2z"></path>
-      <path d="M12 8V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"></path>
-      <rect x="11" y="15" width="10" height="7" rx="1.5"></rect>
-    </g>
-    <!-- Portraits -->
-    <g id="game-pt">
-      <path d="M16 4C9.4 4 4 9.4 4 16c0 6.6 5.4 12 12 12 2.5 0 4.5-2 4.5-4.5 0-1.1-.4-2.1-1.1-2.9-.6-.7-1-1.6-1-2.6 0-2.2 1.8-4 4-4H20c4.4 0 8-3.6 8-8 0-6.6-5.4-12-12-12z"></path>
-      <circle cx="10" cy="13" r="1.5" fill="currentColor"></circle>
-      <circle cx="15" cy="10" r="1.5" fill="currentColor"></circle>
-      <circle cx="21" cy="13" r="1.5" fill="currentColor"></circle>
-    </g>
-  </defs>
-</svg>
-
 <!-- ==========================================================================
      ГЛАВНЫЙ ЭКРАН (ЛОББИ)
      ========================================================================== -->
@@ -1599,15 +1465,15 @@ body.chat-open .sheet { bottom: var(--ch); }
       <i class="conn-dot" id="connDot"></i>
       <span id="connTxt">Онлайн...</span>
     </div>
-    <button class="ghost icon-btn" id="themeBtn" title="Переключить тему" aria-label="Toggle theme">
-      <svg class="svg-icon sm"><use href="#ico-sun"></use></svg>
+    <button class="ghost icon-btn" id="themeBtn" title="Сменить тему" aria-label="Toggle theme">
+      <!-- Иконка темы вставляется через JS (updateThemeVisuals) -->
     </button>
-    <button class="ghost icon-btn" id="langBtn" title="Сменить язык">
-      <svg class="svg-icon sm"><use href="#ico-globe"></use></svg>
+    <button class="ghost icon-btn pill" id="langBtn" title="Сменить язык">
+      <svg class="svg-ico sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
       <span id="langTxt">RU</span>
     </button>
     <button class="ghost icon-btn" id="openCfg" title="Настройки сервера">
-      <svg class="svg-icon sm"><use href="#ico-gear"></use></svg>
+      <svg class="svg-ico sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
   </div>
 
@@ -1620,16 +1486,16 @@ body.chat-open .sheet { bottom: var(--ch); }
   <div class="panel">
     <input id="guest" maxlength="16" placeholder="Ваше имя" autocomplete="name">
     <button id="quickPlay" class="btn mm-btn">
-      <svg class="svg-icon fill"><use href="#ico-lightning"></use></svg>
+      <svg class="svg-ico fill" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
       <span id="qpTxt">Быстрая игра</span>
     </button>
     <button id="soloPlay" class="btn solo-btn">
-      <svg class="svg-icon"><use href="#ico-robot"></use></svg>
+      <svg class="svg-ico" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="3"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8.01" y2="16"/><line x1="16" y1="16" x2="16.01" y2="16"/></svg>
       <span id="spTxt">Одиночная игра с ИИ</span>
     </button>
     <div class="divider"><span id="orFriendTxt">или по коду</span></div>
     <button id="create" class="ghost">
-      <svg class="svg-icon"><use href="#ico-users"></use></svg>
+      <svg class="svg-ico" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       <span id="crTxt">Создать комнату</span>
     </button>
     <div class="row">
@@ -1652,19 +1518,19 @@ body.chat-open .sheet { bottom: var(--ch); }
     <span>
       <b id="code"></b>
       <button class="ghost icon-btn" id="chatBtn" data-ui="chat" aria-label="Чат">
-        <svg class="svg-icon sm"><use href="#ico-chat"></use></svg>
+        <svg class="svg-ico sm" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
         <i id="badge" hidden></i>
       </button>
       <button class="sm ghost" id="menuBtn" data-m='{"t":"menu"}' hidden>Меню</button>
       <button class="ghost icon-btn sm" id="gameThemeBtn" title="Theme">
-        <svg class="svg-icon sm"><use href="#ico-sun"></use></svg>
+        <!-- Вставляется через JS -->
       </button>
-      <button class="ghost icon-btn sm" id="gameLangBtn" title="Language">
-        <svg class="svg-icon sm"><use href="#ico-globe"></use></svg>
+      <button class="ghost icon-btn pill sm" id="gameLangBtn" title="Language">
+        <svg class="svg-ico sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         <span id="gameLangTxt">RU</span>
       </button>
       <button class="ghost icon-btn sm" id="gameCfgBtn" title="Настройки">
-        <svg class="svg-icon sm"><use href="#ico-gear"></use></svg>
+        <svg class="svg-ico sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </span>
   </div>
@@ -1673,7 +1539,7 @@ body.chat-open .sheet { bottom: var(--ch); }
     <p id="waitTxt">Ждём друга. Отправьте ему код или ссылку:</p>
     <b id="wcode"></b>
     <button id="share" class="primary">
-      <svg class="svg-icon"><use href="#ico-share"></use></svg>
+      <svg class="svg-ico" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
       <span id="shTxt">Отправить ссылку</span>
     </button>
   </div>
@@ -1682,47 +1548,47 @@ body.chat-open .sheet { bottom: var(--ch); }
     <h2 id="menuTitle">Во что играем?</h2>
     <div class="tiles">
       <button class="tile" data-k="durak">
-        <div class="tile-icon-wrap"><svg viewBox="0 0 32 32"><use href="#game-durak"></use></svg></div>
+        <div class="game-ico-badge">🃏</div>
         <b class="t-name">Дурак</b><small class="t-desc">36 карт, козырь</small>
         <span class="tag-badge ai-tag">🤖 с ИИ</span>
       </button>
       <button class="tile" data-k="ttt">
-        <div class="tile-icon-wrap"><svg viewBox="0 0 32 32"><use href="#game-ttt"></use></svg></div>
+        <div class="game-ico-badge"><span class="ttt-glyph">✕◯</span></div>
         <b class="t-name">Крестики-нолики</b><small class="t-desc">3×3</small>
         <span class="tag-badge ai-tag">🤖 с ИИ</span>
       </button>
       <button class="tile" data-k="c4">
-        <div class="tile-icon-wrap"><svg viewBox="0 0 32 32"><use href="#game-c4"></use></svg></div>
+        <div class="game-ico-badge">🔴</div>
         <b class="t-name">4 в ряд</b><small class="t-desc">собери четыре</small>
         <span class="tag-badge ai-tag">🤖 с ИИ</span>
       </button>
       <button class="tile" data-k="rps">
-        <div class="tile-icon-wrap"><svg viewBox="0 0 32 32"><use href="#game-rps"></use></svg></div>
+        <div class="game-ico-badge">✂️</div>
         <b class="t-name">Камень-ножницы</b><small class="t-desc">до 3 побед</small>
         <span class="tag-badge ai-tag">🤖 с ИИ</span>
       </button>
       <button class="tile" data-k="memo">
-        <div class="tile-icon-wrap"><svg viewBox="0 0 32 32"><use href="#game-memo"></use></svg></div>
+        <div class="game-ico-badge">💎</div>
         <b class="t-name">Мемори</b><small class="t-desc">найди пары карточек</small>
         <span class="tag-badge duo-tag">✨ Новое</span>
       </button>
       <button class="tile" data-k="dots">
-        <div class="tile-icon-wrap"><svg viewBox="0 0 32 32"><use href="#game-dots"></use></svg></div>
+        <div class="game-ico-badge">✏️</div>
         <b class="t-name">Точки и линии</b><small class="t-desc">захватывай квадраты</small>
         <span class="tag-badge duo-tag">✨ Новое</span>
       </button>
       <button class="tile" data-k="wd">
-        <div class="tile-icon-wrap"><svg viewBox="0 0 32 32"><use href="#game-wd"></use></svg></div>
+        <div class="game-ico-badge">🔤</div>
         <b class="t-name">Wordies</b><small class="t-desc">слово за 6 попыток</small>
         <span class="tag-badge duo-tag">👥 для двоих</span>
       </button>
       <button class="tile" data-k="pk">
-        <div class="tile-icon-wrap"><svg viewBox="0 0 32 32"><use href="#game-pk"></use></svg></div>
+        <div class="game-ico-badge">🎒</div>
         <b class="t-name">Я иду в поход…</b><small class="t-desc">угадай категорию</small>
         <span class="tag-badge duo-tag">👥 для двоих</span>
       </button>
       <button class="tile" data-k="pt">
-        <div class="tile-icon-wrap"><svg viewBox="0 0 32 32"><use href="#game-pt"></use></svg></div>
+        <div class="game-ico-badge">🎨</div>
         <b class="t-name">Портреты</b><small class="t-desc">рисуем друг друга</small>
         <span class="tag-badge duo-tag">👥 для двоих</span>
       </button>
@@ -1739,14 +1605,14 @@ body.chat-open .sheet { bottom: var(--ch); }
   <div class="dhead">
     <b id="chatHead">Чат</b>
     <button class="sm ghost icon-btn" data-ui="cclose" aria-label="Закрыть чат">
-      <svg class="svg-icon sm"><use href="#ico-cross"></use></svg>
+      <svg class="svg-ico sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
   <div id="cList"></div>
   <div class="drow">
     <input id="chIn" maxlength="300" placeholder="Сообщение…" autocomplete="off">
     <button data-ui="csend" class="primary" aria-label="Отправить">
-      <svg class="svg-icon sm fill"><use href="#ico-send"></use></svg>
+      <svg class="svg-ico sm fill" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
     </button>
   </div>
 </div>
@@ -1768,7 +1634,7 @@ body.chat-open .sheet { bottom: var(--ch); }
 <div id="mmSheet" class="sheet" hidden>
   <h2 id="mmTitle">Поиск соперника</h2>
   <div class="radar">
-    <svg class="svg-icon fill"><use href="#ico-lightning"></use></svg>
+    <svg class="svg-ico fill" style="width:34px;height:34px;" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
   </div>
   <p class="hint" id="mmDesc">Подбираем оппонента для сетевой дуэли…</p>
   <button id="cancelMm" class="ghost">Отмена</button>
@@ -1800,19 +1666,20 @@ if (!currentTheme) {
   currentTheme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
 }
 
+const SUN_SVG = '<svg class="svg-ico sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
+const MOON_SVG = '<svg class="svg-ico sm" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+
 function updateThemeVisuals() {
   document.documentElement.setAttribute('data-theme', currentTheme);
   const isLight = currentTheme === 'light';
   const metaTheme = document.querySelector('meta[name="theme-color"]');
   if (metaTheme) metaTheme.content = isLight ? '#f5f7fb' : '#090a10';
 
-  const iconHref = isLight ? '#ico-moon' : '#ico-sun';
-  const btns = [$('themeBtn'), $('gameThemeBtn')];
-  btns.forEach(btn => {
-    if (!btn) return;
-    const useEl = btn.querySelector('use');
-    if (useEl) useEl.setAttribute('href', iconHref);
-  });
+  const iconHtml = isLight ? MOON_SVG : SUN_SVG;
+  const tBtn = $('themeBtn');
+  if (tBtn) tBtn.innerHTML = iconHtml;
+  const gtBtn = $('gameThemeBtn');
+  if (gtBtn) gtBtn.innerHTML = iconHtml;
 
   if (window.IOSBridge && window.IOSBridge.statusBar) {
     window.IOSBridge.statusBar.setStyle({ style: isLight ? 'LIGHT' : 'DARK' });
@@ -2006,8 +1873,8 @@ function applyLanguage() {
   $('crTxt').textContent = d.createRoom;
   $('codeIn').placeholder = d.codePh;
   $('join').textContent = d.joinBtn;
-  $('langTxt').textContent = lang.toUpperCase();
-  $('gameLangTxt').textContent = lang.toUpperCase();
+  if ($('langTxt')) $('langTxt').textContent = lang.toUpperCase();
+  if ($('gameLangTxt')) $('gameLangTxt').textContent = lang.toUpperCase();
   $('waitTxt').textContent = d.waitText;
   $('shTxt').textContent = d.shareBtn;
   $('menuTitle').textContent = d.menuTitle;
@@ -2090,18 +1957,19 @@ const send = o => {
 const myName = () => $('guest').value.trim() || (lang === 'en' ? 'Player' : 'Игрок');
 const joinRoom = () => send({t:'join', code, token:tok, name:myName()});
 
+// Надежное автоопределение адреса сокета для ПК, браузера и iOS
 function resolveWsUrl() {
   if (window.IOSBridge && window.IOSBridge.server) {
     const bridgeUrl = window.IOSBridge.server.getWsUrl();
     if (bridgeUrl) return bridgeUrl;
   }
+  const saved = localStorage.getItem('twop_server_url');
+  if (saved) {
+    if (saved.startsWith('wss://') || saved.startsWith('ws://')) return saved;
+    return saved.replace(/^https?:\/\//, m => m.startsWith('https') ? 'wss://' : 'ws://');
+  }
   if (location.protocol === 'file:' || location.protocol === 'capacitor:' || location.protocol === 'ionic:') {
-    const saved = localStorage.getItem('twop_server_url');
-    if (saved) {
-      if (saved.startsWith('wss://') || saved.startsWith('ws://')) return saved;
-      return saved.replace(/^https?:\/\//, m => m.startsWith('https') ? 'wss://' : 'ws://');
-    }
-    return null;
+    return 'ws://localhost:3000';
   }
   return (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host;
 }
@@ -2220,7 +2088,7 @@ const card = (c, cls = '', m = '', st = '') => `<div class="c ${red(c.s) ? 'r' :
 const turnTxt = (g, ok) => g.winner !== null ? I18N[lang].gameOver : ok ? I18N[lang].yourTurn : I18N[lang].oppTurn;
 
 // ==========================================================================
-// 3. ИГРОВЫЕ ДВИЖКИ (ИГРЫ)
+// 3. ИГРОВЫЕ ДВИЖКИ
 // ==========================================================================
 
 // ---------- Игра: Дурак ----------
@@ -2364,7 +2232,7 @@ function dots(g) {
   }
 
   let lineElements = '';
-  // Horizontal lines
+  // Горизонтальные линии
   for (let r = 0; r < 4; r++) {
     for (let c = 0; c < 3; c++) {
       const idx = r * 3 + c, owner = g.lines[idx];
@@ -2379,7 +2247,7 @@ function dots(g) {
     }
   }
 
-  // Vertical lines
+  // Вертикальные линии
   for (let r = 0; r < 3; r++) {
     for (let c = 0; c < 4; c++) {
       const idx = 12 + r * 4 + c, owner = g.lines[idx];
@@ -2532,7 +2400,7 @@ function stroke() {
 }
 
 cv.addEventListener('pointerdown', e => {
-  if (e.pointerType === 'mouse' && e.button !== 0) return; // Ignore right/middle clicks on PC
+  if (e.pointerType === 'mouse' && e.button !== 0) return; // Игнорируем правую/среднюю кнопку мыши на ПК
   cv.setPointerCapture(e.pointerId);
   undo.push(cx.getImageData(0, 0, 600, 600));
   if (undo.length > 15) undo.shift();
@@ -2646,7 +2514,7 @@ function sendChat() {
 }
 
 // ==========================================================================
-// 5. РЕНДЕРИНГ СОСТОЯНИЯ (STATE RENDER)
+// 5. РЕНДЕРИНГ СОСТОЯНИЯ
 // ==========================================================================
 function render() {
   $('lobby').hidden = true;
@@ -2721,7 +2589,7 @@ function render() {
 }
 
 // ==========================================================================
-// 6. ОБРАБОТЧИКИ СОБЫТИЙ И ФИКСЫ ДЛЯ ПК
+// 6. ОБРАБОТЧИКИ И ДЕСКТОПНЫЕ ФИКСЫ
 // ==========================================================================
 let lastSent = null;
 const UI = {
@@ -2798,13 +2666,18 @@ document.addEventListener('click', e => {
     return;
   }
 
-  const o = JSON.parse(d.m);
-  if (o.t === 'giveup') {
-    const confirmTxt = lang === 'en' ? 'End game and reveal categories?' : 'Закончить игру и раскрыть категории?';
-    if (!confirm(confirmTxt)) return;
+  if (!d.m) return;
+  try {
+    const o = JSON.parse(d.m);
+    if (o.t === 'giveup') {
+      const confirmTxt = lang === 'en' ? 'End game and reveal categories?' : 'Закончить игру и раскрыть категории?';
+      if (!confirm(confirmTxt)) return;
+    }
+    haptics.impactLight();
+    send(o);
+  } catch (err) {
+    console.error('Click action parse error:', err);
   }
-  haptics.impactLight();
-  send(o);
 });
 
 // ПК Фикс: Колесико мыши горизонтально скроллит карты в «Дураке»
