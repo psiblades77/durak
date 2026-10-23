@@ -15,6 +15,9 @@
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="manifest" href="manifest.webmanifest">
 
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2570542366619219" crossorigin="anonymous"></script>
+
 <style>
 /* ==========================================================================
    ДИЗАЙН-СИСТЕМА: ЖИДКОЕ СТЕКЛО & СВЕТЛАЯ / ТЕМНАЯ ТЕМА
@@ -33,19 +36,25 @@
                  #090a10;
 
   /* Жидкое стекло (Liquid Glass Dark) */
-  --surf-glass: rgba(255, 255, 255, 0.05);
-  --surf-glass-hover: rgba(255, 255, 255, 0.09);
-  --surf-glass-active: rgba(255, 255, 255, 0.13);
-  --surf-card: rgba(255, 255, 255, 0.04);
-  --surf-elevated: rgba(255, 255, 255, 0.07);
+  --surf-glass: rgba(255, 255, 255, 0.06);
+  --surf-glass-hover: rgba(255, 255, 255, 0.10);
+  --surf-glass-active: rgba(255, 255, 255, 0.15);
+  --surf-card: rgba(255, 255, 255, 0.045);
+  --surf-elevated: rgba(255, 255, 255, 0.08);
 
-  /* Отражения и границы */
-  --line: rgba(255, 255, 255, 0.1);
-  --line-strong: rgba(255, 255, 255, 0.2);
-  --glass-specular: rgba(255, 255, 255, 0.24);
-  --glass-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.55), inset 0 1px 0.5px var(--glass-specular);
-  --glass-panel-shadow: 0 20px 48px -12px rgba(0, 0, 0, 0.6), inset 0 1px 0.5px var(--glass-specular);
-  --glass-tile-shadow: 0 6px 20px -4px rgba(0, 0, 0, 0.35), inset 0 1px 0.5px var(--glass-specular);
+  /* Жидкое стекло: градиенты и блики */
+  --glass-panel-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.085) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --glass-bar-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%);
+  --glass-tile-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0.02) 100%);
+
+  /* Отражения, фаски и многослойные тени */
+  --line: rgba(255, 255, 255, 0.10);
+  --line-strong: rgba(255, 255, 255, 0.20);
+  --glass-specular: rgba(255, 255, 255, 0.32);
+  --glass-bevel: inset 0 1px 1px 0 var(--glass-specular), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25);
+  --glass-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.55), var(--glass-bevel);
+  --glass-panel-shadow: 0 24px 52px -12px rgba(0, 0, 0, 0.65), var(--glass-bevel);
+  --glass-tile-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.40), var(--glass-bevel);
 
   /* Текст */
   --txt: #f8fafc;
@@ -86,19 +95,25 @@
                  #f5f7fb;
 
   /* Жидкое стекло (Liquid Glass Light) */
-  --surf-glass: rgba(255, 255, 255, 0.78);
-  --surf-glass-hover: rgba(255, 255, 255, 0.92);
+  --surf-glass: rgba(255, 255, 255, 0.82);
+  --surf-glass-hover: rgba(255, 255, 255, 0.94);
   --surf-glass-active: #ffffff;
-  --surf-card: rgba(255, 255, 255, 0.82);
-  --surf-elevated: rgba(255, 255, 255, 0.92);
+  --surf-card: rgba(255, 255, 255, 0.85);
+  --surf-elevated: rgba(255, 255, 255, 0.94);
 
-  /* Отражения и границы */
-  --line: rgba(15, 23, 42, 0.09);
-  --line-strong: rgba(15, 23, 42, 0.18);
-  --glass-specular: rgba(255, 255, 255, 0.95);
-  --glass-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.08), inset 0 1px 0.5px var(--glass-specular);
-  --glass-panel-shadow: 0 20px 48px -10px rgba(15, 23, 42, 0.11), inset 0 1px 0.5px var(--glass-specular);
-  --glass-tile-shadow: 0 6px 18px -3px rgba(15, 23, 42, 0.06), inset 0 1px 0.5px var(--glass-specular);
+  /* Жидкое стекло: градиенты и блики */
+  --glass-panel-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.75) 100%);
+  --glass-bar-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.80) 100%);
+  --glass-tile-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.72) 100%);
+
+  /* Отражения, фаски и многослойные тени */
+  --line: rgba(15, 23, 42, 0.08);
+  --line-strong: rgba(15, 23, 42, 0.16);
+  --glass-specular: rgba(255, 255, 255, 0.98);
+  --glass-bevel: inset 0 1px 1.5px 0 var(--glass-specular), inset 0 -1px 1px 0 rgba(15, 23, 42, 0.05);
+  --glass-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.09), var(--glass-bevel);
+  --glass-panel-shadow: 0 24px 48px -10px rgba(15, 23, 42, 0.12), var(--glass-bevel);
+  --glass-tile-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.07), var(--glass-bevel);
 
   /* Текст */
   --txt: #0f172a;
@@ -437,10 +452,11 @@ h1, h2, h3 {
   gap: 12px;
   width: min(360px, 100%);
   padding: 22px;
-  background: var(--surf-card);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  background: var(--glass-panel-bg);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
   border: 1px solid var(--line);
+  border-top: 1px solid var(--glass-specular);
   border-radius: 24px;
   box-shadow: var(--glass-panel-shadow);
 }
@@ -470,11 +486,12 @@ h1, h2, h3 {
   gap: 8px;
   margin: 8px 12px 0;
   padding: 8px 12px;
-  background: var(--surf-glass);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  background: var(--glass-bar-bg);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-top: 1px solid var(--glass-specular);
+  border-radius: 18px;
   font-size: 13px;
   box-shadow: var(--glass-shadow);
   z-index: 10;
@@ -587,11 +604,12 @@ h1, h2, h3 {
   align-items: center;
   gap: 4px;
   padding: 16px 12px;
-  background: var(--surf-card);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  background: var(--glass-tile-bg);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
   color: var(--txt);
   border: 1px solid var(--line);
+  border-top: 1px solid var(--glass-specular);
   box-shadow: var(--glass-tile-shadow);
   border-radius: 20px;
   transition: transform .14s cubic-bezier(0.2, 0.8, 0.4, 1), border-color .15s, background-color .15s, box-shadow .15s;
@@ -999,25 +1017,6 @@ h1, h2, h3 {
   }
 }
 
-.dots-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.dots-svg {
-  width: min(310px, 86vw);
-  aspect-ratio: 1;
-  background: var(--surf-card);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  padding: 8px;
-  box-shadow: var(--glass-shadow);
-}
-
 /* ==========================================================================
    WORDIES, ПОХОД, ПОРТРЕТЫ
    ========================================================================== */
@@ -1304,11 +1303,13 @@ body.chat-open .sheet { bottom: var(--ch); }
   padding: 24px 20px max(18px, calc(18px + var(--sab)));
   padding-left: max(20px, var(--sal));
   padding-right: max(20px, var(--sar));
-  background: var(--surf-card);
-  backdrop-filter: blur(32px) saturate(190%);
-  -webkit-backdrop-filter: blur(32px) saturate(190%);
-  border-top: 1px solid var(--line-strong);
-  border-radius: 26px 26px 0 0;
+  background: var(--glass-panel-bg);
+  backdrop-filter: blur(36px) saturate(200%);
+  -webkit-backdrop-filter: blur(36px) saturate(200%);
+  border-top: 1.5px solid var(--glass-specular);
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  border-radius: 28px 28px 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1318,6 +1319,53 @@ body.chat-open .sheet { bottom: var(--ch); }
   box-shadow: var(--glass-panel-shadow);
 }
 .sheet h2 { font-size: 22px; margin: 0; }
+
+/* ---------- Ненавязчивые рекламные баннеры (AdSense) ---------- */
+.ad-banner-wrap {
+  width: 100%;
+  max-width: 500px;
+  margin: 14px auto 6px;
+  padding: 8px 12px 10px;
+  background: var(--glass-tile-bg);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid var(--line);
+  border-top: 1px solid var(--glass-specular);
+  border-radius: 18px;
+  box-shadow: var(--glass-tile-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  text-align: center;
+  overflow: hidden;
+  transition: opacity .2s;
+}
+
+.ad-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 4px;
+  user-select: none;
+}
+
+.ad-banner-wrap ins.adsbygoogle {
+  display: block !important;
+  width: 100% !important;
+  min-height: 50px;
+  max-height: 90px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.menu-ad {
+  max-width: min(500px, 100%);
+  margin-top: 14px;
+}
 
 .radar {
   width: 80px;
@@ -1394,7 +1442,6 @@ body.chat-open .sheet { bottom: var(--ch); }
     width: min(440px, 60vw);
     gap: 10px;
   }
-  .dots-svg { width: min(400px, 60vw); }
   #cv { width: min(70vw, 55dvh, 500px); }
 
   /* Десктопный чат — плавающий справа внизу */
@@ -1449,7 +1496,6 @@ body.chat-open .sheet { bottom: var(--ch); }
   .ctl { min-height: 36px; padding: 2px 8px; }
   #cv { width: min(48vw, 75dvh, 320px); }
   .memo-grid { width: min(44vw, 75dvh); }
-  .dots-svg { width: min(44vw, 75dvh); }
 }
 </style>
 <script src="ios-bridge.js"></script>
@@ -1503,6 +1549,16 @@ body.chat-open .sheet { bottom: var(--ch); }
       <button id="join" class="ghost">Войти</button>
     </div>
   </div>
+
+  <div class="ad-banner-wrap" id="adLobbyWrap">
+    <span class="ad-label" id="adLabel1">Реклама</span>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2570542366619219"
+         data-ad-slot="auto"
+         data-ad-format="horizontal"
+         data-full-width-responsive="true"></ins>
+  </div>
 </div>
 
 <!-- ==========================================================================
@@ -1511,6 +1567,9 @@ body.chat-open .sheet { bottom: var(--ch); }
 <div id="game" hidden>
   <div id="bar">
     <span>
+      <button class="ghost icon-btn sm leave-btn" id="leaveBtn" title="Выйти в меню" aria-label="Выйти в меню">
+        <svg class="svg-ico sm" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
       <i id="dot"></i>
       <span id="oppn">Соперник</span>
     </span>
@@ -1530,7 +1589,7 @@ body.chat-open .sheet { bottom: var(--ch); }
         <span id="gameLangTxt">RU</span>
       </button>
       <button class="ghost icon-btn sm" id="gameCfgBtn" title="Настройки">
-        <svg class="svg-ico sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <svg class="svg-ico sm" viewBox="0 0 24 24"><circle cx="12" cy="3" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
     </span>
   </div>
@@ -1541,6 +1600,10 @@ body.chat-open .sheet { bottom: var(--ch); }
     <button id="share" class="primary">
       <svg class="svg-ico" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
       <span id="shTxt">Отправить ссылку</span>
+    </button>
+    <button id="cancelWait" class="ghost sm" style="margin-top: 4px;">
+      <svg class="svg-ico sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <span id="cancelWaitTxt">Выйти в меню</span>
     </button>
   </div>
 
@@ -1572,11 +1635,6 @@ body.chat-open .sheet { bottom: var(--ch); }
         <b class="t-name">Мемори</b><small class="t-desc">найди пары карточек</small>
         <span class="tag-badge duo-tag">✨ Новое</span>
       </button>
-      <button class="tile" data-k="dots">
-        <div class="game-ico-badge">✏️</div>
-        <b class="t-name">Точки и линии</b><small class="t-desc">захватывай квадраты</small>
-        <span class="tag-badge duo-tag">✨ Новое</span>
-      </button>
       <button class="tile" data-k="wd">
         <div class="game-ico-badge">🔤</div>
         <b class="t-name">Wordies</b><small class="t-desc">слово за 6 попыток</small>
@@ -1592,6 +1650,19 @@ body.chat-open .sheet { bottom: var(--ch); }
         <b class="t-name">Портреты</b><small class="t-desc">рисуем друг друга</small>
         <span class="tag-badge duo-tag">👥 для двоих</span>
       </button>
+    </div>
+    <button id="leaveRoomMenuBtn" class="ghost sm" style="margin-top: 10px;">
+      <svg class="svg-ico sm" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span id="leaveRoomMenuTxt">Выйти из лобби в меню</span>
+    </button>
+    <div class="ad-banner-wrap menu-ad" id="adMenuWrap">
+      <span class="ad-label" id="adLabel2">Реклама</span>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-2570542366619219"
+           data-ad-slot="auto"
+           data-ad-format="horizontal"
+           data-full-width-responsive="true"></ins>
     </div>
   </div>
 
@@ -1763,12 +1834,15 @@ const I18N = {
       c4: { name: '4 в ряд', desc: 'собери четыре' },
       rps: { name: 'Камень-ножницы', desc: 'до 3 побед' },
       memo: { name: 'Мемори', desc: 'найди пары карточек' },
-      dots: { name: 'Точки и линии', desc: 'захватывай квадраты' },
       wd: { name: 'Wordies', desc: 'слово за 6 попыток' },
       pk: { name: 'Я иду в поход…', desc: 'угадай категорию' },
       pt: { name: 'Портреты', desc: 'рисуем друг друга' }
     },
-    tags: { ai: '🤖 с ИИ', new: '✨ Новое', duo: '👥 для двоих' }
+    tags: { ai: '🤖 с ИИ', new: '✨ Новое', duo: '👥 для двоих' },
+    leaveBtn: 'Выйти в меню',
+    leaveConfirm: 'Выйти из комнаты в главное меню?',
+    leftRoom: 'Вы вышли в главное меню',
+    adLabel: 'Реклама'
   },
   en: {
     appTitle: 'Two Player Games',
@@ -1827,12 +1901,15 @@ const I18N = {
       c4: { name: 'Connect 4', desc: 'Four in a row' },
       rps: { name: 'Rock-Paper-Scissors', desc: 'First to 3 wins' },
       memo: { name: 'Memory', desc: 'Find matching pairs' },
-      dots: { name: 'Dots & Boxes', desc: 'Capture squares' },
       wd: { name: 'Wordies', desc: 'Word in 6 tries' },
       pk: { name: 'Camping trip…', desc: 'Guess category' },
       pt: { name: 'Portraits', desc: 'Draw each other' }
     },
-    tags: { ai: '🤖 vs AI', new: '✨ New', duo: '👥 2 Players' }
+    tags: { ai: '🤖 vs AI', new: '✨ New', duo: '👥 2 Players' },
+    leaveBtn: 'Leave to Menu',
+    leaveConfirm: 'Leave room and return to main menu?',
+    leftRoom: 'Returned to main menu',
+    adLabel: 'Advertisement'
   }
 };
 
@@ -1891,6 +1968,11 @@ function applyLanguage() {
   $('saveCfg').textContent = d.cfgSave;
   $('resetCfg').textContent = d.cfgReset;
   $('closeCfg').textContent = d.cfgClose;
+  if ($('cancelWaitTxt')) $('cancelWaitTxt').textContent = d.leaveBtn;
+  if ($('leaveRoomMenuTxt')) $('leaveRoomMenuTxt').textContent = d.leaveBtn;
+  if ($('leaveBtn')) $('leaveBtn').title = d.leaveBtn;
+  if ($('adLabel1')) $('adLabel1').textContent = d.adLabel;
+  if ($('adLabel2')) $('adLabel2').textContent = d.adLabel;
 
   document.querySelectorAll('.tiles .tile').forEach(t => {
     const k = t.dataset.k;
@@ -1904,7 +1986,7 @@ function applyLanguage() {
     const aiTag = t.querySelector('.ai-tag');
     if (aiTag) aiTag.textContent = d.tags.ai;
     const duoTag = t.querySelector('.duo-tag');
-    if (duoTag) duoTag.textContent = (k === 'memo' || k === 'dots') ? d.tags.new : d.tags.duo;
+    if (duoTag) duoTag.textContent = (k === 'memo') ? d.tags.new : d.tags.duo;
   });
 }
 
@@ -2061,6 +2143,11 @@ function connect() {
         return;
       }
 
+      if (m.t === 'left') {
+        resetToLobby();
+        return;
+      }
+
       S = m;
       code = m.code;
       history.replaceState(0, '', '?room=' + code);
@@ -2209,77 +2296,6 @@ function memo(g) {
   return `<div class="center">
     <div class="st">${turnTxt(g, my)} · <b>${scoreTitle}</b> <span class="p${me}">${youTxt} ${g.scores[me]}</span> : <span class="p${opp}">${g.scores[opp]}</span></div>
     <div class="memo-grid">${cards}</div>
-    <div class="st hint">${hintTxt}</div>
-  </div>`;
-}
-
-// ---------- Игра: Точки и линии ----------
-function dots(g) {
-  const me = S.me, opp = 1 - me, my = g.turn === me && g.winner === null;
-
-  let boxElements = '';
-  for (let br = 0; br < 3; br++) {
-    for (let bc = 0; bc < 3; bc++) {
-      const bi = br * 3 + bc, owner = g.boxes[bi];
-      const x = 20 + bc * 80, y = 20 + br * 80;
-      if (owner >= 0) {
-        const col = owner === 0 ? 'var(--p0)' : 'var(--p1)';
-        const initial = owner === me ? (lang === 'en' ? 'YOU' : 'ВЫ') : (lang === 'en' ? 'OPP' : 'СОП');
-        boxElements += `<rect x="${x + 6}" y="${y + 6}" width="68" height="68" rx="12" fill="${col}" fill-opacity="0.25" stroke="${col}" stroke-width="1.5"/>
-        <text x="${x + 40}" y="${y + 45}" font-size="14" font-weight="700" fill="var(--txt)" text-anchor="middle" dominant-baseline="middle">${initial}</text>`;
-      }
-    }
-  }
-
-  let lineElements = '';
-  // Горизонтальные линии
-  for (let r = 0; r < 4; r++) {
-    for (let c = 0; c < 3; c++) {
-      const idx = r * 3 + c, owner = g.lines[idx];
-      const x1 = 20 + c * 80, y1 = 20 + r * 80, x2 = 20 + (c + 1) * 80, y2 = y1;
-      const strokeCol = owner === -1 ? 'var(--line)' : owner === 0 ? 'var(--p0)' : 'var(--p1)';
-      const strokeW = owner === -1 ? 2.5 : 6;
-      const clickAttr = owner === -1 && my ? M({t:'line', i:idx}) : '';
-      lineElements += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${strokeCol}" stroke-width="${strokeW}" stroke-linecap="round"/>`;
-      if (owner === -1 && my) {
-        lineElements += `<line class="hoverable" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="transparent" stroke-width="32" ${clickAttr} cursor="pointer"/>`;
-      }
-    }
-  }
-
-  // Вертикальные линии
-  for (let r = 0; r < 3; r++) {
-    for (let c = 0; c < 4; c++) {
-      const idx = 12 + r * 4 + c, owner = g.lines[idx];
-      const x1 = 20 + c * 80, y1 = 20 + r * 80, x2 = x1, y2 = 20 + (r + 1) * 80;
-      const strokeCol = owner === -1 ? 'var(--line)' : owner === 0 ? 'var(--p0)' : 'var(--p1)';
-      const strokeW = owner === -1 ? 2.5 : 6;
-      const clickAttr = owner === -1 && my ? M({t:'line', i:idx}) : '';
-      lineElements += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${strokeCol}" stroke-width="${strokeW}" stroke-linecap="round"/>`;
-      if (owner === -1 && my) {
-        lineElements += `<line class="hoverable" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="transparent" stroke-width="32" ${clickAttr} cursor="pointer"/>`;
-      }
-    }
-  }
-
-  let dotElements = '';
-  for (let r = 0; r < 4; r++) {
-    for (let c = 0; c < 4; c++) {
-      dotElements += `<circle cx="${20 + c * 80}" cy="${20 + r * 80}" r="5.5" fill="var(--txt)"/>`;
-    }
-  }
-
-  const boxesTitle = lang === 'en' ? 'Boxes:' : 'Квадраты:';
-  const youTxt = I18N[lang].youScore;
-  const hintTxt = lang === 'en' ? 'Connect the dots. Closing a 1×1 box gives a bonus turn!' : 'Соединяйте точки. Кто закрывает квадрат 1×1 — ходит снова!';
-
-  return `<div class="center dots-box">
-    <div class="st">${turnTxt(g, my)} · <b>${boxesTitle}</b> <span class="p${me}">${youTxt} ${g.scores[me]}</span> : <span class="p${opp}">${g.scores[opp]}</span></div>
-    <svg class="dots-svg" viewBox="0 0 280 280">
-      ${boxElements}
-      ${lineElements}
-      ${dotElements}
-    </svg>
     <div class="st hint">${hintTxt}</div>
   </div>`;
 }
@@ -2556,7 +2572,7 @@ function render() {
   cur = new Set();
 
   const keep = [...$('board').querySelectorAll('input')].map(i => [i.id, i.value, document.activeElement === i]);
-  $('board').innerHTML = {durak, ttt, c4, rps, memo, dots, wd, pk, pt}[S.kind](g);
+  $('board').innerHTML = {durak, ttt, c4, rps, memo, wd, pk, pt}[S.kind](g);
   keep.forEach(([id, v, f]) => {
     const el = $(id);
     if (el) { el.value = v; if (f) el.focus(); }
@@ -2573,11 +2589,11 @@ function render() {
     const pkk = S.kind === 'pk';
     const L_RU = {
       durak:'Вы остались в дураках', pk:'Соперник угадал вашу категорию',
-      memo:'Соперник набрал больше пар', dots:'Соперник захватил больше квадратов'
+      memo:'Соперник набрал больше пар'
     };
     const L_EN = {
       durak:'You are the fool', pk:'Opponent guessed your category',
-      memo:'Opponent found more pairs', dots:'Opponent captured more boxes'
+      memo:'Opponent found more pairs'
     };
     const L = lang === 'en' ? L_EN : L_RU;
     const won = g.winner === me;
@@ -2797,12 +2813,51 @@ $('resetCfg').onclick = () => {
   connect();
 };
 
+// Выход из комнаты / лобби с игроком в главное меню
+function leaveRoom() {
+  if (S && S.kind && (!S.g || S.g.winner === null)) {
+    if (!confirm(I18N[lang].leaveConfirm)) return;
+  }
+  haptics.impactLight();
+  send({t: 'leave'});
+  resetToLobby();
+}
+
+function resetToLobby() {
+  S = null;
+  code = null;
+  lastGid = -1;
+  history.replaceState(0, '', location.pathname);
+  $('game').hidden = true;
+  $('lobby').hidden = false;
+  $('board').innerHTML = '';
+  $('over').hidden = true;
+  toast(I18N[lang].leftRoom);
+}
+
+if ($('leaveBtn')) $('leaveBtn').onclick = leaveRoom;
+if ($('cancelWait')) $('cancelWait').onclick = leaveRoom;
+if ($('leaveRoomMenuBtn')) $('leaveRoomMenuBtn').onclick = leaveRoom;
+
+// Безопасный вызов рекламных баннеров AdSense
+function initAds() {
+  try {
+    const ads = document.querySelectorAll('.ad-banner-wrap ins.adsbygoogle');
+    ads.forEach(() => {
+      try {
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (_) {}
+    });
+  } catch (_) {}
+}
+
 // ==========================================================================
 // 7. ИНИЦИАЛИЗАЦИЯ
 // ==========================================================================
 updateThemeVisuals();
 applyLanguage();
 connect();
+setTimeout(initAds, 800);
 </script>
 </body>
 </html>

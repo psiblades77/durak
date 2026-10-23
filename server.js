@@ -67,7 +67,7 @@ const wss = new WebSocketServer({ server: srv, maxPayload: 2 * 1024 * 1024 });
 const rooms = new Map();
 const mmQueue = []; // Matchmaking queue: [{ ws, token, name, time }]
 
-const KINDS = ['durak', 'ttt', 'c4', 'rps', 'wd', 'pk', 'pt', 'memo', 'dots'];
+const KINDS = ['durak', 'ttt', 'c4', 'rps', 'wd', 'pk', 'pt', 'memo'];
 const BOT_KINDS = ['durak', 'ttt', 'c4', 'rps'];
 const L3 = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 
@@ -341,55 +341,6 @@ function moveMemo(room, p, m) {
   }
 }
 
-// ---------- Новый режим 2: Точки и линии ----------
-function newDots() {
-  return {
-    lines: Array(24).fill(-1),
-    boxes: Array(9).fill(-1),
-    scores: [0, 0],
-    turn: 0,
-    winner: null
-  };
-}
-
-function moveDots(room, p, m) {
-  const g = room.g;
-  if (!g || g.winner !== null) return;
-  if (m.t === 'line' && g.turn === p) {
-    const i = m.i;
-    if (!Number.isInteger(i) || i < 0 || i >= 24) return;
-    if (g.lines[i] !== -1) return;
-
-    g.lines[i] = p;
-    let completedBox = false;
-
-    for (let br = 0; br < 3; br++) {
-      for (let bc = 0; bc < 3; bc++) {
-        const bi = br * 3 + bc;
-        if (g.boxes[bi] !== -1) continue;
-        const top = br * 3 + bc;
-        const bottom = (br + 1) * 3 + bc;
-        const left = 12 + br * 4 + bc;
-        const right = 12 + br * 4 + (bc + 1);
-
-        if (g.lines[top] >= 0 && g.lines[bottom] >= 0 && g.lines[left] >= 0 && g.lines[right] >= 0) {
-          g.boxes[bi] = p;
-          g.scores[p]++;
-          completedBox = true;
-        }
-      }
-    }
-
-    if (completedBox) {
-      if (g.boxes.every(x => x >= 0)) {
-        g.winner = g.scores[0] > g.scores[1] ? 0 : g.scores[1] > g.scores[0] ? 1 : -1;
-      }
-    } else {
-      g.turn = 1 - p;
-    }
-  }
-}
-
 // ---------- Инициализация игр ----------
 function newGame(k) {
   if (k === 'durak') return newDurak();
@@ -397,7 +348,6 @@ function newGame(k) {
   if (k === 'c4') return { b: Array(42).fill(-1), turn: 0, winner: null, line: null };
   if (k === 'rps') return { picks: [null, null], wins: [0, 0], last: null, winner: null };
   if (k === 'memo') return newMemo();
-  if (k === 'dots') return newDots();
   if (k === 'pt') return { phase: 'mode', mode: null, theme: null, imgs: [null, null], winner: null };
   if (k === 'wd') return { phase: 'who', setter: null, word: null, guesses: [], winner: null };
   if (k === 'pk') return { phase: 'prep', cats: [null, null], log: [], turn: 0, step: 'item', item: null, ans: null, guess: null, winner: null };
@@ -410,7 +360,6 @@ function move(room, p, m) {
   if (!g || g.winner !== null) return;
   if (k === 'durak') return moveDurak(room, p, m);
   if (k === 'memo') return moveMemo(room, p, m);
-  if (k === 'dots') return moveDots(room, p, m);
   if (k === 'wd') return moveWd(g, p, m);
   if (k === 'pk') return movePk(g, p, m);
   if (k === 'pt') return movePt(g, p, m);
@@ -591,13 +540,6 @@ const gv = (room, p) => {
     cards: g.cards.map((val, idx) => (g.opened.includes(idx) || g.matched[idx] >= 0) ? val : null),
     opened: g.opened,
     matched: g.matched,
-    scores: g.scores,
-    turn: g.turn,
-    winner: g.winner
-  };
-  if (room.kind === 'dots') return {
-    lines: g.lines,
-    boxes: g.boxes,
     scores: g.scores,
     turn: g.turn,
     winner: g.winner
@@ -785,6 +727,30 @@ wss.on('connection', ws => {
       ws.seat = seat;
       push(room);
       return ws.send(JSON.stringify({ t: 'chatlog', log: room.chat }));
+    }
+
+    // 4. Выход из комнаты / лобби в главное меню
+    if (m.t === 'leave') {
+      const curRoom = ws.room;
+      const curSeat = ws.seat !== undefined ? ws.seat : -1;
+      if (curRoom && curSeat >= 0) {
+        curRoom.ids[curSeat] = null;
+        curRoom.names[curSeat] = '';
+        curRoom.ws[curSeat] = null;
+        ws.room = null;
+        ws.seat = -1;
+        ws.send(JSON.stringify({ t: 'left' }));
+        if (curRoom.isBot || (!curRoom.ids[0] && !curRoom.ids[1])) {
+          rooms.delete(curRoom.code);
+        } else {
+          curRoom.g = null;
+          curRoom.kind = null;
+          push(curRoom);
+        }
+      } else {
+        ws.send(JSON.stringify({ t: 'left' }));
+      }
+      return;
     }
 
     const room = ws.room;
