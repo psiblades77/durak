@@ -13,12 +13,32 @@ const MIME = {
 };
 
 const srv = http.createServer((req, res) => {
-  const reqPath = req.url.split('?')[0];
-  let relPath = reqPath === '/' ? 'index.html' : reqPath.replace(/^\/+/, '');
-  let filePath = path.normalize(path.join(__dirname, 'public', relPath));
+  // Security headers
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
 
-  const pubDir = path.join(__dirname, 'public');
-  if (!filePath.startsWith(pubDir)) {
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    res.writeHead(405);
+    return res.end('Method Not Allowed');
+  }
+
+  const pubDir = path.resolve(__dirname, 'public');
+  let safeRel = 'index.html';
+
+  try {
+    const rawPath = req.url.split('?')[0];
+    const decoded = decodeURIComponent(rawPath);
+    const normalized = path.normalize(decoded).replace(/^([/\\]|\.\.[/\\])+/, '');
+    if (normalized && normalized !== '.') safeRel = normalized;
+  } catch (_) {
+    res.writeHead(400);
+    return res.end('Bad Request');
+  }
+
+  let filePath = path.resolve(pubDir, safeRel);
+  if (!filePath.startsWith(pubDir + path.sep) && filePath !== pubDir) {
     res.writeHead(403);
     return res.end('Forbidden');
   }
@@ -30,7 +50,7 @@ const srv = http.createServer((req, res) => {
     fs.readFile(filePath, (e, d) => {
       if (e) {
         res.writeHead(500);
-        return res.end('Error');
+        return res.end('Error loading asset');
       }
       const ext = path.extname(filePath);
       res.writeHead(200, {
@@ -42,9 +62,10 @@ const srv = http.createServer((req, res) => {
   });
 });
 
-const wss = new WebSocketServer({ server: srv });
+// WebSocket Server with strict payload size limit (2 MB) to prevent OOM attacks
+const wss = new WebSocketServer({ server: srv, maxPayload: 2 * 1024 * 1024 });
 const rooms = new Map();
-const mmQueue = []; // Matchmaking queue: [{ ws, token, name }]
+const mmQueue = []; // Matchmaking queue: [{ ws, token, name, time }]
 
 const KINDS = ['durak', 'ttt', 'c4', 'rps', 'wd', 'pk', 'pt', 'memo', 'dots'];
 const BOT_KINDS = ['durak', 'ttt', 'c4', 'rps'];
@@ -91,7 +112,7 @@ function newDurak() {
     deck,
     trump,
     hands,
-    table: [], // [{ a: card, d: card | null }]
+    table: [],
     att,
     taking: false,
     winner: null
@@ -105,6 +126,7 @@ function moveDurak(room, p, m) {
   const beats = (a, c) => (c.s === a.s && c.r > a.r) || (c.s === tr && a.s !== tr);
 
   if (m.t === 'card') {
+    if (!Number.isInteger(m.r) || !Number.isInteger(m.s)) return 'Неверная карта';
     const hand = g.hands[p];
     const idx = hand.findIndex(c => c.r === m.r && c.s === m.s);
     if (idx < 0) return 'Карты нет в руке';
@@ -185,7 +207,8 @@ function line4(b, i, p) {
 
 // ---------- Wordies ----------
 const norm = s => String(s || '').toLowerCase().replace(/ё/g, 'е').replace(/\s+/g, ' ').trim();
-const txt = (s, n) => String(s || '').replace(/\s+/g, ' ').trim().slice(0, n);
+const txt = (s, n) => String(s || '').replace(/[\u0000-\u001F\u007F-\u009F]/g, '').replace(/\s+/g, ' ').trim().slice(0, n);
+
 function wdScore(word, guess) {
   const r = Array(word.length).fill(0), cnt = {};
   for (let i = 0; i < word.length; i++) {
@@ -196,6 +219,7 @@ function wdScore(word, guess) {
   for (let i = 0; i < word.length; i++) if (r[i] === 0 && cnt[guess[i]] > 0) { r[i] = 1; cnt[guess[i]]--; }
   return r;
 }
+
 function moveWd(g, p, m) {
   if (g.phase === 'who' && m.t === 'wsetter') { g.setter = m.who === 'me' ? p : 1 - p; g.phase = 'set'; }
   else if (g.phase === 'set' && m.t === 'word' && p === g.setter) {
@@ -246,21 +270,25 @@ function movePk(g, p, m) {
   }
 }
 
-// ---------- Портреты ----------
+// ---------- Портреты (Safe Base64 Validation) ----------
 const STYLES = ['киберпанк', 'аниме', 'пиксель-арт', 'комикс', 'стимпанк', 'мультфильм 90-х', 'фэнтези', 'ретро 80-х', 'поп-арт', 'ужастик', 'супергерой', 'викинг', 'космонавт', 'пират', 'самурай', 'вестерн'];
 const TOPICS = ['бурундук', 'Президент', 'робот-повар', 'дракон', 'космический кот', 'ёжик в тумане', 'бабушка-супергерой', 'король пиццы', 'вампир-вегетарианец', 'сонный волшебник', 'ниндзя-официант', 'пингвин-директор'];
+const BASE64_JPEG_RE = /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/;
+
 function movePt(g, p, m) {
   if (g.phase === 'mode' && m.t === 'pmode' && (m.mode === 'each' || m.mode === 'topic')) {
     const L = m.mode === 'each' ? STYLES : TOPICS;
     g.mode = m.mode; g.theme = L[(Math.random() * L.length) | 0]; g.phase = 'draw';
   } else if (g.phase === 'draw' && m.t === 'pimg' && g.imgs[p] === null) {
-    if (typeof m.img !== 'string' || !m.img.startsWith('data:image/jpeg;base64,') || m.img.length > 1.5e6) return 'Рисунок не принят (слишком большой)';
+    if (typeof m.img !== 'string' || !BASE64_JPEG_RE.test(m.img) || m.img.length > 1.5e6) {
+      return 'Рисунок не принят';
+    }
     g.imgs[p] = m.img;
     if (g.imgs[1 - p] !== null) { g.phase = 'done'; g.winner = -1; }
   }
 }
 
-// ---------- Новый режим 1: Мемори (Найди пару) ----------
+// ---------- Новый режим 1: Мемори ----------
 const MEMO_ICONS = ['💎', '🚀', '🔥', '👑', '⚡', '🍀', '🍕', '🦄'];
 function newMemo() {
   const cards = shuffle([...MEMO_ICONS, ...MEMO_ICONS]);
@@ -312,11 +340,11 @@ function moveMemo(room, p, m) {
   }
 }
 
-// ---------- Новый режим 2: Точки и линии (Dots & Boxes) ----------
+// ---------- Новый режим 2: Точки и линии ----------
 function newDots() {
   return {
-    lines: Array(24).fill(-1), // 12 horiz (0..11) + 12 vert (12..23)
-    boxes: Array(9).fill(-1), // 3x3 boxes (0..8)
+    lines: Array(24).fill(-1),
+    boxes: Array(9).fill(-1),
     scores: [0, 0],
     turn: 0,
     winner: null
@@ -387,7 +415,7 @@ function move(room, p, m) {
   if (k === 'pt') return movePt(g, p, m);
 
   if (k === 'ttt' && m.t === 'cell') {
-    if (g.turn !== p || g.b[m.i] !== -1) return;
+    if (g.turn !== p || !Number.isInteger(m.i) || m.i < 0 || m.i > 8 || g.b[m.i] !== -1) return;
     g.b[m.i] = p;
     const l = L3.find(line => line.every(i => g.b[i] === p));
     if (l) { g.winner = p; g.line = l; }
@@ -414,7 +442,7 @@ function move(room, p, m) {
   }
 }
 
-// ---------- Искусственный интеллект (AI) для первых 4 режимов ----------
+// ---------- Искусственный интеллект (AI) ----------
 function scheduleBotMove(room, delay = 550) {
   if (!room.isBot || !room.g || room.g.winner !== null) return;
   setTimeout(() => {
@@ -427,7 +455,6 @@ function botStep(room) {
   const g = room.g, k = room.kind;
   if (!g || g.winner !== null) return;
 
-  // 1. Дурак против ИИ
   if (k === 'durak') {
     const tr = g.trump;
     const beats = (a, c) => (c.s === a.s && c.r > a.r) || (c.s === tr && a.s !== tr);
@@ -478,10 +505,7 @@ function botStep(room) {
         }
       }
     }
-  }
-
-  // 2. Крестики-нолики против ИИ
-  else if (k === 'ttt' && g.turn === 1) {
+  } else if (k === 'ttt' && g.turn === 1) {
     for (let i = 0; i < 9; i++) {
       if (g.b[i] === -1) {
         g.b[i] = 1;
@@ -510,10 +534,7 @@ function botStep(room) {
       move(room, 1, { t: 'cell', i: empty[(Math.random() * empty.length) | 0] });
       push(room);
     }
-  }
-
-  // 3. 4 в ряд против ИИ
-  else if (k === 'c4' && g.turn === 1) {
+  } else if (k === 'c4' && g.turn === 1) {
     const validCols = [];
     for (let c = 0; c < 7; c++) if (g.b[c] === -1) validCols.push(c);
     if (!validCols.length) return;
@@ -539,10 +560,7 @@ function botStep(room) {
     const pref = [3, 2, 4, 1, 5, 0, 6].filter(c => validCols.includes(c));
     move(room, 1, { t: 'col', c: pref[0] });
     push(room);
-  }
-
-  // 4. Камень-ножницы против ИИ
-  else if (k === 'rps') {
+  } else if (k === 'rps') {
     if (g.picks[1] === null) {
       const v = (Math.random() * 3) | 0;
       move(room, 1, { t: 'rps', v });
@@ -552,7 +570,8 @@ function botStep(room) {
 }
 
 // ---------- Комнаты и Состояние ----------
-const clean = s => String(s || '').replace(/[<>&"'`]/g, '').trim().slice(0, 16);
+const clean = s => String(s || '').replace(/[\u0000-\u001F\u007F-\u009F<>&"'`]/g, '').trim().slice(0, 16);
+
 const start = (room, k) => {
   room.kind = k;
   room.g = newGame(k);
@@ -624,18 +643,37 @@ const genCode = () => {
 
 wss.on('connection', ws => {
   let room = null, seat = -1;
+  let msgCount = 0;
+  let lastRateReset = Date.now();
+
   broadcastOnline();
 
   ws.on('message', raw => {
-    let m; try { m = JSON.parse(raw); } catch { return; }
+    // Anti-flood rate limiting: max 40 messages per 2 seconds
+    const now = Date.now();
+    if (now - lastRateReset > 2000) {
+      msgCount = 0;
+      lastRateReset = now;
+    }
+    msgCount++;
+    if (msgCount > 40) return; // Drop flooded packets
 
-    // 1. Одиночный режим против ИИ (Solo bot room)
+    let m;
+    try {
+      m = JSON.parse(raw);
+    } catch {
+      return;
+    }
+    if (!m || typeof m !== 'object') return;
+
+    // 1. Одиночный режим против ИИ
     if (m.t === 'bot_room') {
+      if (rooms.size > 2500) return err(ws, 'Сервер временно перегружен');
       const code = genCode();
       const pName = clean(m.name) || 'Игрок';
       room = {
         code,
-        ids: [String(m.token || Math.random().toString(36).slice(2)), 'bot_ai'],
+        ids: [clean(m.token) || Math.random().toString(36).slice(2), 'bot_ai'],
         names: [pName, 'ИИ Бот 🤖'],
         ws: [ws, null],
         kind: null,
@@ -652,16 +690,19 @@ wss.on('connection', ws => {
       return ws.send(JSON.stringify({ t: 'chatlog', log: room.chat }));
     }
 
-    // 2. Матчмейкинг (Matchmaking)
+    // 2. Матчмейкинг
     if (m.t === 'mm_join') {
-      const token = String(m.token || '');
+      const token = clean(m.token);
       const pName = clean(m.name) || 'Игрок';
 
-      // Clean disconnected queue items
-      while (mmQueue.length && (mmQueue[0].ws.readyState !== 1 || mmQueue[0].token === token)) {
-        if (mmQueue[0].token === token) mmQueue.shift();
-        else mmQueue.shift();
+      // Prune stale queue entries (> 45s) or dead connections
+      const curTime = Date.now();
+      while (mmQueue.length && (curTime - mmQueue[0].time > 45000 || mmQueue[0].ws.readyState !== 1)) {
+        mmQueue.shift();
       }
+
+      const existingIdx = mmQueue.findIndex(q => q.token === token || q.ws === ws);
+      if (existingIdx >= 0) mmQueue.splice(existingIdx, 1);
 
       if (mmQueue.length > 0) {
         const opp = mmQueue.shift();
@@ -686,13 +727,15 @@ wss.on('connection', ws => {
         if (opp.ws.readyState === 1) opp.ws.send(JSON.stringify({ t: 'mm_matched', code }));
         return;
       } else {
-        mmQueue.push({ ws, token, name: pName });
+        if (mmQueue.length < 100) {
+          mmQueue.push({ ws, token, name: pName, time: curTime });
+        }
         return ws.send(JSON.stringify({ t: 'mm_waiting' }));
       }
     }
 
     if (m.t === 'mm_leave') {
-      const token = String(m.token || '');
+      const token = clean(m.token);
       const idx = mmQueue.findIndex(q => q.token === token || q.ws === ws);
       if (idx >= 0) mmQueue.splice(idx, 1);
       return ws.send(JSON.stringify({ t: 'mm_cancelled' }));
@@ -700,14 +743,16 @@ wss.on('connection', ws => {
 
     // 3. Стандартный вход / создание комнаты
     if (m.t === 'join') {
-      const code = m.code ? String(m.code).toUpperCase() : null;
-      if (code) room = rooms.get(code);
-      else {
+      const code = m.code ? String(m.code).toUpperCase().slice(0, 8) : null;
+      if (code) {
+        room = rooms.get(code);
+      } else {
+        if (rooms.size > 2500) return err(ws, 'Сервер перегружен');
         room = { code: genCode(), ids: [null, null], names: ['', ''], ws: [null, null], kind: null, g: null, score: [0, 0], gid: 0, chat: [], last: Date.now(), isBot: false };
         rooms.set(room.code, room);
       }
       if (!room) return err(ws, 'Комната не найдена');
-      const id = String(m.token || '');
+      const id = clean(m.token) || Math.random().toString(36).slice(2);
       seat = room.ids.indexOf(id);
       if (seat < 0) seat = room.ids.indexOf(null);
       if (seat < 0) { room = null; return err(ws, 'В комнате уже двое игроков'); }
@@ -765,10 +810,12 @@ wss.on('connection', ws => {
   });
 });
 
+// Periodic cleanup of idle rooms
 setInterval(() => {
+  const now = Date.now();
   for (const [c, r] of rooms) {
-    if (Date.now() - r.last > 3600e3) rooms.delete(c);
+    if (now - r.last > 2700e3) rooms.delete(c); // 45 minutes idle cleanup
   }
-}, 600e3);
+}, 300e3);
 
 srv.listen(process.env.PORT || 3000, () => console.log('Игры: http://localhost:' + (process.env.PORT || 3000)));

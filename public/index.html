@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Игры для двоих</title>
-<meta name="theme-color" content="#16134a">
+<meta name="theme-color" content="#090a10">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Игры для двоих">
@@ -23,19 +23,27 @@
   --sar: env(safe-area-inset-right, 0px);
   --keyboard-height: 0px;
 
-  --w: clamp(44px, 13vw, 68px);
-  --ds: clamp(34px, 10.5vw, 54px);
-  --txt: #ecebff;
-  --mut: #a9a6d6;
-  --surf: #ffffff0f;
-  --surf2: #ffffff1a;
-  --line: #ffffff24;
-  --acc: #8b7cf6;
-  --ink: #17163a;
-  --paper: #f3f1ff;
-  --red: #cf4a6c;
-  --p0: #7aa5ff;
-  --p1: #c39bff;
+  /* Минималистичная цветовая палитра */
+  --bg: #090a10;
+  --surf: rgba(255, 255, 255, 0.03);
+  --surf2: rgba(255, 255, 255, 0.06);
+  --surf3: rgba(255, 255, 255, 0.09);
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  --txt: #f8fafc;
+  --mut: #94a3b8;
+  --faint: #64748b;
+
+  --acc: #6366f1;
+  --acc-glow: rgba(99, 102, 241, 0.25);
+  --p0: #38bdf8;
+  --p1: #c084fc;
+  --win: #22c55e;
+  --red: #e11d48;
+
+  --w: clamp(44px, 12.5vw, 66px);
+  --ds: clamp(34px, 10vw, 52px);
   --ch: min(44dvh, 340px);
 }
 
@@ -50,96 +58,130 @@
 html, body {
   height: 100%;
   margin: 0;
+  background: var(--bg);
   overscroll-behavior: none;
   -webkit-overscroll-behavior: none;
 }
 
 body {
-  background: radial-gradient(900px 600px at 12% -10%, #4b3fb766, transparent 60%),
-              radial-gradient(800px 600px at 105% 25%, #2f5fd055, transparent 55%),
-              linear-gradient(165deg, #0d0e29, #16134a 55%, #0d1033) fixed;
+  background: radial-gradient(900px 450px at 50% -5%, rgba(99, 102, 241, 0.07), transparent 70%),
+              radial-gradient(600px 300px at 100% 20%, rgba(56, 189, 248, 0.04), transparent 60%),
+              var(--bg);
   color: var(--txt);
-  font: 16px/1.4 -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+  font: 15px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+  letter-spacing: -0.01em;
   touch-action: manipulation;
 }
 
 [hidden] { display: none !important; }
 
+/* Кнопки и контролы */
 button, .btn {
   font: inherit;
-  font-weight: 700;
-  border: 0;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid var(--line);
   border-radius: 14px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #7f6df2, #5b86f7);
-  color: #fff;
-  box-shadow: 0 6px 18px #5b4fd855;
+  padding: 12px 18px;
+  background: var(--surf2);
+  color: var(--txt);
   cursor: pointer;
   text-decoration: none;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   text-align: center;
-  transition: transform .12s cubic-bezier(0.2, 0.8, 0.4, 1), opacity .12s, box-shadow .15s;
+  transition: transform .12s cubic-bezier(0.2, 0.8, 0.4, 1), background-color .15s, border-color .15s, opacity .12s;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-button:active, .btn:active { transform: scale(.96); }
-button:disabled { opacity: .4; transform: none !important; }
-
-button.sm {
-  padding: 6px 12px;
-  font-size: 14px;
-  border-radius: 10px;
-  box-shadow: none;
+button:active, .btn:active {
+  transform: scale(0.97);
 }
 
-button.ghost {
-  background: var(--surf2);
-  box-shadow: none;
-  border: 1px solid var(--line);
+button:disabled {
+  opacity: 0.35;
+  transform: none !important;
+}
+
+button.primary {
+  background: var(--acc);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  box-shadow: 0 4px 14px var(--acc-glow);
 }
 
 button.mm-btn {
-  background: linear-gradient(135deg, #f59e0b, #ef4444);
-  box-shadow: 0 6px 20px #ef444455;
-  font-size: 16px;
-  padding: 13px 20px;
+  background: linear-gradient(180deg, #f59e0b, #d97706);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 15px;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25);
 }
+
 button.solo-btn {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  box-shadow: 0 6px 20px #8b5cf655;
+  background: var(--surf3);
+  border-color: var(--line-strong);
+  color: #e2e8f0;
+}
+
+button.sm {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 10px;
+}
+
+button.ghost {
+  background: var(--surf);
+  border-color: var(--line);
 }
 
 button.icon-btn {
-  padding: 7px 11px;
-  font-size: 14px;
-  line-height: 1.1;
-  font-weight: 600;
-  letter-spacing: .03em;
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 10px;
+  color: var(--mut);
+  background: var(--surf);
 }
 
+/* Поля ввода */
 input, textarea {
   font: inherit;
-  font-size: 16px !important;
-  border-radius: 14px;
+  font-size: 15px !important;
+  border-radius: 12px;
   border: 1px solid var(--line);
-  background: #0b0c2488;
+  background: var(--surf);
   color: var(--txt);
-  padding: 12px 14px;
+  padding: 11px 14px;
   width: 100%;
   text-align: center;
   outline: none;
   -webkit-user-select: auto;
   user-select: auto;
-  transition: border-color .15s ease;
+  transition: border-color .15s ease, background-color .15s;
 }
 
-input:focus { border-color: var(--acc); }
-input::placeholder { color: #8d89c4; }
-
-h1, h2, .st b {
-  font-family: -apple-system-ui-serif, Georgia, "Times New Roman", serif;
+input:focus {
+  border-color: var(--acc);
+  background: var(--surf2);
 }
 
-.hint { font-size: 13px; color: var(--mut); }
+input::placeholder {
+  color: var(--faint);
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: var(--txt);
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--mut);
+}
 
 .row {
   display: flex;
@@ -154,8 +196,10 @@ h1, h2, .st b {
   align-items: center;
   gap: 10px;
   width: 100%;
-  color: var(--mut);
-  font-size: 12px;
+  color: var(--faint);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
   margin: 2px 0;
 }
 .divider::before, .divider::after {
@@ -169,7 +213,7 @@ h1, h2, .st b {
   width: 7em;
   text-transform: uppercase;
   font-weight: 700;
-  letter-spacing: .08em;
+  letter-spacing: .1em;
 }
 
 /* ---------- Лобби ---------- */
@@ -180,7 +224,7 @@ h1, h2, .st b {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 14px;
+  gap: 16px;
   padding: max(20px, calc(var(--sat) + 12px)) max(18px, var(--sar)) max(20px, calc(var(--sab) + 12px)) max(18px, var(--sal));
   text-align: center;
   position: relative;
@@ -206,30 +250,29 @@ h1, h2, .st b {
   border-radius: 99px;
   font-size: 12px;
   color: var(--mut);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .conn-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: #ff5252;
+  background: #f43f5e;
 }
 .conn-dot.on {
-  background: #6fe0b0;
-  box-shadow: 0 0 8px #6fe0b0;
+  background: var(--win);
+  box-shadow: 0 0 6px var(--win);
 }
 .conn-dot.wait {
-  background: #ffb74d;
-  box-shadow: 0 0 6px #ffb74d;
+  background: #f59e0b;
+  box-shadow: 0 0 6px #f59e0b;
 }
 
 #lobby h1 {
-  font-size: clamp(34px, 10vw, 60px);
-  line-height: 1.04;
-  margin: 0;
-  background: linear-gradient(90deg, #d3c9ff, #8fb2ff);
+  font-size: clamp(34px, 9vw, 52px);
+  line-height: 1.05;
+  background: linear-gradient(180deg, #ffffff, #cbd5e1);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -243,23 +286,23 @@ h1, h2, .st b {
 }
 
 .suits {
-  font-size: 26px;
-  letter-spacing: .25em;
-  color: #b9b0f5;
+  font-size: 22px;
+  letter-spacing: .3em;
+  color: var(--faint);
 }
 
 .panel {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: min(340px, 100%);
+  width: min(330px, 100%);
   padding: 18px;
   background: var(--surf);
   border: 1px solid var(--line);
-  border-radius: 22px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 10px 30px #0004;
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
 }
 
 /* ---------- Игровая комната ---------- */
@@ -284,10 +327,10 @@ h1, h2, .st b {
   padding: 6px 10px;
   background: var(--surf);
   border: 1px solid var(--line);
-  border-radius: 16px;
-  font-size: 14px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  border-radius: 14px;
+  font-size: 13px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 #bar > span {
@@ -298,10 +341,11 @@ h1, h2, .st b {
 }
 
 #score {
-  background: #0004;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--line);
   border-radius: 99px;
-  padding: 3px 12px;
-  font-weight: 700;
+  padding: 3px 10px;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -310,46 +354,48 @@ h1, h2, .st b {
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 24vw;
+  color: var(--txt);
+  font-weight: 500;
 }
 
 #dot {
   display: inline-block;
-  width: 9px;
-  height: 9px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: #777;
+  background: var(--faint);
   flex: none;
 }
 #dot.on {
-  background: #6fe0b0;
-  box-shadow: 0 0 8px #6fe0b0;
+  background: var(--win);
+  box-shadow: 0 0 6px var(--win);
 }
 
 #code {
-  letter-spacing: .1em;
-  color: #c9c2ff;
+  letter-spacing: .08em;
+  color: var(--mut);
+  font-weight: 700;
 }
 
 #chatBtn {
   position: relative;
   padding: 6px 10px;
-  font-size: 17px;
-  line-height: 1.2;
+  font-size: 15px;
 }
 
 #badge {
   position: absolute;
-  top: -7px;
-  right: -7px;
-  min-width: 19px;
-  height: 19px;
-  border-radius: 10px;
-  background: #e9679a;
+  top: -6px;
+  right: -6px;
+  min-width: 17px;
+  height: 17px;
+  border-radius: 99px;
+  background: var(--acc);
   color: #fff;
-  font: 700 11px system-ui;
+  font: 700 10px system-ui;
   display: grid;
   place-items: center;
-  padding: 0 5px;
+  padding: 0 4px;
 }
 
 #wait, #menu, .center {
@@ -364,9 +410,9 @@ h1, h2, .st b {
 }
 
 #wait b {
-  font: 700 44px -apple-system-ui-serif, Georgia, serif;
+  font-size: 40px;
   letter-spacing: .12em;
-  color: #d3c9ff;
+  color: #fff;
 }
 
 #menu {
@@ -374,15 +420,15 @@ h1, h2, .st b {
   justify-content: safe center;
 }
 #menu h2 {
-  margin: 0;
-  font-size: 24px;
+  font-size: 22px;
+  margin-bottom: 2px;
 }
 
 .tiles {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
-  width: min(460px, 100%);
+  width: min(440px, 100%);
 }
 
 .tile {
@@ -392,40 +438,44 @@ h1, h2, .st b {
   align-items: center;
   gap: 3px;
   padding: 14px 8px;
-  background: linear-gradient(160deg, #ffffff18, #ffffff08);
+  background: var(--surf);
   color: var(--txt);
   border: 1px solid var(--line);
   box-shadow: none;
-  border-radius: 18px;
-  transition: transform .12s, border-color .15s;
+  border-radius: 16px;
+  transition: transform .12s, border-color .15s, background-color .15s;
 }
 
-.tile:hover, .tile:focus { border-color: var(--acc); }
+.tile:hover, .tile:focus {
+  border-color: var(--line-strong);
+  background: var(--surf2);
+}
 
-.tile span { font-size: 32px; }
-.tile small {
+.tile span { font-size: 30px; }
+.tile .t-name { font-size: 14px; font-weight: 600; }
+.tile .t-desc {
   font-weight: 400;
   color: var(--mut);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .tag-badge {
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 600;
   padding: 2px 7px;
-  border-radius: 8px;
+  border-radius: 6px;
   margin-top: 2px;
   letter-spacing: .02em;
 }
 .ai-tag {
-  background: #6366f140;
+  background: rgba(99, 102, 241, 0.15);
   color: #a5b4fc;
-  border: 1px solid #6366f160;
+  border: 1px solid rgba(99, 102, 241, 0.3);
 }
 .duo-tag {
-  background: #ffffff15;
+  background: var(--surf2);
   color: var(--mut);
-  border: 1px solid #ffffff20;
+  border: 1px solid var(--line);
 }
 
 #board {
@@ -437,13 +487,13 @@ h1, h2, .st b {
   -webkit-overflow-scrolling: touch;
 }
 
-.ttl { margin: 0; font-size: 26px; }
+.ttl { font-size: 24px; margin: 0; }
 
-/* ---------- Дурак ---------- */
+/* ---------- Карты (Дурак) - Минималистичные ---------- */
 .hand {
   display: flex;
   justify-content: safe center;
-  padding: 8px 14px;
+  padding: 6px 14px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -452,31 +502,33 @@ h1, h2, .st b {
 .opp .c + .c { margin-left: calc(var(--w) * -.62); }
 
 .me {
-  padding-top: 16px;
-  border-radius: 18px 18px 0 0;
+  padding-top: 14px;
+  border-radius: 16px 16px 0 0;
 }
 .me.turn {
-  background: linear-gradient(#8b7cf633, transparent);
-  animation: glow 1.4s ease-in-out infinite;
+  background: linear-gradient(rgba(99, 102, 241, 0.12), transparent);
 }
 
-@keyframes glow { 50% { background: linear-gradient(#8b7cf670, transparent); } }
-
-.me .c.ok { cursor: pointer; transform: translateY(-8px); }
-.me .c.no { opacity: .5; filter: saturate(.6); }
-
-@keyframes deal { from { opacity: 0; transform: translate(-70px, -120px) rotate(-14deg) scale(.55); } }
-@keyframes dealo { from { opacity: 0; transform: translateY(-70px) rotate(10deg) scale(.6); } }
-@keyframes pop { 0% { opacity: 0; transform: scale(1.55) rotate(-6deg); } 60% { transform: scale(.94); } }
-@keyframes drop { from { opacity: .3; transform: translateY(calc((var(--r) + 1) * (var(--ds) + 5px) * -1 - 40px)); } }
-@keyframes flip { from { transform: rotateY(90deg); opacity: 0; } }
-@keyframes glow2 { to { transform: scale(1.06); } }
+.me .c.ok {
+  cursor: pointer;
+  transform: translateY(-8px);
+}
+.me .c.no {
+  opacity: 0.45;
+}
 
 .deal { animation: deal .45s cubic-bezier(.2, .8, .3, 1) both; }
 .dealo { animation: dealo .4s ease-out both; }
 .pop { animation: pop .35s ease-out both; }
 .drop { animation: drop .5s cubic-bezier(.5, 0, .9, .5) both; }
 .flip { animation: flip .4s ease both; }
+
+@keyframes deal { from { opacity: 0; transform: translate(-70px, -120px) rotate(-14deg) scale(.55); } }
+@keyframes dealo { from { opacity: 0; transform: translateY(-70px) rotate(10deg) scale(.6); } }
+@keyframes pop { 0% { opacity: 0; transform: scale(1.4) rotate(-4deg); } 60% { transform: scale(.96); } }
+@keyframes drop { from { opacity: .3; transform: translateY(calc((var(--r) + 1) * (var(--ds) + 5px) * -1 - 40px)); } }
+@keyframes flip { from { transform: rotateY(90deg); opacity: 0; } }
+@keyframes glow2 { to { transform: scale(1.05); } }
 
 .mid {
   flex: 1;
@@ -508,7 +560,7 @@ h1, h2, .st b {
   top: 0;
   transform: rotate(90deg);
   z-index: 1;
-  outline: 3px solid #a99bff;
+  outline: 2px solid var(--acc);
   outline-offset: 1px;
 }
 
@@ -520,27 +572,28 @@ h1, h2, .st b {
 }
 
 .tb {
-  background: #0005;
-  border: 1px solid #a99bff;
+  background: var(--surf);
+  border: 1px solid var(--line);
   border-radius: 99px;
-  padding: 3px 12px;
-  font-size: 14px;
+  padding: 3px 10px;
+  font-size: 13px;
+  color: var(--mut);
   white-space: nowrap;
 }
 
-.tb b { font-size: 22px; vertical-align: -2px; margin-left: 2px; }
-.tb.r b { color: #ff8fae; }
+.tb b { font-size: 18px; vertical-align: -1px; margin-left: 2px; }
+.tb.r b { color: var(--red); }
 
 .tbl {
   display: grid;
   grid-template-columns: repeat(3, calc(var(--w) * 1.5));
-  gap: 10px 6px;
+  gap: 8px 6px;
   align-content: center;
-  padding: 10px;
+  padding: 8px;
   background: var(--surf);
   border: 1px solid var(--line);
-  border-radius: 20px;
-  min-height: calc(var(--w) * 3.4);
+  border-radius: 18px;
+  min-height: calc(var(--w) * 3.3);
 }
 
 .pair { position: relative; height: calc(var(--w) * 1.55); }
@@ -548,7 +601,7 @@ h1, h2, .st b {
   position: absolute;
   left: calc(var(--w) * .4);
   top: calc(var(--w) * .18);
-  box-shadow: -3px 3px 8px #0006;
+  box-shadow: -3px 3px 10px rgba(0, 0, 0, 0.45);
 }
 
 .ctl {
@@ -557,66 +610,68 @@ h1, h2, .st b {
   justify-content: center;
   gap: 12px;
   padding: 4px 14px 0;
-  min-height: 52px;
+  min-height: 48px;
 }
 
 .st { text-align: center; }
 
+/* Карта */
 .c {
   flex: none;
   width: var(--w);
   height: calc(var(--w) * 1.4);
-  border-radius: calc(var(--w) * .12);
-  background: var(--paper);
-  color: var(--ink);
-  border: 1px solid #0003;
-  box-shadow: 0 2px 8px #0008;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #0f172a;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-family: -apple-system-ui-serif, Georgia, serif;
   line-height: 1;
   user-select: none;
   transition: transform .12s, opacity .2s;
 }
 
-.c b { font-size: calc(var(--w) * .36); }
+.c b { font-size: calc(var(--w) * .36); font-weight: 700; }
 .c span { font-size: calc(var(--w) * .42); }
 .c.r { color: var(--red); }
 
 .c.back {
-  background: repeating-linear-gradient(45deg, #4f43b8 0 6px, #3d3499 6px 12px);
-  border: 3px solid #e9e6ff;
+  background: repeating-linear-gradient(45deg, #1e1b4b 0 5px, #17153b 5px 10px);
+  border: 2px solid rgba(255, 255, 255, 0.15);
 }
 .c.back em {
-  font: normal 700 calc(var(--w) * .3) -apple-system-ui-serif, Georgia, serif;
-  color: #fff;
+  font: normal 700 calc(var(--w) * .3) system-ui, sans-serif;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* ---------- Крестики-нолики, 4 в ряд, КНБ ---------- */
 .ttt {
   display: grid;
-  grid-template-columns: repeat(3, clamp(78px, 24vw, 110px));
+  grid-template-columns: repeat(3, clamp(76px, 23vw, 105px));
   gap: 8px;
 }
 
 .cell {
-  height: clamp(78px, 24vw, 110px);
-  font-size: clamp(40px, 13vw, 64px);
+  height: clamp(76px, 23vw, 105px);
+  font-size: clamp(38px, 12vw, 58px);
+  font-weight: 300;
   padding: 0;
   background: var(--surf);
   color: var(--txt);
   box-shadow: none;
   border: 1px solid var(--line);
-  border-radius: 18px;
+  border-radius: 16px;
 }
 
 .p0 { color: var(--p0); }
 .p1 { color: var(--p1); }
 
 .win {
-  background: #ffffff33 !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: var(--line-strong) !important;
   animation: glow2 .8s infinite alternate;
 }
 
@@ -624,9 +679,10 @@ h1, h2, .st b {
   display: flex;
   gap: 5px;
   padding: 10px;
-  background: #2a3180;
+  background: #111322;
+  border: 1px solid var(--line);
   border-radius: 18px;
-  box-shadow: 0 6px 0 #1b2060;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
 
@@ -642,15 +698,16 @@ h1, h2, .st b {
   width: var(--ds);
   height: var(--ds);
   border-radius: 50%;
-  background: #12154a;
+  background: #090a14;
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
-.disc.p0 { background: var(--p0); }
-.disc.p1 { background: var(--p1); }
+.disc.p0 { background: var(--p0); box-shadow: 0 0 8px rgba(56, 189, 248, 0.4); }
+.disc.p1 { background: var(--p1); box-shadow: 0 0 8px rgba(192, 132, 252, 0.4); }
 .disc.sm {
   display: inline-block;
-  width: 16px;
-  height: 16px;
-  vertical-align: -3px;
+  width: 14px;
+  height: 14px;
+  vertical-align: -2px;
 }
 
 .rps { display: flex; gap: 10px; }
@@ -658,62 +715,64 @@ h1, h2, .st b {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 48px;
+  font-size: 44px;
   line-height: 1.1;
-  padding: 14px 12px;
-  width: clamp(86px, 26vw, 110px);
+  padding: 14px 10px;
+  width: clamp(84px, 25vw, 105px);
+  background: var(--surf);
+  border: 1px solid var(--line);
 }
-.rps small { font-size: 13px; }
+.rps small { font-size: 13px; color: var(--mut); margin-top: 4px; }
 .rps button.sel {
-  background: linear-gradient(135deg, #3fa186, #4fb59a);
+  background: rgba(99, 102, 241, 0.2);
+  border-color: var(--acc);
 }
 
 .reveal {
   display: flex;
   align-items: center;
   gap: 14px;
-  font-size: 54px;
+  font-size: 50px;
 }
-.reveal em { font: normal 600 15px system-ui; }
+.reveal em { font: normal 600 14px system-ui; color: var(--mut); }
 
 /* ---------- Мемори ---------- */
 .memo-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
-  width: min(340px, 88vw);
+  width: min(330px, 86vw);
   aspect-ratio: 1;
 }
 
 .memo-card {
-  border-radius: 14px;
-  background: var(--surf2);
+  border-radius: 12px;
+  background: var(--surf);
   border: 1px solid var(--line);
   display: grid;
   place-items: center;
-  font-size: clamp(26px, 6.5vw, 40px);
+  font-size: clamp(24px, 6vw, 36px);
   cursor: pointer;
-  box-shadow: 0 4px 12px #0004;
-  transition: transform .2s, border-color .2s;
+  box-shadow: none;
+  transition: transform .2s, border-color .2s, background-color .2s;
 }
 
-.memo-card:active { transform: scale(.94); }
+.memo-card:active { transform: scale(.95); }
 .memo-card.open {
-  background: linear-gradient(145deg, #2b276b, #1d194f);
+  background: var(--surf3);
   border-color: var(--acc);
 }
 .memo-card.m0 {
-  background: rgba(122, 165, 255, 0.22);
+  background: rgba(56, 189, 248, 0.15);
   border-color: var(--p0);
-  box-shadow: 0 0 12px rgba(122, 165, 255, 0.4);
 }
 .memo-card.m1 {
-  background: rgba(195, 155, 255, 0.22);
+  background: rgba(192, 132, 252, 0.15);
   border-color: var(--p1);
-  box-shadow: 0 0 12px rgba(195, 155, 255, 0.4);
 }
 .memo-card.back {
-  background: repeating-linear-gradient(45deg, #252063 0 5px, #1a174c 5px 10px);
+  background: var(--surf);
+  border-color: var(--line);
 }
 
 /* ---------- Точки и линии ---------- */
@@ -725,13 +784,13 @@ h1, h2, .st b {
 }
 
 .dots-svg {
-  width: min(320px, 86vw);
+  width: min(310px, 86vw);
   aspect-ratio: 1;
   background: var(--surf);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 18px;
   padding: 8px;
-  box-shadow: 0 8px 24px #0006;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 /* ---------- Wordies ---------- */
@@ -744,16 +803,15 @@ h1, h2, .st b {
   display: grid;
   place-items: center;
   border-radius: 8px;
-  background: #0004;
+  background: var(--surf);
   border: 1px solid var(--line);
-  font: 700 calc(var(--cs) * .55) -apple-system-ui-serif, Georgia, serif;
-  font-style: normal;
+  font: 700 calc(var(--cs) * .55) system-ui, sans-serif;
   text-transform: uppercase;
   color: var(--txt);
 }
-.wc.g { background: #3fa186; border-color: #3fa186; }
-.wc.y { background: #d3a84b; border-color: #d3a84b; color: var(--ink); }
-.wc.x { background: #2c2f66; }
+.wc.g { background: #059669; border-color: #059669; }
+.wc.y { background: #d97706; border-color: #d97706; color: #fff; }
+.wc.x { background: #1e293b; color: var(--faint); }
 
 .wgap { width: calc(var(--cs) * .5); }
 
@@ -766,19 +824,20 @@ h1, h2, .st b {
   min-height: 26px;
 }
 .keys i {
-  font: 700 13px -apple-system-ui-serif, Georgia, serif;
+  font: 700 12px system-ui, sans-serif;
   text-transform: uppercase;
   min-width: 22px;
   text-align: center;
-  padding: 3px 5px;
+  padding: 4px 6px;
   border-radius: 6px;
   background: var(--surf2);
+  color: var(--txt);
 }
-.keys .g { background: #3fa186; }
-.keys .y { background: #d3a84b; color: var(--ink); }
-.keys .x { background: #2c2f66; opacity: .6; }
+.keys .g { background: #059669; }
+.keys .y { background: #d97706; color: #fff; }
+.keys .x { background: #1e293b; opacity: .5; }
 
-.frm { display: flex; gap: 8px; width: min(420px, 100%); }
+.frm { display: flex; gap: 8px; width: min(400px, 100%); }
 .frm input { flex: 1; min-width: 0; }
 
 /* ---------- Поход ---------- */
@@ -800,26 +859,26 @@ h1, h2, .st b {
   gap: 6px;
   background: var(--surf);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 14px;
   padding: 10px;
   min-height: 80px;
 }
 
 .msg {
   max-width: 85%;
-  padding: 8px 12px;
-  border-radius: 14px;
+  padding: 7px 12px;
+  border-radius: 12px;
   background: var(--surf2);
   align-self: flex-start;
-  font-size: 15px;
+  font-size: 14px;
 }
-.msg.mine { align-self: flex-end; background: #7f6df255; }
-.msg b { display: block; font-size: 12px; opacity: .7; }
+.msg.mine { align-self: flex-end; background: rgba(99, 102, 241, 0.25); border: 1px solid rgba(99, 102, 241, 0.3); }
+.msg b { display: block; font-size: 11px; color: var(--mut); margin-bottom: 2px; }
 
 .act {
   background: var(--surf);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 14px;
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -827,31 +886,30 @@ h1, h2, .st b {
   align-items: center;
   text-align: center;
 }
-.act h3 { margin: 0; font: 700 18px -apple-system-ui-serif, Georgia, serif; }
+.act h3 { font-size: 16px; margin: 0; }
 
 .chip2 { font-size: 13px; color: var(--mut); text-align: center; }
-.sent { font: 700 22px -apple-system-ui-serif, Georgia, serif; margin: 0; }
+.sent { font-size: 18px; font-weight: 600; margin: 0; }
 
 /* ---------- Портреты ---------- */
 .modes {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: min(380px, 100%);
+  gap: 10px;
+  width: min(360px, 100%);
 }
 .mode {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  background: linear-gradient(160deg, #ffffff18, #ffffff08);
+  background: var(--surf);
   border: 1px solid var(--line);
-  box-shadow: none;
-  border-radius: 18px;
-  padding: 18px;
+  border-radius: 16px;
+  padding: 16px;
   color: var(--txt);
 }
-.mode span { font-size: 34px; }
+.mode span { font-size: 32px; }
 .mode small { font-weight: 400; color: var(--mut); }
 
 #cv {
@@ -859,8 +917,8 @@ h1, h2, .st b {
   touch-action: none;
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 8px 28px #0007;
-  width: min(100vw - 28px, 52dvh, 460px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  width: min(100vw - 28px, 52dvh, 440px);
   aspect-ratio: 1;
   cursor: crosshair;
 }
@@ -870,32 +928,31 @@ h1, h2, .st b {
   gap: 6px;
   flex-wrap: wrap;
   justify-content: center;
-  max-width: 420px;
+  max-width: 400px;
 }
 
 .sw {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   padding: 0;
   border-radius: 50%;
-  border: 2px solid #ffffff55;
+  border: 2px solid transparent;
   box-shadow: none;
 }
-.sw.on { border-color: #fff; transform: scale(1.18); }
+.sw.on { border-color: #fff; transform: scale(1.15); }
 
 .sz {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   padding: 0;
   display: grid;
   place-items: center;
-  background: var(--surf2);
-  box-shadow: none;
+  background: var(--surf);
   border: 1px solid var(--line);
-  border-radius: 12px;
-  font-size: 18px;
+  border-radius: 10px;
+  font-size: 16px;
 }
-.sz.on { background: #7f6df2; border-color: #fff; }
+.sz.on { background: var(--acc); border-color: rgba(255, 255, 255, 0.3); }
 .sz i { display: block; background: #fff; border-radius: 50%; }
 
 .pics {
@@ -909,13 +966,13 @@ h1, h2, .st b {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  width: min(300px, 100%);
+  width: min(280px, 100%);
 }
 .pic img, .pv {
   width: 100%;
-  border-radius: 16px;
+  border-radius: 14px;
   background: #fff;
-  box-shadow: 0 8px 28px #0007;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 .pv { width: min(240px, 70vw); }
 
@@ -928,16 +985,16 @@ h1, h2, .st b {
   height: var(--ch);
   display: flex;
   flex-direction: column;
-  background: #15133ff7;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(9, 10, 16, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border-top: 1px solid var(--line);
-  border-radius: 22px 22px 0 0;
+  border-radius: 24px 24px 0 0;
   z-index: 50;
   padding-bottom: max(8px, var(--sab));
   padding-left: var(--sal);
   padding-right: var(--sar);
-  box-shadow: 0 -8px 32px #0008;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
 }
 
 .dhead {
@@ -945,7 +1002,7 @@ h1, h2, .st b {
   justify-content: space-between;
   align-items: center;
   padding: 10px 16px;
-  border-bottom: 1px solid #ffffff12;
+  border-bottom: 1px solid var(--line);
 }
 
 #cList {
@@ -961,38 +1018,42 @@ h1, h2, .st b {
 .cm {
   max-width: 82%;
   padding: 8px 12px;
-  border-radius: 14px;
+  border-radius: 12px;
   background: var(--surf2);
   align-self: flex-start;
-  font-size: 15px;
+  font-size: 14px;
   word-break: break-word;
 }
-.cm.me { align-self: flex-end; background: #7f6df280; }
-.cm b { display: block; font-size: 11px; opacity: .65; }
+.cm.me {
+  align-self: flex-end;
+  background: var(--acc);
+  color: #fff;
+}
+.cm b { display: block; font-size: 10px; opacity: .7; margin-bottom: 2px; }
 
 .drow { display: flex; gap: 8px; padding: 8px 16px; }
 .drow input { text-align: left; }
-.drow button { padding: 10px 18px; }
+.drow button { padding: 10px 16px; }
 
 #cPrev {
   position: fixed;
-  top: max(56px, calc(var(--sat) + 52px));
+  top: max(54px, calc(var(--sat) + 50px));
   left: 50%;
   transform: translateX(-50%);
   max-width: 88vw;
-  background: #241f66f7;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(15, 17, 26, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--acc);
   padding: 8px 16px;
-  border-radius: 16px;
+  border-radius: 14px;
   z-index: 90;
-  font-size: 14px;
+  font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
-  box-shadow: 0 8px 24px #0008;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 body.chat-open #game { padding-bottom: var(--ch); }
@@ -1007,37 +1068,37 @@ body.chat-open .sheet { bottom: var(--ch); }
   padding: 20px 20px max(18px, calc(18px + var(--sab)));
   padding-left: max(20px, var(--sal));
   padding-right: max(20px, var(--sar));
-  background: #15133ff5;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid var(--acc);
-  border-radius: 24px 24px 0 0;
+  background: rgba(10, 11, 18, 0.95);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border-top: 1px solid var(--line-strong);
+  border-radius: 26px 26px 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
   text-align: center;
   z-index: 60;
-  box-shadow: 0 -10px 36px #0009;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.6);
 }
-.sheet h2 { margin: 0; font-size: 26px; }
+.sheet h2 { font-size: 22px; margin: 0; }
 
 .radar {
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background: radial-gradient(#ef444455, transparent);
-  border: 2px solid #ef4444;
+  background: radial-gradient(rgba(245, 158, 11, 0.2), transparent);
+  border: 1px solid #f59e0b;
   display: grid;
   place-items: center;
-  font-size: 34px;
-  animation: pulseRadar 1.5s infinite;
+  font-size: 28px;
+  animation: pulseRadar 1.6s infinite;
   margin: 6px 0;
 }
 @keyframes pulseRadar {
-  0% { transform: scale(.88); box-shadow: 0 0 0 0 #ef444477; }
-  70% { transform: scale(1.05); box-shadow: 0 0 0 24px #ef444400; }
-  100% { transform: scale(.88); box-shadow: 0 0 0 0 #ef444400; }
+  0% { transform: scale(.9); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(245, 158, 11, 0); }
+  100% { transform: scale(.9); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
 }
 
 #toast {
@@ -1045,10 +1106,10 @@ body.chat-open .sheet { bottom: var(--ch); }
   left: 50%;
   top: max(14px, calc(var(--sat) + 12px));
   transform: translateX(-50%);
-  background: #1d1a52f2;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--line);
+  background: rgba(15, 17, 26, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--line-strong);
   padding: 8px 18px;
   border-radius: 99px;
   opacity: 0;
@@ -1057,94 +1118,94 @@ body.chat-open .sheet { bottom: var(--ch); }
   z-index: 100;
   max-width: 90vw;
   text-align: center;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  box-shadow: 0 8px 24px #0008;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(4px); }
 
 /* ---------- Планшеты и iPad ---------- */
 @media (min-width: 768px) {
   :root {
-    --w: clamp(62px, 8.5vw, 88px);
-    --ds: clamp(46px, 5.5vw, 64px);
+    --w: clamp(62px, 8vw, 84px);
+    --ds: clamp(44px, 5.5vw, 62px);
   }
-  #lobby .panel { width: 380px; }
+  #lobby .panel { width: 360px; }
   .tiles {
     grid-template-columns: 1fr 1fr;
-    width: min(540px, 90vw);
-    gap: 14px;
+    width: min(520px, 90vw);
+    gap: 12px;
   }
   .tile { padding: 18px 12px; }
-  .tile span { font-size: 38px; }
+  .tile span { font-size: 36px; }
   .ttt {
-    grid-template-columns: repeat(3, clamp(96px, 15vw, 130px));
-    gap: 12px;
+    grid-template-columns: repeat(3, clamp(90px, 14vw, 120px));
+    gap: 10px;
   }
   .cell {
-    height: clamp(96px, 15vw, 130px);
-    font-size: clamp(52px, 8vw, 76px);
-    border-radius: 22px;
+    height: clamp(90px, 14vw, 120px);
+    font-size: clamp(48px, 8vw, 70px);
+    border-radius: 20px;
   }
   .rps button {
-    font-size: 56px;
-    width: clamp(100px, 16vw, 130px);
-    padding: 18px 14px;
+    font-size: 52px;
+    width: clamp(96px, 15vw, 120px);
+    padding: 16px 12px;
   }
   .memo-grid {
-    width: min(460px, 60vw);
-    gap: 12px;
+    width: min(440px, 60vw);
+    gap: 10px;
   }
-  .dots-svg { width: min(420px, 60vw); }
-  #cv { width: min(75vw, 56dvh, 520px); }
+  .dots-svg { width: min(400px, 60vw); }
+  #cv { width: min(70vw, 55dvh, 500px); }
   #drawer {
     left: auto;
     right: max(16px, var(--sar));
     bottom: max(16px, var(--sab));
-    width: 360px;
-    height: min(70dvh, 560px);
+    width: 350px;
+    height: min(70dvh, 550px);
     border-radius: 22px;
     border: 1px solid var(--line);
   }
-  body.chat-open #game { padding-bottom: 0; padding-right: 390px; }
-  body.chat-open .sheet { bottom: 0; right: 390px; }
+  body.chat-open #game { padding-bottom: 0; padding-right: 380px; }
+  body.chat-open .sheet { bottom: 0; right: 380px; }
 }
 
 @media (min-width: 1024px) {
   :root {
-    --w: clamp(70px, 6.5vw, 98px);
-    --ds: clamp(52px, 4.5vw, 72px);
+    --w: clamp(68px, 6.5vw, 94px);
+    --ds: clamp(50px, 4.5vw, 70px);
   }
-  .tiles { width: 600px; }
+  .tiles { width: 560px; }
 }
 
 @media (max-height: 700px) and (orientation: portrait) {
   :root {
-    --w: clamp(38px, 11vw, 56px);
-    --ds: clamp(30px, 9vw, 44px);
+    --w: clamp(38px, 11vw, 54px);
+    --ds: clamp(30px, 9vw, 42px);
   }
-  #lobby { gap: 8px; padding-top: max(14px, var(--sat)); padding-bottom: max(14px, var(--sab)); }
-  #lobby h1 { font-size: clamp(30px, 8.5vw, 44px); }
-  .suits { font-size: 22px; }
+  #lobby { gap: 8px; padding-top: max(12px, var(--sat)); padding-bottom: max(12px, var(--sab)); }
+  #lobby h1 { font-size: clamp(28px, 8vw, 40px); }
+  .suits { font-size: 20px; }
   .panel { padding: 14px; gap: 8px; }
 }
 
 @media (max-height: 500px) and (orientation: landscape) {
   :root {
-    --w: clamp(32px, 7vh, 46px);
-    --ds: clamp(24px, 6.5vh, 36px);
+    --w: clamp(32px, 7vh, 44px);
+    --ds: clamp(24px, 6.5vh, 34px);
   }
   #lobby {
     flex-direction: row;
-    gap: 24px;
-    padding: var(--sat) max(24px, var(--sar)) var(--sab) max(24px, var(--sal));
+    gap: 20px;
+    padding: var(--sat) max(20px, var(--sar)) var(--sab) max(20px, var(--sal));
   }
-  #bar { margin: 2px 10px 0; padding: 4px 8px; font-size: 13px; }
-  .mid { padding: 2px 8px; gap: 8px; }
-  .tbl { min-height: calc(var(--w) * 2.8); padding: 6px; gap: 4px; }
-  .hand { padding: 4px 10px; }
-  .ctl { min-height: 38px; padding: 2px 10px; }
-  #cv { width: min(48vw, 75dvh, 340px); }
+  #bar { margin: 2px 8px 0; padding: 4px 8px; font-size: 12px; }
+  .mid { padding: 2px 6px; gap: 8px; }
+  .tbl { min-height: calc(var(--w) * 2.8); padding: 4px; gap: 4px; }
+  .hand { padding: 4px 8px; }
+  .ctl { min-height: 36px; padding: 2px 8px; }
+  #cv { width: min(48vw, 75dvh, 320px); }
   .memo-grid { width: min(44vw, 75dvh); }
   .dots-svg { width: min(44vw, 75dvh); }
 }
@@ -1159,7 +1220,6 @@ body.chat-open .sheet { bottom: var(--ch); }
       <i class="conn-dot" id="connDot"></i>
       <span id="connTxt">Онлайн...</span>
     </div>
-    <!-- Селектор языка в углу (Language selector in corner) -->
     <button class="ghost icon-btn" id="langBtn" title="Switch language">🌐 RU</button>
     <button class="ghost icon-btn" id="openCfg" title="Настройки сервера">⚙️</button>
   </div>
@@ -1170,9 +1230,9 @@ body.chat-open .sheet { bottom: var(--ch); }
 
   <div class="panel">
     <input id="guest" maxlength="16" placeholder="Ваше имя">
-    <button id="quickPlay" class="btn mm-btn">⚡ Быстрая игра (Найти соперника)</button>
+    <button id="quickPlay" class="btn mm-btn">⚡ Быстрая игра</button>
     <button id="soloPlay" class="btn solo-btn">🤖 Одиночная игра с ИИ</button>
-    <div class="divider"><span id="orFriendTxt">или игра по коду</span></div>
+    <div class="divider"><span id="orFriendTxt">или по коду</span></div>
     <button id="create" class="ghost">👥 Создать комнату</button>
     <div class="row">
       <input id="codeIn" maxlength="4" placeholder="Код">
@@ -1200,7 +1260,7 @@ body.chat-open .sheet { bottom: var(--ch); }
   <div id="wait" hidden>
     <p id="waitTxt">Ждём друга. Отправьте ему код или ссылку:</p>
     <b id="wcode"></b>
-    <button id="share">Отправить ссылку</button>
+    <button id="share" class="primary">Отправить ссылку</button>
   </div>
 
   <div id="menu" hidden>
@@ -1256,7 +1316,7 @@ body.chat-open .sheet { bottom: var(--ch); }
   <div id="cList"></div>
   <div class="drow">
     <input id="chIn" maxlength="300" placeholder="Сообщение…" autocomplete="off">
-    <button data-ui="csend">➤</button>
+    <button data-ui="csend" class="primary">➤</button>
   </div>
 </div>
 
@@ -1265,7 +1325,7 @@ body.chat-open .sheet { bottom: var(--ch); }
 <div id="over" class="sheet" hidden>
   <h2 id="res"></h2>
   <div class="row">
-    <button data-m='{"t":"again"}' id="btnAgain">Ещё раз</button>
+    <button data-m='{"t":"again"}' id="btnAgain" class="primary">Ещё раз</button>
     <button class="ghost" data-m='{"t":"menu"}' id="btnOther">Другая игра</button>
   </div>
 </div>
@@ -1284,7 +1344,7 @@ body.chat-open .sheet { bottom: var(--ch); }
   <p class="hint" id="cfgDesc">Укажите адрес игрового сервера для сетевой игры на iPhone и iPad.</p>
   <input id="srvInput" placeholder="wss://ваш-сервер.com или http://ip:3000">
   <div class="row">
-    <button id="saveCfg">Сохранить</button>
+    <button id="saveCfg" class="primary">Сохранить</button>
     <button class="ghost" id="resetCfg">Сбросить</button>
     <button class="ghost" id="closeCfg">Закрыть</button>
   </div>
@@ -1305,9 +1365,9 @@ const I18N = {
     lobbyTitle: 'Игры<br>для двоих',
     lobbyDesc: 'Карты, слова, мини-игры и рисование. Играйте с другом онлайн, против ИИ или ищите соперника!',
     namePh: 'Ваше имя',
-    quickPlay: '⚡ Быстрая игра (Найти соперника)',
+    quickPlay: '⚡ Быстрая игра',
     soloPlay: '🤖 Одиночная игра с ИИ',
-    orFriend: 'или игра по коду',
+    orFriend: 'или по коду',
     createRoom: '👥 Создать комнату',
     codePh: 'Код',
     joinBtn: 'Войти',
@@ -1369,7 +1429,7 @@ const I18N = {
     lobbyTitle: 'Two Player<br>Games',
     lobbyDesc: 'Cards, words, mini-games & drawing. Play online with friends, challenge AI or find an opponent!',
     namePh: 'Your name',
-    quickPlay: '⚡ Quick Play (Find Match)',
+    quickPlay: '⚡ Quick Play',
     soloPlay: '🤖 Solo vs AI Bot',
     orFriend: 'or join with code',
     createRoom: '👥 Create Room',
@@ -1443,7 +1503,8 @@ const ERR_MAP = {
   'Сначала отбейте все карты': { ru: 'Сначала отбейте все карты', en: 'Defend all cards first' },
   'Этот режим доступен только для двоих игроков': { ru: 'Этот режим доступен только для двоих игроков', en: 'Mode only available for 2 players' },
   'Максимум 6 карт на столе': { ru: 'Максимум 6 карт на столе', en: 'Maximum 6 cards on table' },
-  'У соперника недостаточно карт': { ru: 'У соперника недостаточно карт', en: 'Opponent has not enough cards' }
+  'У соперника недостаточно карт': { ru: 'У соперника недостаточно карт', en: 'Opponent has not enough cards' },
+  'Рисунок не принят': { ru: 'Рисунок не принят', en: 'Drawing rejected' }
 };
 
 function setLanguage(l) {
@@ -1485,7 +1546,6 @@ function applyLanguage() {
   $('resetCfg').textContent = d.cfgReset;
   $('closeCfg').textContent = d.cfgClose;
 
-  // Обновление названий и описаний плиток в меню
   document.querySelectorAll('.tiles .tile').forEach(t => {
     const k = t.dataset.k;
     const gInfo = d.games[k];
@@ -1535,7 +1595,7 @@ function toast(t) {
   e.textContent = t;
   e.classList.add('on');
   clearTimeout(toast.t);
-  toast.t = setTimeout(() => e.classList.remove('on'), 2600);
+  toast.t = setTimeout(() => e.classList.remove('on'), 2500);
 }
 
 const send = o => {
@@ -1734,7 +1794,7 @@ function durak(g) {
     </div>
     <div class="tbl">${tbl}</div>
   </div>
-  <div class="ctl"><div class="st">${st}</div>${btn ? `<button ${M({t:act})}>${btn}</button>` : ''}</div>
+  <div class="ctl"><div class="st">${st}</div>${btn ? `<button ${M({t:act})} class="primary sm">${btn}</button>` : ''}</div>
   <div class="hand me ${turn && g.winner === null ? 'turn' : ''}">${hand}</div>`;
 }
 
@@ -1814,8 +1874,8 @@ function dots(g) {
       if (owner >= 0) {
         const col = owner === 0 ? 'var(--p0)' : 'var(--p1)';
         const initial = owner === me ? (lang === 'en' ? 'YOU' : 'ВЫ') : (lang === 'en' ? 'OPP' : 'СОП');
-        boxElements += `<rect x="${x + 6}" y="${y + 6}" width="68" height="68" rx="12" fill="${col}" fill-opacity="0.32" stroke="${col}" stroke-width="2"/>
-        <text x="${x + 40}" y="${y + 46}" font-size="16" font-weight="bold" fill="#fff" text-anchor="middle" dominant-baseline="middle">${initial}</text>`;
+        boxElements += `<rect x="${x + 6}" y="${y + 6}" width="68" height="68" rx="10" fill="${col}" fill-opacity="0.25" stroke="${col}" stroke-width="1.5"/>
+        <text x="${x + 40}" y="${y + 45}" font-size="14" font-weight="700" fill="#fff" text-anchor="middle" dominant-baseline="middle">${initial}</text>`;
       }
     }
   }
@@ -1825,8 +1885,8 @@ function dots(g) {
     for (let c = 0; c < 3; c++) {
       const idx = r * 3 + c, owner = g.lines[idx];
       const x1 = 20 + c * 80, y1 = 20 + r * 80, x2 = 20 + (c + 1) * 80, y2 = y1;
-      const strokeCol = owner === -1 ? 'rgba(255,255,255,0.18)' : owner === 0 ? 'var(--p0)' : 'var(--p1)';
-      const strokeW = owner === -1 ? 3 : 7;
+      const strokeCol = owner === -1 ? 'rgba(255,255,255,0.1)' : owner === 0 ? 'var(--p0)' : 'var(--p1)';
+      const strokeW = owner === -1 ? 2.5 : 6;
       const clickAttr = owner === -1 && my ? M({t:'line', i:idx}) : '';
       lineElements += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${strokeCol}" stroke-width="${strokeW}" stroke-linecap="round"/>`;
       if (owner === -1 && my) {
@@ -1839,8 +1899,8 @@ function dots(g) {
     for (let c = 0; c < 4; c++) {
       const idx = 12 + r * 4 + c, owner = g.lines[idx];
       const x1 = 20 + c * 80, y1 = 20 + r * 80, x2 = x1, y2 = 20 + (r + 1) * 80;
-      const strokeCol = owner === -1 ? 'rgba(255,255,255,0.18)' : owner === 0 ? 'var(--p0)' : 'var(--p1)';
-      const strokeW = owner === -1 ? 3 : 7;
+      const strokeCol = owner === -1 ? 'rgba(255,255,255,0.1)' : owner === 0 ? 'var(--p0)' : 'var(--p1)';
+      const strokeW = owner === -1 ? 2.5 : 6;
       const clickAttr = owner === -1 && my ? M({t:'line', i:idx}) : '';
       lineElements += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${strokeCol}" stroke-width="${strokeW}" stroke-linecap="round"/>`;
       if (owner === -1 && my) {
@@ -1852,7 +1912,7 @@ function dots(g) {
   let dotElements = '';
   for (let r = 0; r < 4; r++) {
     for (let c = 0; c < 4; c++) {
-      dotElements += `<circle cx="${20 + c * 80}" cy="${20 + r * 80}" r="6" fill="#ecebff"/>`;
+      dotElements += `<circle cx="${20 + c * 80}" cy="${20 + r * 80}" r="5.5" fill="#f8fafc"/>`;
     }
   }
 
@@ -1874,13 +1934,13 @@ function dots(g) {
 // ---------- Игра: Wordies ----------
 function wd(g) {
   const me = S.me, o = 1 - me, nm = i => esc(S.names[i]), setter = g.setter === me;
-  const form = (id, act, ph, btn, hint) => `<div class="frm"><input id="${id}" maxlength="15" placeholder="${ph}" autocomplete="off"><button class="go" data-f="${act}" data-in="${id}">${btn}</button></div>${hint ? `<div class="hint">${hint}</div>` : ''}`;
+  const form = (id, act, ph, btn, hint) => `<div class="frm"><input id="${id}" maxlength="15" placeholder="${ph}" autocomplete="off"><button class="go primary" data-f="${act}" data-in="${id}">${btn}</button></div>${hint ? `<div class="hint">${hint}</div>` : ''}`;
 
   if (g.phase === 'who') {
     const qTitle = lang === 'en' ? 'Who will set the word?<br>The other player guesses in 6 tries.' : 'Кто будет загадывать слово?<br>Второй игрок отгадывает за 6 попыток.';
     const btnMe = lang === 'en' ? 'I will set it' : 'Я загадываю';
     const btnOther = lang === 'en' ? `Let ${nm(o)} set it` : `Пусть загадывает ${nm(o)}`;
-    return `<div class="center"><h2 style="margin:0">Wordies</h2><p class="st">${qTitle}</p><div class="row"><button ${M({t:'wsetter', who:'me'})}>${btnMe}</button><button class="ghost" ${M({t:'wsetter', who:'other'})}>${btnOther}</button></div></div>`;
+    return `<div class="center"><h2 style="margin:0">Wordies</h2><p class="st">${qTitle}</p><div class="row"><button ${M({t:'wsetter', who:'me'})} class="primary">${btnMe}</button><button class="ghost" ${M({t:'wsetter', who:'other'})}>${btnOther}</button></div></div>`;
   }
 
   if (g.phase === 'set') {
@@ -1914,7 +1974,7 @@ function wd(g) {
 // ---------- Игра: Поход ----------
 function pk(g) {
   const me = S.me, o = 1 - me, nm = i => esc(S.names[i]), q = s => `«${esc(s)}»`;
-  const form = (id, act, ph, btn) => `<div class="frm"><input id="${id}" maxlength="40" placeholder="${ph}" autocomplete="off"><button class="go" data-f="${act}" data-in="${id}">${btn}</button></div>`;
+  const form = (id, act, ph, btn) => `<div class="frm"><input id="${id}" maxlength="40" placeholder="${ph}" autocomplete="off"><button class="go primary" data-f="${act}" data-in="${id}">${btn}</button></div>`;
 
   if (g.phase === 'prep') {
     const mainTitle = lang === 'en' ? 'I am going on a trip and taking with me…' : 'Я иду в поход и беру с собой…';
@@ -1944,14 +2004,14 @@ function pk(g) {
   } else if (g.step === 'item') {
     act = t ? `<h3>${lang === 'en' ? 'What are you taking on the trip?' : 'Что ты берёшь с собой в поход?'}</h3>${form('iIn', 'item', lang === 'en' ? 'Item name' : 'Название предмета', lang === 'en' ? 'Send' : 'Отправить')}` : `<div>${nm(g.turn)} ${lang === 'en' ? 'is picking an item…' : 'выбирает предмет…'}</div>`;
   } else if (g.step === 'judge') {
-    act = t ? `<div>${lang === 'en' ? `Waiting for ${nm(o)}’s answer…` : `Ждём ответа ${nm(o)}…`}</div>` : `<h3>${nm(g.turn)} ${lang === 'en' ? 'takes' : 'берёт с собой'} ${q(g.item)}</h3><div class="row"><button ${M({t:'judge', v:true})}>${lang === 'en' ? 'You can go' : 'Ты идёшь в поход'}</button><button class="ghost" ${M({t:'judge', v:false})}>${lang === 'en' ? 'You cannot go' : 'Ты не идёшь в поход'}</button></div>${mineCat}`;
+    act = t ? `<div>${lang === 'en' ? `Waiting for ${nm(o)}’s answer…` : `Ждём ответа ${nm(o)}…`}</div>` : `<h3>${nm(g.turn)} ${lang === 'en' ? 'takes' : 'берёт с собой'} ${q(g.item)}</h3><div class="row"><button ${M({t:'judge', v:true})} class="primary">${lang === 'en' ? 'You can go' : 'Ты идёшь в поход'}</button><button class="ghost" ${M({t:'judge', v:false})}>${lang === 'en' ? 'You cannot go' : 'Ты не идёшь в поход'}</button></div>${mineCat}`;
   } else if (g.step === 'decide') {
     const verdict = g.ans ? (lang === 'en' ? '✅ You can go' : '✅ Ты идёшь в поход') : (lang === 'en' ? '❌ You cannot go' : '❌ Ты не идёшь в поход');
-    act = t ? `<h3>${verdict}</h3><div>${q(g.item)}</div><div class="row"><button ${M({t:'try'})}>${lang === 'en' ? 'Try to guess category' : 'Попробовать угадать категорию'}</button><button class="ghost" ${M({t:'skip'})}>${lang === 'en' ? 'Skip' : 'Пропустить'}</button></div>` : `<div>${nm(g.turn)} ${lang === 'en' ? 'is deciding whether to guess…' : 'решает, пробовать ли угадать вашу категорию…'}</div>`;
+    act = t ? `<h3>${verdict}</h3><div>${q(g.item)}</div><div class="row"><button ${M({t:'try'})} class="primary">${lang === 'en' ? 'Try to guess category' : 'Попробовать угадать категорию'}</button><button class="ghost" ${M({t:'skip'})}>${lang === 'en' ? 'Skip' : 'Пропустить'}</button></div>` : `<div>${nm(g.turn)} ${lang === 'en' ? 'is deciding whether to guess…' : 'решает, пробовать ли угадать вашу категорию…'}</div>`;
   } else if (g.step === 'guess') {
     act = t ? `<h3>${lang === 'en' ? `What is ${nm(o)}’s category?` : `Какая категория у ${nm(o)}?`}</h3>${form('gIn', 'pguess', lang === 'en' ? 'Your guess' : 'Ваш вариант', lang === 'en' ? 'Send' : 'Отправить')}` : `<div>${nm(g.turn)} ${lang === 'en' ? 'is writing a guess…' : 'пишет догадку…'}</div>`;
   } else {
-    act = t ? `<div>${lang === 'en' ? `Waiting for ${nm(o)}’s answer…` : `Ждём ответа ${nm(o)}…`}</div>` : `<h3>${nm(g.turn)} ${lang === 'en' ? 'thinks:' : 'думает:'} ${q(g.guess)}</h3><div class="row"><button ${M({t:'verify', v:true})}>${lang === 'en' ? 'Correct ✅' : 'Верно ✅'}</button><button class="ghost" ${M({t:'verify', v:false})}>${lang === 'en' ? 'Incorrect ❌' : 'Неверно ❌'}</button></div>${mineCat}`;
+    act = t ? `<div>${lang === 'en' ? `Waiting for ${nm(o)}’s answer…` : `Ждём ответа ${nm(o)}…`}</div>` : `<h3>${nm(g.turn)} ${lang === 'en' ? 'thinks:' : 'думает:'} ${q(g.guess)}</h3><div class="row"><button ${M({t:'verify', v:true})} class="primary">${lang === 'en' ? 'Correct ✅' : 'Верно ✅'}</button><button class="ghost" ${M({t:'verify', v:false})}>${lang === 'en' ? 'Incorrect ❌' : 'Неверно ❌'}</button></div>${mineCat}`;
   }
 
   const giveupBtn = lang === 'en' ? 'Give up & reveal categories' : 'Сдаться и раскрыть категории';
@@ -1963,7 +2023,7 @@ const cv = document.createElement('canvas');
 cv.width = cv.height = 600;
 cv.id = 'cv';
 const cx = cv.getContext('2d');
-const pen = {col:'#1b1a3d', sz:7, tool:'pen'};
+const pen = {col:'#0f172a', sz:6, tool:'pen'};
 let undo = [], drawing = false, last = null, myImg = null;
 
 function cvClear() {
@@ -2025,10 +2085,10 @@ function pt(g) {
 
   if (g.phase === 'done') {
     const saveTxt = lang === 'en' ? '💾 Save' : '💾 Сохранить';
-    const cards = g.imgs.map((img, i) => `<div class="pic"><img src="${img}" alt=""><div class="st">${g.mode === 'each' ? (lang === 'en' ? `Portrait of ${nm(1 - i)} by ${nm(i)}` : `Портрет ${nm(1 - i)} от ${nm(i)}`) : (lang === 'en' ? `Artwork by ${nm(i)}` : `Работа ${nm(i)}`)}</div><a class="btn" href="${img}" download="portrait-${i + 1}.jpg">${saveTxt}</a></div>`).join('');
+    const cards = g.imgs.map((img, i) => `<div class="pic"><img src="${img}" alt=""><div class="st">${g.mode === 'each' ? (lang === 'en' ? `Portrait of ${nm(1 - i)} by ${nm(i)}` : `Портрет ${nm(1 - i)} от ${nm(i)}`) : (lang === 'en' ? `Artwork by ${nm(i)}` : `Работа ${nm(i)}`)}</div><a class="btn primary sm" href="${img}" download="portrait-${i + 1}.jpg">${saveTxt}</a></div>`).join('');
     const topicLabel = g.mode === 'each' ? (lang === 'en' ? 'Style' : 'Стиль') : (lang === 'en' ? 'Topic' : 'Тема');
     const saveHint = lang === 'en' ? 'Press and hold image to save' : 'Нажмите и удерживайте картинку для сохранения';
-    return `<div class="center"><div class="st">${topicLabel}: «<b>${esc(g.theme)}</b>»</div><div class="pics">${cards}</div><div class="hint">${saveHint}</div><div class="row"><button ${M({t:'again'})}>${I18N[lang].playAgain}</button><button class="ghost" ${M({t:'menu'})}>${I18N[lang].otherGame}</button></div></div>`;
+    return `<div class="center"><div class="st">${topicLabel}: «<b>${esc(g.theme)}</b>»</div><div class="pics">${cards}</div><div class="hint">${saveHint}</div><div class="row"><button ${M({t:'again'})} class="primary">${I18N[lang].playAgain}</button><button class="ghost" ${M({t:'menu'})}>${I18N[lang].otherGame}</button></div></div>`;
   }
 
   const task = g.mode === 'each' ? (lang === 'en' ? `Draw <b>${nm(o)}</b> in style «<b>${esc(g.theme)}</b>»` : `Нарисуйте <b>${nm(o)}</b> в стиле «<b>${esc(g.theme)}</b>»`) : (lang === 'en' ? `Draw: «<b>${esc(g.theme)}</b>»` : `Нарисуйте: «<b>${esc(g.theme)}</b>»`);
@@ -2037,13 +2097,13 @@ function pt(g) {
     return `<div class="center"><div class="st">${task}</div>${myImg ? `<img class="pv" src="${myImg}" alt="">` : ''}<div class="st">${sentTxt}</div></div>`;
   }
 
-  const cols = ['#1b1a3d', '#6c5ce7', '#3b82f6', '#14b8a6', '#22c55e', '#eab308', '#f97316', '#ef4444', '#ec4899', '#92400e', '#9ca3af'];
+  const cols = ['#0f172a', '#6366f1', '#3b82f6', '#14b8a6', '#22c55e', '#eab308', '#f97316', '#ef4444', '#ec4899', '#78350f', '#94a3b8'];
   const doneBtn = lang === 'en' ? 'Done' : 'Готово';
 
   return `<div class="center" style="gap:10px;padding:10px"><div class="st">${task}</div><div id="cvHost"></div>
     <div class="tools">${cols.map(c => `<button class="sw ${pen.tool === 'pen' && pen.col === c ? 'on' : ''}" style="background:${c}" data-col="${c}"></button>`).join('')}</div>
-    <div class="tools">${[3, 7, 14].map(z => `<button class="sz ${pen.sz === z ? 'on' : ''}" data-sz="${z}"><i style="width:${z + 4}px;height:${z + 4}px"></i></button>`).join('')}<button class="sz ${pen.tool === 'eraser' ? 'on' : ''}" data-tool="eraser">🧽</button><button class="sz" data-ui="pundo">↩️</button><button class="sz" data-ui="pclear">🗑</button></div>
-    <button data-ui="psubmit">${doneBtn}</button></div>`;
+    <div class="tools">${[3, 6, 12].map(z => `<button class="sz ${pen.sz === z ? 'on' : ''}" data-sz="${z}"><i style="width:${z + 4}px;height:${z + 4}px"></i></button>`).join('')}<button class="sz ${pen.tool === 'eraser' ? 'on' : ''}" data-tool="eraser">🧽</button><button class="sz" data-ui="pundo">↩️</button><button class="sz" data-ui="pclear">🗑</button></div>
+    <button data-ui="psubmit" class="primary">${doneBtn}</button></div>`;
 }
 
 // ---------- Чат ----------
@@ -2112,7 +2172,7 @@ function render() {
     document.querySelectorAll('.tiles .tile').forEach(t => {
       const k = t.dataset.k;
       const isBotSupported = ['durak', 'ttt', 'c4', 'rps'].includes(k);
-      t.style.opacity = isBotSupported ? '1' : '0.45';
+      t.style.opacity = isBotSupported ? '1' : '0.4';
     });
   } else {
     document.querySelectorAll('.tiles .tile').forEach(t => t.style.opacity = '1');
