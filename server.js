@@ -181,7 +181,8 @@ function moveDurak(room, p, m) {
     }
   }
 
-  if (g.deck.length === 0) {
+  // Check winner when deck is empty and current attack is resolved
+  if (g.deck.length === 0 && g.table.length === 0) {
     const p0Empty = g.hands[0].length === 0;
     const p1Empty = g.hands[1].length === 0;
     if (p0Empty && p1Empty) g.winner = -1;
@@ -793,7 +794,7 @@ wss.on('connection', ws => {
       const e = move(room, seat, m);
       if (e) err(ws, e);
       if (was === null && room.g.winner !== null && room.g.winner >= 0) room.score[room.g.winner]++;
-      if (room.isBot) scheduleBotMove(room, 500);
+      if (!e && room.isBot) scheduleBotMove(room, 500);
     }
     push(room);
   });
