@@ -1,6 +1,28 @@
 {
-  "name": "durak-online",
+  "name": "2.3-build",
   "version": "1.0.0",
-  "scripts": { "start": "node server.js" },
-  "dependencies": { "ws": "^8.18.0" }
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "sync": "cap sync ios",
+    "copy": "cap copy ios",
+    "open:ios": "cap open ios",
+    "build:ios": "cap sync ios"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.5.3",
+    "@capacitor/keyboard": "^8.0.6",
+    "@capacitor/share": "^8.0.3",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.4",
+    "ws": "^8.22.0"
+  }
 }

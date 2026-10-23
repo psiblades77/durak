@@ -1,97 +1,174 @@
 const http = require('http'), fs = require('fs'), path = require('path');
 const { WebSocketServer } = require('ws');
 
-const MIME = { '.svg': 'image/svg+xml', '.png': 'image/png', '.webmanifest': 'application/manifest+json' };
+const MIME = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'application/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.webmanifest': 'application/manifest+json; charset=utf-8',
+  '.ico': 'image/x-icon'
+};
+
 const srv = http.createServer((req, res) => {
-  const m = req.url.split('?')[0].match(/^\/icons\/([\w.-]+)$/);
-  const file = m ? path.join('icons', m[1]) : 'index.html';
-  fs.readFile(path.join(__dirname, 'public', file), (e, d) => {
-    res.writeHead(e ? (m ? 404 : 500) : 200, { 'Content-Type': m ? (MIME[path.extname(file)] || 'application/octet-stream') : 'text/html; charset=utf-8' });
-    res.end(d);
+  const reqPath = req.url.split('?')[0];
+  let relPath = reqPath === '/' ? 'index.html' : reqPath.replace(/^\/+/, '');
+  let filePath = path.normalize(path.join(__dirname, 'public', relPath));
+
+  const pubDir = path.join(__dirname, 'public');
+  if (!filePath.startsWith(pubDir)) {
+    res.writeHead(403);
+    return res.end('Forbidden');
+  }
+
+  fs.stat(filePath, (err, stats) => {
+    if (err || !stats.isFile()) {
+      filePath = path.join(pubDir, 'index.html');
+    }
+    fs.readFile(filePath, (e, d) => {
+      if (e) {
+        res.writeHead(500);
+        return res.end('Error');
+      }
+      const ext = path.extname(filePath);
+      res.writeHead(200, {
+        'Content-Type': MIME[ext] || 'application/octet-stream',
+        'Cache-Control': ext === '.html' ? 'no-cache' : 'public, max-age=86400'
+      });
+      res.end(d);
+    });
   });
 });
+
 const wss = new WebSocketServer({ server: srv });
 const rooms = new Map();
-// ---------- Дурак ----------
-const beats = (a, d, t) => (d.s === a.s && d.r > a.r) || (d.s === t && a.s !== t);
+const mmQueue = []; // Matchmaking queue: [{ ws, token, name }]
 
+const KINDS = ['durak', 'ttt', 'c4', 'rps', 'wd', 'pk', 'pt', 'memo', 'dots'];
+const BOT_KINDS = ['durak', 'ttt', 'c4', 'rps'];
+const L3 = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+function broadcastOnline() {
+  const msg = JSON.stringify({ t: 'online', count: wss.clients.size });
+  for (const client of wss.clients) {
+    if (client.readyState === 1) client.send(msg);
+  }
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = (Math.random() * (i + 1)) | 0;
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// ---------- Дурак ----------
 function newDurak() {
   const deck = [];
-  for (let s = 0; s < 4; s++) for (let r = 6; r <= 14; r++) deck.push({ r, s });
-  for (let i = deck.length - 1; i > 0; i--) {
-    const j = (Math.random() * (i + 1)) | 0;
-    [deck[i], deck[j]] = [deck[j], deck[i]];
+  for (let s = 0; s < 4; s++) {
+    for (let r = 6; r <= 14; r++) deck.push({ r, s });
   }
-  const g = { deck, hands: [[], []], table: [], taking: false, winner: null, trump: deck[0].s };
-  for (let i = 0; i < 6; i++) { g.hands[0].push(deck.pop()); g.hands[1].push(deck.pop()); }
-  const low = p => Math.min(99, ...g.hands[p].filter(c => c.s === g.trump).map(c => c.r));
-  g.att = low(1) < low(0) ? 1 : 0; // первым ходит обладатель младшего козыря
-  return g;
-}
-
-function canThrow(g) {
-  const def = 1 - g.att, und = g.table.filter(x => !x.d).length;
-  if (g.table.length >= 6 || und + 1 > g.hands[def].length) return false;
-  return g.hands[g.att].some(c => g.table.some(x => x.a.r === c.r || (x.d && x.d.r === c.r)));
-}
-
-function finish(g) {
-  const def = 1 - g.att;
-  if (g.taking) g.table.forEach(x => { g.hands[def].push(x.a); if (x.d) g.hands[def].push(x.d); });
-  g.table = [];
-  for (const p of [g.att, def]) while (g.hands[p].length < 6 && g.deck.length) g.hands[p].push(g.deck.pop());
-  if (!g.taking) g.att = def;
-  g.taking = false;
-  if (!g.deck.length) {
-    const e0 = !g.hands[0].length, e1 = !g.hands[1].length;
-    if (e0 && e1) g.winner = -1; else if (e0) g.winner = 0; else if (e1) g.winner = 1;
+  shuffle(deck);
+  const trump = deck[0].s;
+  const hands = [[], []];
+  for (let i = 0; i < 6; i++) {
+    hands[0].push(deck.pop());
+    hands[1].push(deck.pop());
   }
+  let att = 0, minTr = 99;
+  for (let p = 0; p < 2; p++) {
+    for (const c of hands[p]) {
+      if (c.s === trump && c.r < minTr) {
+        minTr = c.r;
+        att = p;
+      }
+    }
+  }
+  return {
+    deck,
+    trump,
+    hands,
+    table: [], // [{ a: card, d: card | null }]
+    att,
+    taking: false,
+    winner: null
+  };
 }
 
 function moveDurak(room, p, m) {
   const g = room.g;
   if (!g || g.winner !== null) return;
-  const def = 1 - g.att, H = g.hands[p];
+  const tr = g.trump;
+  const beats = (a, c) => (c.s === a.s && c.r > a.r) || (c.s === tr && a.s !== tr);
+
   if (m.t === 'card') {
-    const i = H.findIndex(c => c.r === m.r && c.s === m.s);
-    if (i < 0) return;
-    const c = H[i];
+    const hand = g.hands[p];
+    const idx = hand.findIndex(c => c.r === m.r && c.s === m.s);
+    if (idx < 0) return 'Карты нет в руке';
+    const card = hand[idx];
+
     if (p === g.att) {
-      if (g.table.length && !g.table.some(x => x.a.r === c.r || (x.d && x.d.r === c.r))) return;
-      const und = g.table.filter(x => !x.d).length;
-      if (g.table.length >= 6 || und + 1 > g.hands[def].length) return;
-      H.splice(i, 1); g.table.push({ a: c, d: null });
+      if (g.table.length >= 6) return 'Максимум 6 карт на столе';
+      const defHandLen = g.hands[1 - p].length;
+      const undefended = g.table.filter(x => !x.d).length;
+      if (undefended >= defHandLen && !g.taking) return 'У соперника недостаточно карт';
+
+      if (g.table.length === 0) {
+        hand.splice(idx, 1);
+        g.table.push({ a: card, d: null });
+      } else {
+        const canToss = g.table.some(x => x.a.r === card.r || (x.d && x.d.r === card.r));
+        if (!canToss) return 'Нельзя подкинуть эту карту';
+        hand.splice(idx, 1);
+        g.table.push({ a: card, d: null });
+      }
     } else {
-      if (g.taking) return;
-      const k = g.table.findIndex(x => !x.d && beats(x.a, c, g.trump));
-      if (k < 0) return;
-      H.splice(i, 1); g.table[k].d = c;
+      if (g.taking) return 'Вы уже берете карты';
+      const target = g.table.find(x => !x.d);
+      if (!target) return 'Нечего отбивать';
+      if (!beats(target.a, card)) return 'Карта не бьет';
+      hand.splice(idx, 1);
+      target.d = card;
     }
-  } else if (m.t === 'take') {
-    if (p !== def || g.taking || !g.table.some(x => !x.d)) return;
+  } else if (m.t === 'take' && p !== g.att) {
+    if (!g.table.length || g.taking) return;
     g.taking = true;
-  } else if (m.t === 'done') {
-    if (p !== g.att || !g.table.length || (!g.taking && g.table.some(x => !x.d))) return;
-    finish(g);
-  } else return;
-  // автозавершение, если подкидывать уже нечего
-  if (g.winner === null && g.table.length && (g.taking || g.table.every(x => x.d)) && !canThrow(g)) finish(g);
+  } else if (m.t === 'done' && p === g.att) {
+    if (!g.table.length) return;
+    if (g.taking) {
+      const def = 1 - g.att;
+      for (const pair of g.table) {
+        g.hands[def].push(pair.a);
+        if (pair.d) g.hands[def].push(pair.d);
+      }
+      g.table = [];
+      g.taking = false;
+    } else {
+      if (g.table.some(x => !x.d)) return 'Сначала отбейте все карты';
+      g.table = [];
+      g.att = 1 - g.att;
+    }
+    const order = [g.att === 0 ? 1 : 0, g.att === 0 ? 0 : 1];
+    for (const pl of order) {
+      while (g.hands[pl].length < 6 && g.deck.length > 0) {
+        g.hands[pl].push(g.deck.pop());
+      }
+    }
+  }
+
+  if (g.deck.length === 0) {
+    const p0Empty = g.hands[0].length === 0;
+    const p1Empty = g.hands[1].length === 0;
+    if (p0Empty && p1Empty) g.winner = -1;
+    else if (p0Empty) g.winner = 0;
+    else if (p1Empty) g.winner = 1;
+  }
 }
 
-// ---------- крестики-нолики ----------
-const L3 = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-const KINDS = ['durak', 'ttt', 'c4', 'rps', 'wd', 'pk', 'pt'];
-
-function newGame(k) {
-  if (k === 'durak') return newDurak();
-  if (k === 'ttt') return { b: Array(9).fill(-1), turn: 0, winner: null, line: null };
-  if (k === 'c4') return { b: Array(42).fill(-1), turn: 0, winner: null, line: null };
-  if (k === 'pt') return { phase: 'mode', mode: null, theme: null, imgs: [null, null], winner: null };
-  if (k === 'wd') return { phase: 'who', setter: null, word: null, guesses: [], winner: null };
-  if (k === 'pk') return { phase: 'prep', cats: [null, null], log: [], turn: 0, step: 'item', item: null, ans: null, guess: null, winner: null };
-  return { picks: [null, null], wins: [0, 0], last: null, winner: null };
-}
-
+// ---------- 4 в ряд ----------
 function line4(b, i, p) {
   const r = (i / 7) | 0, c = i % 7;
   for (const [dr, dc] of [[0,1],[1,0],[1,1],[1,-1]]) {
@@ -117,7 +194,7 @@ function wdScore(word, guess) {
     else cnt[word[i]] = (cnt[word[i]] || 0) + 1;
   }
   for (let i = 0; i < word.length; i++) if (r[i] === 0 && cnt[guess[i]] > 0) { r[i] = 1; cnt[guess[i]]--; }
-  return r; // 2 — на месте, 1 — есть в слове, 0 — нет, -1 — пробел
+  return r;
 }
 function moveWd(g, p, m) {
   if (g.phase === 'who' && m.t === 'wsetter') { g.setter = m.who === 'me' ? p : 1 - p; g.phase = 'set'; }
@@ -183,25 +260,148 @@ function movePt(g, p, m) {
   }
 }
 
+// ---------- Новый режим 1: Мемори (Найди пару) ----------
+const MEMO_ICONS = ['💎', '🚀', '🔥', '👑', '⚡', '🍀', '🍕', '🦄'];
+function newMemo() {
+  const cards = shuffle([...MEMO_ICONS, ...MEMO_ICONS]);
+  return {
+    cards,
+    opened: [],
+    matched: Array(16).fill(-1),
+    scores: [0, 0],
+    turn: 0,
+    closing: false,
+    winner: null
+  };
+}
+
+function moveMemo(room, p, m) {
+  const g = room.g;
+  if (!g || g.winner !== null || g.closing) return;
+  if (m.t === 'flip' && g.turn === p) {
+    const i = m.i;
+    if (!Number.isInteger(i) || i < 0 || i >= 16) return;
+    if (g.matched[i] !== -1 || g.opened.includes(i) || g.opened.length >= 2) return;
+
+    g.opened.push(i);
+    if (g.opened.length === 2) {
+      const [i1, i2] = g.opened;
+      if (g.cards[i1] === g.cards[i2]) {
+        g.matched[i1] = p;
+        g.matched[i2] = p;
+        g.scores[p]++;
+        g.opened = [];
+        if (g.matched.every(x => x >= 0)) {
+          g.winner = g.scores[0] > g.scores[1] ? 0 : g.scores[1] > g.scores[0] ? 1 : -1;
+        }
+      } else {
+        g.closing = true;
+        push(room);
+        setTimeout(() => {
+          if (room.g === g) {
+            g.opened = [];
+            g.turn = 1 - p;
+            g.closing = false;
+            push(room);
+            if (room.isBot && g.turn === 1) scheduleBotMove(room);
+          }
+        }, 1100);
+        return;
+      }
+    }
+  }
+}
+
+// ---------- Новый режим 2: Точки и линии (Dots & Boxes) ----------
+function newDots() {
+  return {
+    lines: Array(24).fill(-1), // 12 horiz (0..11) + 12 vert (12..23)
+    boxes: Array(9).fill(-1), // 3x3 boxes (0..8)
+    scores: [0, 0],
+    turn: 0,
+    winner: null
+  };
+}
+
+function moveDots(room, p, m) {
+  const g = room.g;
+  if (!g || g.winner !== null) return;
+  if (m.t === 'line' && g.turn === p) {
+    const i = m.i;
+    if (!Number.isInteger(i) || i < 0 || i >= 24) return;
+    if (g.lines[i] !== -1) return;
+
+    g.lines[i] = p;
+    let completedBox = false;
+
+    for (let br = 0; br < 3; br++) {
+      for (let bc = 0; bc < 3; bc++) {
+        const bi = br * 3 + bc;
+        if (g.boxes[bi] !== -1) continue;
+        const top = br * 3 + bc;
+        const bottom = (br + 1) * 3 + bc;
+        const left = 12 + br * 4 + bc;
+        const right = 12 + br * 4 + (bc + 1);
+
+        if (g.lines[top] >= 0 && g.lines[bottom] >= 0 && g.lines[left] >= 0 && g.lines[right] >= 0) {
+          g.boxes[bi] = p;
+          g.scores[p]++;
+          completedBox = true;
+        }
+      }
+    }
+
+    if (completedBox) {
+      if (g.boxes.every(x => x >= 0)) {
+        g.winner = g.scores[0] > g.scores[1] ? 0 : g.scores[1] > g.scores[0] ? 1 : -1;
+      }
+    } else {
+      g.turn = 1 - p;
+    }
+  }
+}
+
+// ---------- Инициализация игр ----------
+function newGame(k) {
+  if (k === 'durak') return newDurak();
+  if (k === 'ttt') return { b: Array(9).fill(-1), turn: 0, winner: null, line: null };
+  if (k === 'c4') return { b: Array(42).fill(-1), turn: 0, winner: null, line: null };
+  if (k === 'rps') return { picks: [null, null], wins: [0, 0], last: null, winner: null };
+  if (k === 'memo') return newMemo();
+  if (k === 'dots') return newDots();
+  if (k === 'pt') return { phase: 'mode', mode: null, theme: null, imgs: [null, null], winner: null };
+  if (k === 'wd') return { phase: 'who', setter: null, word: null, guesses: [], winner: null };
+  if (k === 'pk') return { phase: 'prep', cats: [null, null], log: [], turn: 0, step: 'item', item: null, ans: null, guess: null, winner: null };
+  return null;
+}
+
+// ---------- Общий обработчик хода ----------
 function move(room, p, m) {
   const g = room.g, k = room.kind;
   if (!g || g.winner !== null) return;
   if (k === 'durak') return moveDurak(room, p, m);
+  if (k === 'memo') return moveMemo(room, p, m);
+  if (k === 'dots') return moveDots(room, p, m);
   if (k === 'wd') return moveWd(g, p, m);
   if (k === 'pk') return movePk(g, p, m);
   if (k === 'pt') return movePt(g, p, m);
+
   if (k === 'ttt' && m.t === 'cell') {
     if (g.turn !== p || g.b[m.i] !== -1) return;
     g.b[m.i] = p;
-    const l = L3.find(l => l.every(i => g.b[i] === p));
-    if (l) { g.winner = p; g.line = l; } else if (g.b.every(x => x >= 0)) g.winner = -1; else g.turn = 1 - p;
+    const l = L3.find(line => line.every(i => g.b[i] === p));
+    if (l) { g.winner = p; g.line = l; }
+    else if (g.b.every(x => x >= 0)) g.winner = -1;
+    else g.turn = 1 - p;
   } else if (k === 'c4' && m.t === 'col') {
     if (g.turn !== p || !Number.isInteger(m.c) || m.c < 0 || m.c > 6) return;
     let r = 5; while (r >= 0 && g.b[r * 7 + m.c] !== -1) r--;
     if (r < 0) return;
     const i = r * 7 + m.c; g.b[i] = p;
     const l = line4(g.b, i, p);
-    if (l) { g.winner = p; g.line = l; } else if (g.b.every(x => x >= 0)) g.winner = -1; else g.turn = 1 - p;
+    if (l) { g.winner = p; g.line = l; }
+    else if (g.b.every(x => x >= 0)) g.winner = -1;
+    else g.turn = 1 - p;
   } else if (k === 'rps' && m.t === 'rps') {
     if (g.picks[p] !== null || ![0, 1, 2].includes(m.v)) return;
     g.picks[p] = m.v;
@@ -214,9 +414,151 @@ function move(room, p, m) {
   }
 }
 
-// ---------- комнаты ----------
+// ---------- Искусственный интеллект (AI) для первых 4 режимов ----------
+function scheduleBotMove(room, delay = 550) {
+  if (!room.isBot || !room.g || room.g.winner !== null) return;
+  setTimeout(() => {
+    if (!room.isBot || !room.g || room.g.winner !== null) return;
+    botStep(room);
+  }, delay);
+}
+
+function botStep(room) {
+  const g = room.g, k = room.kind;
+  if (!g || g.winner !== null) return;
+
+  // 1. Дурак против ИИ
+  if (k === 'durak') {
+    const tr = g.trump;
+    const beats = (a, c) => (c.s === a.s && c.r > a.r) || (c.s === tr && a.s !== tr);
+    const hand = g.hands[1];
+
+    if (g.att === 1) {
+      if (g.table.length === 0) {
+        const nonTr = hand.filter(c => c.s !== tr).sort((a, b) => a.r - b.r);
+        const card = nonTr[0] || [...hand].sort((a, b) => a.r - b.r)[0];
+        if (card) {
+          move(room, 1, { t: 'card', r: card.r, s: card.s });
+          push(room);
+        }
+      } else {
+        const allBeaten = !g.table.some(x => !x.d);
+        if (allBeaten || g.taking) {
+          const matching = hand.filter(c => g.table.some(x => x.a.r === c.r || (x.d && x.d.r === c.r)));
+          const lowToss = matching.filter(c => c.s !== tr).sort((a, b) => a.r - b.r)[0];
+          if (lowToss && g.table.length < 6) {
+            move(room, 1, { t: 'card', r: lowToss.r, s: lowToss.s });
+            push(room);
+            scheduleBotMove(room, 600);
+          } else {
+            move(room, 1, { t: 'done' });
+            push(room);
+            scheduleBotMove(room, 600);
+          }
+        }
+      }
+    } else {
+      if (g.taking) return;
+      const target = g.table.find(x => !x.d);
+      if (target) {
+        const legal = hand.filter(c => beats(target.a, c));
+        legal.sort((a, b) => {
+          if (a.s === tr && b.s !== tr) return 1;
+          if (a.s !== tr && b.s === tr) return -1;
+          return a.r - b.r;
+        });
+        if (legal.length > 0) {
+          const card = legal[0];
+          move(room, 1, { t: 'card', r: card.r, s: card.s });
+          push(room);
+          scheduleBotMove(room, 600);
+        } else {
+          move(room, 1, { t: 'take' });
+          push(room);
+        }
+      }
+    }
+  }
+
+  // 2. Крестики-нолики против ИИ
+  else if (k === 'ttt' && g.turn === 1) {
+    for (let i = 0; i < 9; i++) {
+      if (g.b[i] === -1) {
+        g.b[i] = 1;
+        const win = L3.some(line => line.every(idx => g.b[idx] === 1));
+        g.b[i] = -1;
+        if (win) { move(room, 1, { t: 'cell', i }); push(room); return; }
+      }
+    }
+    for (let i = 0; i < 9; i++) {
+      if (g.b[i] === -1) {
+        g.b[i] = 0;
+        const win = L3.some(line => line.every(idx => g.b[idx] === 0));
+        g.b[i] = -1;
+        if (win) { move(room, 1, { t: 'cell', i }); push(room); return; }
+      }
+    }
+    if (g.b[4] === -1) { move(room, 1, { t: 'cell', i: 4 }); push(room); return; }
+    const corners = [0, 2, 6, 8].filter(i => g.b[i] === -1);
+    if (corners.length) {
+      move(room, 1, { t: 'cell', i: corners[(Math.random() * corners.length) | 0] });
+      push(room);
+      return;
+    }
+    const empty = g.b.map((v, i) => v === -1 ? i : null).filter(x => x !== null);
+    if (empty.length) {
+      move(room, 1, { t: 'cell', i: empty[(Math.random() * empty.length) | 0] });
+      push(room);
+    }
+  }
+
+  // 3. 4 в ряд против ИИ
+  else if (k === 'c4' && g.turn === 1) {
+    const validCols = [];
+    for (let c = 0; c < 7; c++) if (g.b[c] === -1) validCols.push(c);
+    if (!validCols.length) return;
+
+    for (const c of validCols) {
+      let r = 5; while (r >= 0 && g.b[r * 7 + c] !== -1) r--;
+      if (r >= 0) {
+        g.b[r * 7 + c] = 1;
+        const win = !!line4(g.b, r * 7 + c, 1);
+        g.b[r * 7 + c] = -1;
+        if (win) { move(room, 1, { t: 'col', c }); push(room); return; }
+      }
+    }
+    for (const c of validCols) {
+      let r = 5; while (r >= 0 && g.b[r * 7 + c] !== -1) r--;
+      if (r >= 0) {
+        g.b[r * 7 + c] = 0;
+        const win = !!line4(g.b, r * 7 + c, 0);
+        g.b[r * 7 + c] = -1;
+        if (win) { move(room, 1, { t: 'col', c }); push(room); return; }
+      }
+    }
+    const pref = [3, 2, 4, 1, 5, 0, 6].filter(c => validCols.includes(c));
+    move(room, 1, { t: 'col', c: pref[0] });
+    push(room);
+  }
+
+  // 4. Камень-ножницы против ИИ
+  else if (k === 'rps') {
+    if (g.picks[1] === null) {
+      const v = (Math.random() * 3) | 0;
+      move(room, 1, { t: 'rps', v });
+      push(room);
+    }
+  }
+}
+
+// ---------- Комнаты и Состояние ----------
 const clean = s => String(s || '').replace(/[<>&"'`]/g, '').trim().slice(0, 16);
-const start = (room, k) => { room.kind = k; room.g = newGame(k); room.gid++; };
+const start = (room, k) => {
+  room.kind = k;
+  room.g = newGame(k);
+  room.gid++;
+  if (room.isBot) scheduleBotMove(room, 600);
+};
 
 const gv = (room, p) => {
   const g = room.g;
@@ -224,6 +566,21 @@ const gv = (room, p) => {
   if (room.kind === 'durak') return {
     hand: g.hands[p], opp: g.hands[1 - p].length, deck: g.deck.length, trump: g.trump,
     tc: g.deck[0] || null, table: g.table, att: g.att, taking: g.taking, winner: g.winner,
+  };
+  if (room.kind === 'memo') return {
+    cards: g.cards.map((val, idx) => (g.opened.includes(idx) || g.matched[idx] >= 0) ? val : null),
+    opened: g.opened,
+    matched: g.matched,
+    scores: g.scores,
+    turn: g.turn,
+    winner: g.winner
+  };
+  if (room.kind === 'dots') return {
+    lines: g.lines,
+    boxes: g.boxes,
+    scores: g.scores,
+    turn: g.turn,
+    winner: g.winner
   };
   if (room.kind === 'pt') return { phase: g.phase, mode: g.mode, theme: g.theme, done: g.imgs.map(x => x !== null), imgs: g.phase === 'done' ? g.imgs : null, winner: g.winner };
   if (room.kind === 'wd') return {
@@ -237,12 +594,28 @@ const gv = (room, p) => {
   if (room.kind === 'rps') return { mine: g.picks[p], opp: g.picks[1 - p] !== null, last: g.last, wins: g.wins, winner: g.winner };
   return { b: g.b, turn: g.turn, winner: g.winner, line: g.line };
 };
+
 const view = (room, p) => ({
-  t: 'state', me: p, code: room.code, peers: room.ids.map(Boolean), on: room.ws.map(Boolean),
-  names: room.names, score: room.score, kind: room.kind, gid: room.gid, g: gv(room, p),
+  t: 'state',
+  me: p,
+  code: room.code,
+  peers: room.ids.map(Boolean),
+  on: room.ws.map((w, idx) => room.isBot && idx === 1 ? true : Boolean(w)),
+  names: room.names,
+  score: room.score,
+  kind: room.kind,
+  gid: room.gid,
+  isBot: !!room.isBot,
+  g: gv(room, p),
 });
-const push = room => room.ws.forEach((w, p) => w && w.readyState === 1 && w.send(JSON.stringify(view(room, p))));
-const err = (ws, m) => ws.send(JSON.stringify({ t: 'err', m }));
+
+const push = room => {
+  room.ws.forEach((w, p) => {
+    if (w && w.readyState === 1) w.send(JSON.stringify(view(room, p)));
+  });
+};
+
+const err = (ws, m) => ws && ws.readyState === 1 && ws.send(JSON.stringify({ t: 'err', m }));
 const genCode = () => {
   let c;
   do { c = Array.from({ length: 4 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ'[(Math.random() * 24) | 0]).join(''); } while (rooms.has(c));
@@ -251,13 +624,86 @@ const genCode = () => {
 
 wss.on('connection', ws => {
   let room = null, seat = -1;
-  const onMsg = raw => {
+  broadcastOnline();
+
+  ws.on('message', raw => {
     let m; try { m = JSON.parse(raw); } catch { return; }
+
+    // 1. Одиночный режим против ИИ (Solo bot room)
+    if (m.t === 'bot_room') {
+      const code = genCode();
+      const pName = clean(m.name) || 'Игрок';
+      room = {
+        code,
+        ids: [String(m.token || Math.random().toString(36).slice(2)), 'bot_ai'],
+        names: [pName, 'ИИ Бот 🤖'],
+        ws: [ws, null],
+        kind: null,
+        g: null,
+        score: [0, 0],
+        gid: 0,
+        chat: [],
+        last: Date.now(),
+        isBot: true
+      };
+      seat = 0;
+      rooms.set(code, room);
+      push(room);
+      return ws.send(JSON.stringify({ t: 'chatlog', log: room.chat }));
+    }
+
+    // 2. Матчмейкинг (Matchmaking)
+    if (m.t === 'mm_join') {
+      const token = String(m.token || '');
+      const pName = clean(m.name) || 'Игрок';
+
+      // Clean disconnected queue items
+      while (mmQueue.length && (mmQueue[0].ws.readyState !== 1 || mmQueue[0].token === token)) {
+        if (mmQueue[0].token === token) mmQueue.shift();
+        else mmQueue.shift();
+      }
+
+      if (mmQueue.length > 0) {
+        const opp = mmQueue.shift();
+        const code = genCode();
+        room = {
+          code,
+          ids: [opp.token, token],
+          names: [opp.name, pName],
+          ws: [opp.ws, ws],
+          kind: null,
+          g: null,
+          score: [0, 0],
+          gid: 0,
+          chat: [],
+          last: Date.now(),
+          isBot: false
+        };
+        rooms.set(code, room);
+        seat = 1;
+        push(room);
+        ws.send(JSON.stringify({ t: 'mm_matched', code }));
+        if (opp.ws.readyState === 1) opp.ws.send(JSON.stringify({ t: 'mm_matched', code }));
+        return;
+      } else {
+        mmQueue.push({ ws, token, name: pName });
+        return ws.send(JSON.stringify({ t: 'mm_waiting' }));
+      }
+    }
+
+    if (m.t === 'mm_leave') {
+      const token = String(m.token || '');
+      const idx = mmQueue.findIndex(q => q.token === token || q.ws === ws);
+      if (idx >= 0) mmQueue.splice(idx, 1);
+      return ws.send(JSON.stringify({ t: 'mm_cancelled' }));
+    }
+
+    // 3. Стандартный вход / создание комнаты
     if (m.t === 'join') {
       const code = m.code ? String(m.code).toUpperCase() : null;
       if (code) room = rooms.get(code);
       else {
-        room = { code: genCode(), ids: [null, null], names: ['', ''], ws: [null, null], kind: null, g: null, score: [0, 0], gid: 0, chat: [], last: Date.now() };
+        room = { code: genCode(), ids: [null, null], names: ['', ''], ws: [null, null], kind: null, g: null, score: [0, 0], gid: 0, chat: [], last: Date.now(), isBot: false };
         rooms.set(room.code, room);
       }
       if (!room) return err(ws, 'Комната не найдена');
@@ -272,8 +718,10 @@ wss.on('connection', ws => {
       push(room);
       return ws.send(JSON.stringify({ t: 'chatlog', log: room.chat }));
     }
+
     if (!room) return;
     room.last = Date.now();
+
     if (m.t === 'chat') {
       const text = txt(m.text, 300);
       if (!text) return;
@@ -281,26 +729,46 @@ wss.on('connection', ws => {
       room.chat.push(msg); if (room.chat.length > 100) room.chat.shift();
       return room.ws.forEach(w => w && w.readyState === 1 && w.send(JSON.stringify({ t: 'chat', m: msg })));
     }
+
     const fin = !!room.g && room.g.winner !== null;
     if (m.t === 'pick') {
-      if (KINDS.includes(m.k) && room.ids[0] && room.ids[1] && (!room.g || fin)) start(room, m.k);
-    } else if (m.t === 'menu') { room.kind = null; room.g = null; }
-    else if (m.t === 'again') { if (fin) start(room, room.kind); }
-    else if (room.g) {
+      if (KINDS.includes(m.k) && room.ids[0] && room.ids[1] && (!room.g || fin)) {
+        if (room.isBot && !BOT_KINDS.includes(m.k)) {
+          return err(ws, 'Этот режим доступен только для двоих игроков');
+        }
+        start(room, m.k);
+      }
+    } else if (m.t === 'menu') {
+      room.kind = null;
+      room.g = null;
+    } else if (m.t === 'again') {
+      if (fin) start(room, room.kind);
+    } else if (room.g) {
       const was = room.g.winner;
       const e = move(room, seat, m);
       if (e) err(ws, e);
       if (was === null && room.g.winner !== null && room.g.winner >= 0) room.score[room.g.winner]++;
+      if (room.isBot) scheduleBotMove(room, 500);
     }
     push(room);
-  };
-  ws.on('message', raw => { try { onMsg(raw); } catch (e) { console.error('handler error:', e); try { err(ws, 'Ошибка сервера'); } catch {} } });
-  ws.on('close', () => { if (room && room.ws[seat] === ws) { room.ws[seat] = null; push(room); } });
+  });
+
+  ws.on('close', () => {
+    const qIdx = mmQueue.findIndex(q => q.ws === ws);
+    if (qIdx >= 0) mmQueue.splice(qIdx, 1);
+
+    if (room && room.ws[seat] === ws) {
+      room.ws[seat] = null;
+      push(room);
+    }
+    broadcastOnline();
+  });
 });
 
 setInterval(() => {
-  for (const [c, r] of rooms) if (Date.now() - r.last > 3600e3) rooms.delete(c);
+  for (const [c, r] of rooms) {
+    if (Date.now() - r.last > 3600e3) rooms.delete(c);
+  }
 }, 600e3);
 
-process.on('uncaughtException', e => console.error('uncaught:', e));
 srv.listen(process.env.PORT || 3000, () => console.log('Игры: http://localhost:' + (process.env.PORT || 3000)));
