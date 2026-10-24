@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "build": "echo 'Build ready'",
     "sync": "cap sync ios",
     "copy": "cap copy ios",
     "open:ios": "cap open ios",

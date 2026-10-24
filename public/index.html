@@ -31,31 +31,37 @@
   --sar: env(safe-area-inset-right, 0px);
 
   /* Темная обсидиановая палитра */
-  --bg: #090a10;
-  --bg-gradient: radial-gradient(1100px 550px at 50% -10%, rgba(99, 102, 241, 0.12), transparent 70%),
-                 radial-gradient(800px 400px at 95% 25%, rgba(56, 189, 248, 0.07), transparent 60%),
-                 #090a10;
+  --bg: #080910;
+  --bg-gradient: radial-gradient(1200px 600px at 50% -10%, rgba(99, 102, 241, 0.16), transparent 70%),
+                 radial-gradient(900px 500px at 95% 30%, rgba(6, 182, 212, 0.10), transparent 60%),
+                 radial-gradient(800px 450px at 5% 75%, rgba(168, 85, 247, 0.08), transparent 60%),
+                 #080910;
 
   /* Жидкое стекло (Liquid Glass Dark) */
-  --surf-glass: rgba(255, 255, 255, 0.06);
-  --surf-glass-hover: rgba(255, 255, 255, 0.10);
-  --surf-glass-active: rgba(255, 255, 255, 0.15);
-  --surf-card: rgba(255, 255, 255, 0.045);
-  --surf-elevated: rgba(255, 255, 255, 0.08);
+  --surf-glass: rgba(255, 255, 255, 0.07);
+  --surf-glass-hover: rgba(255, 255, 255, 0.12);
+  --surf-glass-active: rgba(255, 255, 255, 0.18);
+  --surf-card: rgba(255, 255, 255, 0.05);
+  --surf-elevated: rgba(255, 255, 255, 0.095);
 
-  /* Жидкое стекло: градиенты и блики */
-  --glass-panel-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.085) 0%, rgba(255, 255, 255, 0.02) 100%);
-  --glass-bar-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.03) 100%);
-  --glass-tile-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0.02) 100%);
+  /* Жидкое стекло: градиенты, блики и каустика */
+  --glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.035) 35%, rgba(255, 255, 255, 0.0) 65%, rgba(255, 255, 255, 0.04) 100%);
+  --glass-panel-bg: linear-gradient(155deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.02) 100%);
+  --glass-bar-bg: linear-gradient(155deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.025) 100%);
+  --glass-tile-bg: linear-gradient(155deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
 
-  /* Отражения, фаски и многослойные тени */
-  --line: rgba(255, 255, 255, 0.10);
-  --line-strong: rgba(255, 255, 255, 0.20);
-  --glass-specular: rgba(255, 255, 255, 0.32);
-  --glass-bevel: inset 0 1px 1px 0 var(--glass-specular), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25);
-  --glass-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.55), var(--glass-bevel);
-  --glass-panel-shadow: 0 24px 52px -12px rgba(0, 0, 0, 0.65), var(--glass-bevel);
-  --glass-tile-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.40), var(--glass-bevel);
+  /* Отражения, фаски, световые кромки и многослойные тени */
+  --line: rgba(255, 255, 255, 0.11);
+  --line-strong: rgba(255, 255, 255, 0.22);
+  --glass-border: rgba(255, 255, 255, 0.14);
+  --glass-rim: rgba(255, 255, 255, 0.42);
+  --glass-rim-subtle: rgba(255, 255, 255, 0.22);
+  --glass-specular: rgba(255, 255, 255, 0.48);
+  --glass-specular-soft: rgba(255, 255, 255, 0.18);
+  --glass-bevel: inset 0 1.5px 1px 0 var(--glass-specular), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.35), inset 1px 0 1.5px 0 var(--glass-specular-soft);
+  --glass-shadow: 0 18px 42px -10px rgba(0, 0, 0, 0.58), var(--glass-bevel);
+  --glass-panel-shadow: 0 24px 54px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--glass-border), var(--glass-bevel);
+  --glass-tile-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.42), 0 0 0 1px var(--glass-border), var(--glass-bevel);
 
   /* Текст */
   --txt: #f8fafc;
@@ -65,7 +71,7 @@
   /* Акценты */
   --acc: #6366f1;
   --acc-hover: #4f46e5;
-  --acc-glow: rgba(99, 102, 241, 0.35);
+  --acc-glow: rgba(99, 102, 241, 0.40);
   --p0: #38bdf8;
   --p1: #c084fc;
   --win: #10b981;
@@ -73,12 +79,12 @@
   --amber: #f59e0b;
 
   /* Игровые компоненты */
-  --c4-board: #111425;
-  --c4-hole: #0a0b14;
+  --c4-board: rgba(17, 20, 37, 0.85);
+  --c4-hole: #080a12;
   --c-face: #ffffff;
   --c-face-txt: #0f172a;
   --c-back: repeating-linear-gradient(135deg, #1e1b4b 0 5px, #17153b 5px 10px);
-  --c-back-border: rgba(255, 255, 255, 0.18);
+  --c-back-border: rgba(255, 255, 255, 0.22);
   --c-back-txt: rgba(255, 255, 255, 0.7);
 
   --w: clamp(44px, 12.5vw, 68px);
@@ -90,31 +96,37 @@
   --theme: light;
 
   /* Светлая жемчужная палитра */
-  --bg: #f5f7fb;
-  --bg-gradient: radial-gradient(1100px 550px at 50% -10%, rgba(99, 102, 241, 0.09), transparent 70%),
-                 radial-gradient(800px 400px at 95% 25%, rgba(14, 165, 233, 0.08), transparent 60%),
-                 #f5f7fb;
+  --bg: #f3f5fa;
+  --bg-gradient: radial-gradient(1200px 600px at 50% -10%, rgba(99, 102, 241, 0.11), transparent 70%),
+                 radial-gradient(900px 500px at 95% 30%, rgba(14, 165, 233, 0.10), transparent 60%),
+                 radial-gradient(800px 450px at 5% 75%, rgba(244, 114, 182, 0.08), transparent 60%),
+                 #f3f5fa;
 
   /* Жидкое стекло (Liquid Glass Light) */
-  --surf-glass: rgba(255, 255, 255, 0.82);
-  --surf-glass-hover: rgba(255, 255, 255, 0.94);
-  --surf-glass-active: #ffffff;
-  --surf-card: rgba(255, 255, 255, 0.85);
-  --surf-elevated: rgba(255, 255, 255, 0.94);
+  --surf-glass: rgba(255, 255, 255, 0.72);
+  --surf-glass-hover: rgba(255, 255, 255, 0.88);
+  --surf-glass-active: rgba(255, 255, 255, 0.96);
+  --surf-card: rgba(255, 255, 255, 0.75);
+  --surf-elevated: rgba(255, 255, 255, 0.88);
 
-  /* Жидкое стекло: градиенты и блики */
-  --glass-panel-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.75) 100%);
-  --glass-bar-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.80) 100%);
-  --glass-tile-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.72) 100%);
+  /* Жидкое стекло: градиенты, блики и каустика */
+  --glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.70) 0%, rgba(255, 255, 255, 0.22) 35%, rgba(255, 255, 255, 0.0) 65%, rgba(255, 255, 255, 0.25) 100%);
+  --glass-panel-bg: linear-gradient(155deg, rgba(255, 255, 255, 0.88) 0%, rgba(255, 255, 255, 0.65) 100%);
+  --glass-bar-bg: linear-gradient(155deg, rgba(255, 255, 255, 0.90) 0%, rgba(255, 255, 255, 0.70) 100%);
+  --glass-tile-bg: linear-gradient(155deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.60) 100%);
 
-  /* Отражения, фаски и многослойные тени */
-  --line: rgba(15, 23, 42, 0.08);
-  --line-strong: rgba(15, 23, 42, 0.16);
-  --glass-specular: rgba(255, 255, 255, 0.98);
-  --glass-bevel: inset 0 1px 1.5px 0 var(--glass-specular), inset 0 -1px 1px 0 rgba(15, 23, 42, 0.05);
+  /* Отражения, фаски, световые кромки и многослойные тени */
+  --line: rgba(15, 23, 42, 0.09);
+  --line-strong: rgba(15, 23, 42, 0.18);
+  --glass-border: rgba(255, 255, 255, 0.85);
+  --glass-rim: #ffffff;
+  --glass-rim-subtle: rgba(255, 255, 255, 0.95);
+  --glass-specular: #ffffff;
+  --glass-specular-soft: rgba(255, 255, 255, 0.80);
+  --glass-bevel: inset 0 1.5px 1.5px 0 #ffffff, inset 0 -1px 2px 0 rgba(15, 23, 42, 0.05), inset 1px 0 1.5px 0 rgba(255, 255, 255, 0.7);
   --glass-shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.09), var(--glass-bevel);
-  --glass-panel-shadow: 0 24px 48px -10px rgba(15, 23, 42, 0.12), var(--glass-bevel);
-  --glass-tile-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.07), var(--glass-bevel);
+  --glass-panel-shadow: 0 24px 50px -10px rgba(15, 23, 42, 0.11), 0 0 0 1px var(--glass-border), var(--glass-bevel);
+  --glass-tile-shadow: 0 10px 24px -5px rgba(15, 23, 42, 0.08), 0 0 0 1px var(--glass-border), var(--glass-bevel);
 
   /* Текст */
   --txt: #0f172a;
@@ -124,7 +136,7 @@
   /* Акценты */
   --acc: #4f46e5;
   --acc-hover: #4338ca;
-  --acc-glow: rgba(79, 70, 229, 0.25);
+  --acc-glow: rgba(79, 70, 229, 0.28);
   --p0: #0284c7;
   --p1: #9333ea;
   --win: #059669;
@@ -132,7 +144,7 @@
   --amber: #d97706;
 
   /* Игровые компоненты */
-  --c4-board: #cbd5e1;
+  --c4-board: rgba(203, 213, 225, 0.85);
   --c4-hole: #f8fafc;
   --c-face: #ffffff;
   --c-face-txt: #0f172a;
@@ -169,6 +181,88 @@ body {
 
 [hidden] { display: none !important; }
 
+/* ==========================================================================
+   АУРА ЖИДКОГО СТЕКЛА (РЕФРАКЦИОННЫЙ СЛОЙ)
+   ========================================================================== */
+.liquid-bg-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  opacity: 0.85;
+}
+
+.liquid-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(85px);
+  will-change: transform;
+  pointer-events: none;
+  transform: translateZ(0);
+}
+
+.orb-1 {
+  width: min(520px, 85vw);
+  height: min(520px, 85vw);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.42) 0%, rgba(99, 102, 241, 0.08) 60%, transparent 75%);
+  top: -100px;
+  left: -40px;
+  animation: floatOrb1 20s ease-in-out infinite alternate;
+}
+
+.orb-2 {
+  width: min(560px, 90vw);
+  height: min(560px, 90vw);
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.35) 0%, rgba(56, 189, 248, 0.08) 60%, transparent 75%);
+  top: 35%;
+  right: -100px;
+  animation: floatOrb2 25s ease-in-out infinite alternate;
+}
+
+.orb-3 {
+  width: min(480px, 80vw);
+  height: min(480px, 80vw);
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.32) 0%, rgba(236, 72, 153, 0.08) 60%, transparent 75%);
+  bottom: -100px;
+  left: 20%;
+  animation: floatOrb3 22s ease-in-out infinite alternate;
+}
+
+[data-theme="light"] .liquid-bg-layer {
+  opacity: 0.75;
+}
+
+[data-theme="light"] .orb-1 {
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.38) 0%, rgba(129, 140, 248, 0.08) 60%, transparent 75%);
+}
+
+[data-theme="light"] .orb-2 {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, rgba(56, 189, 248, 0.08) 60%, transparent 75%);
+}
+
+[data-theme="light"] .orb-3 {
+  background: radial-gradient(circle, rgba(244, 114, 182, 0.32) 0%, rgba(244, 114, 182, 0.06) 60%, transparent 75%);
+}
+
+@keyframes floatOrb1 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(60px, 80px) scale(1.12); }
+  100% { transform: translate(-40px, 120px) scale(0.95); }
+}
+
+@keyframes floatOrb2 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-80px, -60px) scale(1.15); }
+  100% { transform: translate(-40px, 90px) scale(0.92); }
+}
+
+@keyframes floatOrb3 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(80px, -70px) scale(1.08); }
+  100% { transform: translate(-50px, -40px) scale(0.96); }
+}
+
 /* ---------- Векторные иконки (Прямые SVG без багов sprite) ---------- */
 .svg-ico {
   display: inline-block;
@@ -190,12 +284,15 @@ button, .btn {
   font: inherit;
   font-weight: 600;
   font-size: 14px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-left: 1.2px solid var(--glass-rim-subtle);
+  border-radius: 15px;
   padding: 12px 18px;
-  background: var(--surf-glass);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-glass);
+  backdrop-filter: blur(28px) saturate(200%) brightness(1.05);
+  -webkit-backdrop-filter: blur(28px) saturate(200%) brightness(1.05);
   color: var(--txt);
   cursor: pointer;
   text-decoration: none;
@@ -204,12 +301,14 @@ button, .btn {
   justify-content: center;
   gap: 8px;
   text-align: center;
-  transition: transform .12s cubic-bezier(0.2, 0.8, 0.4, 1), background-color .15s, border-color .15s, opacity .12s, box-shadow .15s;
+  transition: transform .12s cubic-bezier(0.16, 1, 0.3, 1), background-color .15s, border-color .15s, opacity .12s, box-shadow .15s;
   box-shadow: var(--glass-tile-shadow);
+  position: relative;
+  overflow: hidden;
 }
 
 button:active, .btn:active {
-  transform: scale(0.97);
+  transform: scale(0.965);
 }
 
 button:disabled {
@@ -219,23 +318,37 @@ button:disabled {
 }
 
 button.primary {
-  background: var(--acc);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: linear-gradient(145deg, rgba(99, 102, 241, 0.95), rgba(79, 70, 229, 0.92));
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.2px solid rgba(255, 255, 255, 0.45);
   color: #ffffff;
-  box-shadow: 0 6px 20px var(--acc-glow), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 8px 24px -4px var(--acc-glow),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 button.mm-btn {
-  background: linear-gradient(180deg, #f59e0b, #d97706);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: linear-gradient(145deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.92));
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.65);
+  border-left: 1.2px solid rgba(255, 255, 255, 0.45);
   color: #ffffff;
   font-size: 15px;
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 8px 24px -4px rgba(245, 158, 11, 0.4),
+    inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.25);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 button.solo-btn {
-  background: var(--surf-elevated);
-  border-color: var(--line-strong);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-elevated);
+  border: 1px solid var(--line-strong);
+  border-top: 1.5px solid var(--glass-specular);
   color: var(--txt);
 }
 
@@ -246,8 +359,10 @@ button.sm {
 }
 
 button.ghost {
-  background: var(--surf-glass);
-  border-color: var(--line);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-glass);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
 }
 
 button.icon-btn {
@@ -257,16 +372,19 @@ button.icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 13px;
   color: var(--txt);
-  background: var(--surf-glass);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-glass);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
   box-shadow: var(--glass-tile-shadow);
   flex-shrink: 0;
 }
 
 button.icon-btn.pill {
   width: auto;
-  padding: 6px 12px;
+  padding: 6px 14px;
   gap: 6px;
   font-size: 12.5px;
   font-weight: 700;
@@ -275,13 +393,15 @@ button.icon-btn.pill {
 
 @media (hover: hover) and (pointer: fine) {
   button:hover:not(:disabled), .btn:hover:not(:disabled) {
-    background: var(--surf-glass-hover);
+    background-color: var(--surf-glass-hover);
     border-color: var(--line-strong);
-    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.15), inset 0 1px 0.5px var(--glass-specular);
+    border-top-color: var(--glass-specular);
+    box-shadow: 0 10px 26px -4px rgba(0, 0, 0, 0.25), var(--glass-bevel);
   }
   button.primary:hover:not(:disabled) {
-    background: var(--acc-hover);
-    border-color: rgba(255, 255, 255, 0.35);
+    background: linear-gradient(145deg, #4f46e5, #4338ca);
+    border-color: rgba(255, 255, 255, 0.45);
+    box-shadow: 0 10px 28px -4px var(--acc-glow), inset 0 1.5px 1px 0 #ffffff;
   }
 }
 
@@ -289,11 +409,13 @@ button.icon-btn.pill {
 input, textarea {
   font: inherit;
   font-size: 15px !important;
-  border-radius: 13px;
-  border: 1px solid var(--line);
-  background: var(--surf-glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  border-radius: 14px;
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-glass);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
   color: var(--txt);
   padding: 12px 14px;
   width: 100%;
@@ -302,10 +424,15 @@ input, textarea {
   -webkit-user-select: auto;
   user-select: auto;
   transition: border-color .15s ease, background-color .15s, box-shadow .15s;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 input:focus {
   border-color: var(--acc);
+  border-top-color: #ffffff;
+  background-color: var(--surf-glass-hover);
+  box-shadow: 0 0 0 3px var(--acc-glow), inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
   background: var(--surf-glass-hover);
   box-shadow: 0 0 0 3px var(--acc-glow);
 }
@@ -393,10 +520,12 @@ h1, h2, h3 {
   align-items: center;
   gap: 7px;
   padding: 7px 14px;
-  background: var(--surf-glass);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--line);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-glass);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
   border-radius: 99px;
   font-size: 12px;
   font-weight: 600;
@@ -435,13 +564,23 @@ h1, h2, h3 {
 }
 
 .suits-banner {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 14px;
-  font-size: 20px;
+  font-size: 18px;
   color: var(--faint);
   letter-spacing: .2em;
+  padding: 6px 18px;
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-radius: 99px;
+  box-shadow: var(--glass-tile-shadow);
+  margin-bottom: 2px;
 }
 .suits-banner span:nth-child(2), .suits-banner span:nth-child(3) {
   color: var(--red);
@@ -450,16 +589,35 @@ h1, h2, h3 {
 .panel {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  width: min(360px, 100%);
-  padding: 22px;
-  background: var(--glass-panel-bg);
-  backdrop-filter: blur(32px) saturate(200%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
-  border: 1px solid var(--line);
-  border-top: 1px solid var(--glass-specular);
-  border-radius: 24px;
+  gap: 14px;
+  width: min(370px, 100%);
+  padding: 24px;
+  background-image: var(--glass-sheen), var(--glass-panel-bg);
+  background-color: var(--surf-card);
+  backdrop-filter: blur(36px) saturate(220%) brightness(1.05);
+  -webkit-backdrop-filter: blur(36px) saturate(220%) brightness(1.05);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-left: 1.2px solid var(--glass-rim-subtle);
+  border-radius: 26px;
   box-shadow: var(--glass-panel-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+[data-theme="light"] .panel::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, transparent 100%);
 }
 
 /* ==========================================================================
@@ -485,17 +643,20 @@ h1, h2, h3 {
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin: 8px 12px 0;
-  padding: 8px 12px;
-  background: var(--glass-bar-bg);
-  backdrop-filter: blur(32px) saturate(200%);
-  -webkit-backdrop-filter: blur(32px) saturate(200%);
-  border: 1px solid var(--line);
-  border-top: 1px solid var(--glass-specular);
-  border-radius: 18px;
+  margin: 10px 14px 0;
+  padding: 8px 14px;
+  background-image: var(--glass-sheen), var(--glass-bar-bg);
+  background-color: var(--surf-card);
+  backdrop-filter: blur(36px) saturate(220%) brightness(1.06);
+  -webkit-backdrop-filter: blur(36px) saturate(220%) brightness(1.06);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-left: 1.2px solid var(--glass-rim-subtle);
+  border-radius: 20px;
   font-size: 13px;
   box-shadow: var(--glass-shadow);
   z-index: 10;
+  position: relative;
 }
 
 #bar > span {
@@ -506,13 +667,16 @@ h1, h2, h3 {
 }
 
 #score {
-  background: var(--surf-elevated);
-  border: 1px solid var(--line);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-elevated);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
   border-radius: 99px;
-  padding: 4px 12px;
+  padding: 5px 14px;
   font-weight: 700;
   white-space: nowrap;
   font-size: 12.5px;
+  box-shadow: var(--glass-tile-shadow);
 }
 
 #oppn {
@@ -603,44 +767,83 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 16px 12px;
-  background: var(--glass-tile-bg);
-  backdrop-filter: blur(28px) saturate(200%);
-  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  gap: 5px;
+  padding: 18px 12px;
+  background-image: var(--glass-sheen), var(--glass-tile-bg);
+  background-color: var(--surf-card);
+  backdrop-filter: blur(32px) saturate(210%) brightness(1.04);
+  -webkit-backdrop-filter: blur(32px) saturate(210%) brightness(1.04);
   color: var(--txt);
-  border: 1px solid var(--line);
-  border-top: 1px solid var(--glass-specular);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-left: 1.2px solid var(--glass-rim-subtle);
   box-shadow: var(--glass-tile-shadow);
-  border-radius: 20px;
-  transition: transform .14s cubic-bezier(0.2, 0.8, 0.4, 1), border-color .15s, background-color .15s, box-shadow .15s;
+  border-radius: 22px;
+  transition: transform .16s cubic-bezier(0.16, 1, 0.3, 1), border-color .15s, box-shadow .16s, background-color .15s;
+  overflow: hidden;
+}
+
+.tile::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+[data-theme="light"] .tile::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.40) 0%, transparent 100%);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .tile:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px) scale(1.015);
     border-color: var(--line-strong);
-    background: var(--surf-glass-hover);
-    box-shadow: 0 14px 28px -6px rgba(0, 0, 0, 0.22), inset 0 1px 0.5px var(--glass-specular);
+    border-top-color: #ffffff;
+    background-color: var(--surf-glass-hover);
+    box-shadow: 0 16px 36px -6px rgba(0, 0, 0, 0.35), 0 0 16px var(--acc-glow), var(--glass-bevel);
   }
 }
 
 /* Живые, четкие бейджи иконок мини-игр */
 .game-ico-badge {
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
+  width: 54px;
+  height: 54px;
+  border-radius: 17px;
   display: grid;
   place-items: center;
   font-size: 30px;
-  background: var(--surf-elevated);
-  border: 1px solid var(--line);
-  box-shadow: var(--glass-tile-shadow);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-elevated);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  box-shadow:
+    0 8px 18px -4px rgba(0, 0, 0, 0.3),
+    inset 0 1.5px 1px 0 var(--glass-specular),
+    inset 0 -1px 2px 0 rgba(0, 0, 0, 0.2);
   margin-bottom: 4px;
-  transition: transform .18s cubic-bezier(0.2, 0.8, 0.4, 1);
+  transition: transform .2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .2s;
+}
+
+[data-theme="light"] .game-ico-badge {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 8px 18px -4px rgba(15, 23, 42, 0.1),
+    inset 0 1.5px 1.5px 0 #ffffff,
+    inset 0 -1px 1.5px 0 rgba(15, 23, 42, 0.05);
 }
 
 .tile:hover .game-ico-badge {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow:
+    0 12px 24px -4px rgba(99, 102, 241, 0.35),
+    inset 0 1.5px 1px 0 #ffffff;
+}
   transform: scale(1.08) translateY(-2px);
 }
 
@@ -786,13 +989,15 @@ h1, h2, h3 {
 }
 
 .tb {
-  background: var(--surf-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--line);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-glass);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
   box-shadow: var(--glass-tile-shadow);
   border-radius: 99px;
-  padding: 4px 12px;
+  padding: 5px 14px;
   font-size: 13px;
   color: var(--mut);
   white-space: nowrap;
@@ -806,12 +1011,14 @@ h1, h2, h3 {
   grid-template-columns: repeat(3, calc(var(--w) * 1.5));
   gap: 8px 6px;
   align-content: center;
-  padding: 10px;
-  background: var(--surf-card);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid var(--line);
-  border-radius: 20px;
+  padding: 12px;
+  background-image: var(--glass-sheen), var(--glass-panel-bg);
+  background-color: var(--surf-card);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-radius: 24px;
   box-shadow: var(--glass-shadow);
   min-height: calc(var(--w) * 3.3);
 }
@@ -840,7 +1047,7 @@ h1, h2, h3 {
   flex: none;
   width: var(--w);
   height: calc(var(--w) * 1.4);
-  border-radius: 11px;
+  border-radius: 12px;
   background: var(--c-face);
   color: var(--c-face-txt);
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -851,7 +1058,7 @@ h1, h2, h3 {
   justify-content: center;
   line-height: 1;
   user-select: none;
-  transition: transform .14s, opacity .2s, box-shadow .15s;
+  transition: transform .14s cubic-bezier(0.16, 1, 0.3, 1), opacity .2s, box-shadow .15s;
 }
 
 .c b { font-size: calc(var(--w) * .36); font-weight: 700; }
@@ -881,31 +1088,45 @@ h1, h2, h3 {
   font-size: clamp(38px, 12vw, 58px);
   font-weight: 300;
   padding: 0;
-  background: var(--surf-card);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-card);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
   color: var(--txt);
   box-shadow: var(--glass-tile-shadow);
-  border: 1px solid var(--line);
-  border-radius: 18px;
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-left: 1.2px solid var(--glass-rim-subtle);
+  border-radius: 20px;
+  transition: transform .14s cubic-bezier(0.16, 1, 0.3, 1), background-color .15s, border-color .15s, box-shadow .15s;
+}
+
+.cell:active {
+  transform: scale(0.95);
 }
 
 .p0 { color: var(--p0); }
 .p1 { color: var(--p1); }
 
 .win {
-  background: rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.22) !important;
   border-color: var(--line-strong) !important;
+  border-top-color: #ffffff !important;
+  box-shadow: 0 0 20px var(--acc-glow), var(--glass-bevel) !important;
   animation: glow2 .8s infinite alternate;
 }
 
 .c4 {
   display: flex;
   gap: 6px;
-  padding: 12px;
-  background: var(--c4-board);
-  border: 1px solid var(--line);
-  border-radius: 20px;
+  padding: 14px;
+  background-image: var(--glass-sheen);
+  background-color: var(--c4-board);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-radius: 24px;
   box-shadow: var(--glass-shadow);
   overflow: hidden;
 }
@@ -943,6 +1164,315 @@ h1, h2, h3 {
   vertical-align: -2px;
 }
 
+/* ==========================================================================
+   ШАХМАТЫ (CHESS)
+   ========================================================================== */
+.chess-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: min(92vw, 440px);
+  margin: 0 auto;
+}
+
+.chess-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 14px;
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-glass);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-radius: 16px;
+  font-size: 13px;
+  box-shadow: var(--glass-tile-shadow);
+}
+
+.chess-graveyard {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 20px;
+  font-size: 15px;
+  opacity: 0.85;
+}
+
+.chess-board {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: min(90vw, 430px);
+  height: min(90vw, 430px);
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1.5px solid var(--glass-rim);
+  box-shadow: 0 20px 48px -10px rgba(0, 0, 0, 0.55), var(--glass-bevel);
+  position: relative;
+  background: var(--surf-card);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
+
+.chess-sq {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  cursor: pointer;
+  transition: background-color .15s;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.chess-sq.light {
+  background: rgba(255, 255, 255, 0.08);
+}
+[data-theme="light"] .chess-sq.light {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.chess-sq.dark {
+  background: rgba(0, 0, 0, 0.22);
+}
+[data-theme="light"] .chess-sq.dark {
+  background: rgba(99, 102, 241, 0.16);
+}
+
+.chess-sq.sel {
+  background: rgba(99, 102, 241, 0.42) !important;
+  box-shadow: inset 0 0 0 2px var(--acc);
+}
+
+.chess-sq.last {
+  background: rgba(245, 158, 11, 0.24) !important;
+}
+
+.chess-sq.check {
+  background: rgba(244, 63, 94, 0.45) !important;
+  box-shadow: inset 0 0 0 2px var(--red);
+}
+
+.chess-sq.legal-dot::after {
+  content: "";
+  width: 26%;
+  height: 26%;
+  border-radius: 50%;
+  background: var(--acc);
+  opacity: 0.85;
+  position: absolute;
+  pointer-events: none;
+  box-shadow: 0 0 8px var(--acc-glow);
+}
+
+.chess-sq.legal-cap::after {
+  content: "";
+  position: absolute;
+  inset: 10%;
+  border-radius: 50%;
+  border: 3px solid var(--red);
+  pointer-events: none;
+  animation: pulseCap 1.2s infinite;
+}
+
+@keyframes pulseCap {
+  0%, 100% { transform: scale(0.92); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+.chess-piece {
+  font-size: clamp(24px, 7.5vw, 38px);
+  line-height: 1;
+  display: block;
+  pointer-events: none;
+  transition: transform .14s cubic-bezier(0.2, 0.8, 0.4, 1);
+}
+
+.chess-piece.w {
+  color: #ffffff;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.45));
+}
+[data-theme="light"] .chess-piece.w {
+  color: #ffffff;
+  -webkit-text-stroke: 1px #475569;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.25));
+}
+
+.chess-piece.b {
+  color: #1e1b4b;
+  -webkit-text-stroke: 1.2px #a5b4fc;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+[data-theme="light"] .chess-piece.b {
+  color: #0f172a;
+  -webkit-text-stroke: 0px;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+}
+
+.chess-sq:active .chess-piece {
+  transform: scale(1.15);
+}
+
+/* ==========================================================================
+   ДУРАК (DURAK 4 ИГРОКА)
+   ========================================================================== */
+.durak-opps-4p {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 10px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.opp-chip {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 10px;
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-glass);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-radius: 16px;
+  font-size: 11.5px;
+  box-shadow: var(--glass-tile-shadow);
+  transition: border-color .15s, background-color .15s, transform .15s, box-shadow .15s;
+}
+
+.opp-chip.active-turn {
+  border-color: var(--acc);
+  border-top-color: #ffffff;
+  background: rgba(99, 102, 241, 0.20);
+  box-shadow: 0 0 16px var(--acc-glow), var(--glass-bevel);
+  transform: translateY(-2px);
+}
+
+.opp-chip.def-turn {
+  border-color: var(--amber);
+  border-top-color: #ffffff;
+  background: rgba(245, 158, 11, 0.20);
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.35), var(--glass-bevel);
+  transform: translateY(-2px);
+}
+
+.opp-chip-name {
+  font-weight: 600;
+  max-width: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.opp-chip-role {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 99px;
+  background: var(--surf-elevated);
+  color: var(--mut);
+}
+
+.opp-chip-cards {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 700;
+  font-size: 11.5px;
+  color: var(--txt);
+}
+
+/* ==========================================================================
+   ЛОББИ КОМНАТА (ОЖИДАНИЕ ИГРОКОВ 2–4)
+   ========================================================================== */
+.wait-players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: min(340px, 90vw);
+  margin: 10px 0;
+}
+
+.wait-player-slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-glass);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-radius: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: var(--glass-tile-shadow);
+}
+
+.wait-player-slot.filled {
+  border-color: var(--line-strong);
+  color: var(--txt);
+}
+
+.wait-player-slot.empty {
+  opacity: 0.55;
+  color: var(--mut);
+  border-style: dashed;
+}
+
+.wait-player-slot .role-pill {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: var(--surf-elevated);
+  color: var(--mut);
+}
+
+.wait-player-slot.filled .role-pill.host {
+  background: rgba(99, 102, 241, 0.18);
+  color: var(--acc);
+}
+
+.pk-targets-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.pk-target-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 99px;
+  background: var(--surf-elevated);
+  border: 1px solid var(--line);
+  color: var(--mut);
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.pk-target-btn.sel {
+  background: var(--acc);
+  color: #fff;
+  border-color: var(--acc);
+  box-shadow: 0 0 8px var(--acc-glow);
+}
+
 .rps { display: flex; gap: 10px; }
 .rps button {
   display: flex;
@@ -950,15 +1480,24 @@ h1, h2, h3 {
   align-items: center;
   font-size: 44px;
   line-height: 1.1;
-  padding: 14px 10px;
-  width: clamp(84px, 25vw, 105px);
-  background: var(--surf-card);
-  border: 1px solid var(--line);
+  padding: 16px 10px;
+  width: clamp(86px, 25vw, 110px);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-card);
+  backdrop-filter: blur(30px) saturate(200%);
+  -webkit-backdrop-filter: blur(30px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-left: 1.2px solid var(--glass-rim-subtle);
+  border-radius: 22px;
+  box-shadow: var(--glass-tile-shadow);
 }
 .rps small { font-size: 13px; color: var(--mut); margin-top: 4px; }
 .rps button.sel {
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(99, 102, 241, 0.28);
   border-color: var(--acc);
+  border-top-color: #ffffff;
+  box-shadow: 0 0 16px var(--acc-glow), var(--glass-bevel);
 }
 
 .reveal {
@@ -981,40 +1520,52 @@ h1, h2, h3 {
 }
 
 .memo-card {
-  border-radius: 14px;
-  background: var(--surf-card);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid var(--line);
+  border-radius: 18px;
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-card);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-left: 1.2px solid var(--glass-rim-subtle);
   box-shadow: var(--glass-tile-shadow);
   display: grid;
   place-items: center;
   font-size: clamp(24px, 6vw, 36px);
   cursor: pointer;
-  transition: transform .2s, border-color .2s, background-color .2s;
+  transition: transform .2s cubic-bezier(0.16, 1, 0.3, 1), border-color .2s, background-color .2s, box-shadow .2s;
 }
 
 .memo-card:active { transform: scale(.95); }
 .memo-card.open {
-  background: var(--surf-elevated);
+  background-color: var(--surf-elevated);
   border-color: var(--acc);
+  border-top-color: #ffffff;
+  box-shadow: 0 0 16px var(--acc-glow), var(--glass-bevel);
 }
 .memo-card.m0 {
-  background: rgba(56, 189, 248, 0.16);
+  background-color: rgba(56, 189, 248, 0.20);
   border-color: var(--p0);
+  border-top-color: #ffffff;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.4), var(--glass-bevel);
 }
 .memo-card.m1 {
-  background: rgba(192, 132, 252, 0.16);
+  background-color: rgba(192, 132, 252, 0.20);
   border-color: var(--p1);
+  border-top-color: #ffffff;
+  box-shadow: 0 0 14px rgba(192, 132, 252, 0.4), var(--glass-bevel);
 }
 .memo-card.back {
-  background: var(--surf-card);
-  border-color: var(--line);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-card);
+  border-color: var(--glass-border);
+  border-top-color: var(--glass-rim);
 }
 @media (hover: hover) and (pointer: fine) {
   .memo-card.back:hover {
     border-color: var(--line-strong);
-    transform: translateY(-2px);
+    border-top-color: #ffffff;
+    transform: translateY(-3px) scale(1.02);
   }
 }
 
@@ -1221,11 +1772,14 @@ h1, h2, h3 {
   height: var(--ch);
   display: flex;
   flex-direction: column;
-  background: var(--surf-card);
-  backdrop-filter: blur(32px) saturate(190%);
-  -webkit-backdrop-filter: blur(32px) saturate(190%);
-  border-top: 1px solid var(--line-strong);
-  border-radius: 24px 24px 0 0;
+  background-image: var(--glass-sheen), var(--glass-panel-bg);
+  background-color: var(--surf-card);
+  backdrop-filter: blur(40px) saturate(220%) brightness(1.05);
+  -webkit-backdrop-filter: blur(40px) saturate(220%) brightness(1.05);
+  border-top: 2px solid var(--glass-specular);
+  border-left: 1px solid var(--glass-border);
+  border-right: 1px solid var(--glass-border);
+  border-radius: 28px 28px 0 0;
   z-index: 50;
   padding-bottom: max(8px, var(--sab));
   padding-left: var(--sal);
@@ -1278,10 +1832,12 @@ h1, h2, h3 {
   left: 50%;
   transform: translateX(-50%);
   max-width: 88vw;
-  background: var(--surf-card);
-  backdrop-filter: blur(24px) saturate(190%);
-  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-card);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
   border: 1px solid var(--acc);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.6);
   padding: 8px 16px;
   border-radius: 99px;
   z-index: 90;
@@ -1301,16 +1857,17 @@ body.chat-open .sheet { bottom: var(--ch); }
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 24px 20px max(18px, calc(18px + var(--sab)));
+  padding: 26px 20px max(20px, calc(20px + var(--sab)));
   padding-left: max(20px, var(--sal));
   padding-right: max(20px, var(--sar));
-  background: var(--glass-panel-bg);
-  backdrop-filter: blur(36px) saturate(200%);
-  -webkit-backdrop-filter: blur(36px) saturate(200%);
-  border-top: 1.5px solid var(--glass-specular);
-  border-left: 1px solid var(--line);
-  border-right: 1px solid var(--line);
-  border-radius: 28px 28px 0 0;
+  background-image: var(--glass-sheen), var(--glass-panel-bg);
+  background-color: var(--surf-card);
+  backdrop-filter: blur(44px) saturate(220%) brightness(1.06);
+  -webkit-backdrop-filter: blur(44px) saturate(220%) brightness(1.06);
+  border-top: 2px solid var(--glass-specular);
+  border-left: 1px solid var(--glass-border);
+  border-right: 1px solid var(--glass-border);
+  border-radius: 30px 30px 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1318,7 +1875,25 @@ body.chat-open .sheet { bottom: var(--ch); }
   text-align: center;
   z-index: 60;
   box-shadow: var(--glass-panel-shadow);
+  position: relative;
+  overflow: hidden;
 }
+
+.sheet::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+  pointer-events: none;
+  border-radius: inherit;
+}
+[data-theme="light"] .sheet::before {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, transparent 100%);
+}
+
 .sheet h2 { font-size: 22px; margin: 0; }
 
 /* ---------- Ненавязчивые рекламные баннеры (AdSense) ---------- */
@@ -1327,12 +1902,13 @@ body.chat-open .sheet { bottom: var(--ch); }
   max-width: 500px;
   margin: 14px auto 6px;
   padding: 8px 12px 10px;
-  background: var(--glass-tile-bg);
-  backdrop-filter: blur(28px) saturate(200%);
-  -webkit-backdrop-filter: blur(28px) saturate(200%);
-  border: 1px solid var(--line);
-  border-top: 1px solid var(--glass-specular);
-  border-radius: 18px;
+  background-image: var(--glass-sheen), var(--glass-tile-bg);
+  background-color: var(--surf-card);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  border-radius: 20px;
   box-shadow: var(--glass-tile-shadow);
   display: flex;
   flex-direction: column;
@@ -1391,20 +1967,22 @@ body.chat-open .sheet { bottom: var(--ch); }
   left: 50%;
   top: max(14px, calc(var(--sat) + 12px));
   transform: translateX(-50%);
-  background: var(--surf-card);
-  backdrop-filter: blur(28px) saturate(190%);
-  -webkit-backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid var(--line-strong);
-  padding: 9px 20px;
+  background-image: var(--glass-sheen);
+  background-color: var(--surf-glass-hover);
+  backdrop-filter: blur(32px) saturate(210%);
+  -webkit-backdrop-filter: blur(32px) saturate(210%);
+  border: 1px solid var(--glass-border);
+  border-top: 1.5px solid var(--glass-rim);
+  padding: 10px 22px;
   border-radius: 99px;
   opacity: 0;
-  transition: opacity .2s, transform .2s;
+  transition: opacity .2s, transform .2s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
   z-index: 100;
   max-width: 90vw;
   text-align: center;
   font-size: 13.5px;
-  font-weight: 500;
+  font-weight: 600;
   box-shadow: var(--glass-shadow);
 }
 #toast.on { opacity: 1; transform: translateX(-50%) translateY(4px); }
@@ -1503,6 +2081,13 @@ body.chat-open .sheet { bottom: var(--ch); }
 </head>
 <body>
 
+<!-- Фоновый слой ауры жидкого стекла для живой рефракции -->
+<div class="liquid-bg-layer" aria-hidden="true">
+  <div class="liquid-orb orb-1"></div>
+  <div class="liquid-orb orb-2"></div>
+  <div class="liquid-orb orb-3"></div>
+</div>
+
 <!-- ==========================================================================
      ГЛАВНЫЙ ЭКРАН (ЛОББИ)
      ========================================================================== -->
@@ -1590,9 +2175,15 @@ body.chat-open .sheet { bottom: var(--ch); }
   </div>
 
   <div id="wait" hidden>
-    <p id="waitTxt">Ждём друга. Отправьте ему код или ссылку:</p>
+    <p id="waitTxt">Ждём игроков. Отправьте код или ссылку:</p>
     <b id="wcode"></b>
-    <button id="share" class="primary">
+    <div class="wait-players-list" id="waitPlayersList"></div>
+    <button id="startRoomBtn" class="primary" hidden style="margin-top: 4px;">
+      <svg class="svg-ico" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      <span id="startRoomTxt">Начать игру</span>
+    </button>
+    <p class="hint" id="guestWaitHint" hidden>Ожидаем запуска хостом комнаты…</p>
+    <button id="share" class="ghost" style="margin-top: 4px;">
       <svg class="svg-ico" viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
       <span id="shTxt">Отправить ссылку</span>
     </button>
@@ -1605,10 +2196,15 @@ body.chat-open .sheet { bottom: var(--ch); }
   <div id="menu" hidden>
     <h2 id="menuTitle">Во что играем?</h2>
     <div class="tiles">
+      <button class="tile" data-k="chess">
+        <div class="game-ico-badge">♟️</div>
+        <b class="t-name">Шахматы</b><small class="t-desc">8×8, классика</small>
+        <span class="tag-badge ai-tag">🤖 с ИИ</span>
+      </button>
       <button class="tile" data-k="durak">
         <div class="game-ico-badge">🃏</div>
         <b class="t-name">Дурак</b><small class="t-desc">36 карт, козырь</small>
-        <span class="tag-badge ai-tag">🤖 с ИИ</span>
+        <span class="tag-badge duo-tag">👥👥 2–4 игрока</span>
       </button>
       <button class="tile" data-k="ttt">
         <div class="game-ico-badge"><span class="ttt-glyph">✕◯</span></div>
@@ -1638,7 +2234,7 @@ body.chat-open .sheet { bottom: var(--ch); }
       <button class="tile" data-k="pk">
         <div class="game-ico-badge">🎒</div>
         <b class="t-name">Я иду в поход…</b><small class="t-desc">угадай категорию</small>
-        <span class="tag-badge duo-tag">👥 для двоих</span>
+        <span class="tag-badge duo-tag">👥👥 2–4 игрока</span>
       </button>
       <button class="tile" data-k="pt">
         <div class="game-ico-badge">🎨</div>
@@ -1771,7 +2367,9 @@ const I18N = {
     createRoom: 'Создать комнату',
     codePh: 'Код',
     joinBtn: 'Войти',
-    waitText: 'Ждём друга. Отправьте ему код или ссылку:',
+    waitText: 'Ждём игроков. Отправьте код или ссылку:',
+    startGame: 'Начать игру',
+    hostWaitHint: 'Ожидаем запуска хостом комнаты…',
     shareBtn: 'Отправить ссылку',
     menuTitle: 'Во что играем?',
     oppDefault: 'Соперник',
@@ -1803,6 +2401,7 @@ const I18N = {
     botOnly2P: 'Этот режим доступен только в игре для двоих 👥',
     noServerConn: 'Нет связи с сервером, подключаемся…',
     games: {
+      chess: { name: 'Шахматы', desc: '8×8, классика' },
       durak: { name: 'Дурак', desc: '36 карт, козырь' },
       ttt: { name: 'Крестики-нолики', desc: '3×3' },
       c4: { name: '4 в ряд', desc: 'собери четыре' },
@@ -1812,7 +2411,7 @@ const I18N = {
       pk: { name: 'Я иду в поход…', desc: 'угадай категорию' },
       pt: { name: 'Портреты', desc: 'рисуем друг друга' }
     },
-    tags: { ai: '🤖 с ИИ', new: '✨ Новое', duo: '👥 для двоих' },
+    tags: { ai: '🤖 с ИИ', new: '✨ Новое', duo: '👥 2 игрока', multi: '👥👥 2–4 игрока' },
     leaveBtn: 'Выйти в меню',
     leaveConfirm: 'Выйти из комнаты в главное меню?',
     leftRoom: 'Вы вышли в главное меню',
@@ -1829,7 +2428,9 @@ const I18N = {
     createRoom: 'Create Room',
     codePh: 'Code',
     joinBtn: 'Join',
-    waitText: 'Waiting for a friend. Send them the code or link:',
+    waitText: 'Waiting for players. Send code or link:',
+    startGame: 'Start Game',
+    hostWaitHint: 'Waiting for host to start room…',
     shareBtn: 'Share Link',
     menuTitle: 'What are we playing?',
     oppDefault: 'Opponent',
@@ -1861,6 +2462,7 @@ const I18N = {
     botOnly2P: 'This mode is only available for 2 players 👥',
     noServerConn: 'No server connection, reconnecting…',
     games: {
+      chess: { name: 'Chess', desc: '8×8 classic' },
       durak: { name: 'Durak', desc: '36 cards, trump' },
       ttt: { name: 'Tic-Tac-Toe', desc: '3×3' },
       c4: { name: 'Connect 4', desc: 'Four in a row' },
@@ -1870,7 +2472,7 @@ const I18N = {
       pk: { name: 'Camping trip…', desc: 'Guess category' },
       pt: { name: 'Portraits', desc: 'Draw each other' }
     },
-    tags: { ai: '🤖 vs AI', new: '✨ New', duo: '👥 2 Players' },
+    tags: { ai: '🤖 vs AI', new: '✨ New', duo: '👥 2 Players', multi: '👥👥 2–4 Players' },
     leaveBtn: 'Leave to Menu',
     leaveConfirm: 'Leave room and return to main menu?',
     leftRoom: 'Returned to main menu',
@@ -1885,6 +2487,12 @@ const RK = () => lang === 'en' ? RK_EN : RK_RU;
 const ERR_MAP = {
   'Комната не найдена': { ru: 'Комната не найдена', en: 'Room not found' },
   'В комнате уже двое игроков': { ru: 'В комнате уже двое игроков', en: 'Room is already full' },
+  'В комнате уже максимум 4 игрока': { ru: 'В комнате уже максимум 4 игрока', en: 'Room is full (max 4 players)' },
+  'Недопустимый ход': { ru: 'Недопустимый ход', en: 'Illegal move' },
+  'Первым ходит атакующий': { ru: 'Первым ходит атакующий', en: 'Attacker moves first' },
+  'У защитника недостаточно карт': { ru: 'У защитника недостаточно карт', en: 'Defender does not have enough cards' },
+  'Этот режим доступен только для 2 игроков': { ru: 'Этот режим доступен только для 2 игроков', en: 'This mode is only for 2 players' },
+  'Нужно как минимум 2 игрока': { ru: 'Нужно как минимум 2 игрока', en: 'Need at least 2 players' },
   'Карты нет в руке': { ru: 'Карты нет в руке', en: 'Card not in hand' },
   'Нельзя подкинуть эту карту': { ru: 'Нельзя подкинуть эту карту', en: 'Cannot toss this card' },
   'Карта не бьет': { ru: 'Карта не бьет', en: 'Card does not beat' },
@@ -1931,6 +2539,8 @@ function applyLanguage() {
   if ($('cancelWaitTxt')) $('cancelWaitTxt').textContent = d.leaveBtn;
   if ($('leaveRoomMenuTxt')) $('leaveRoomMenuTxt').textContent = d.leaveBtn;
   if ($('leaveBtn')) $('leaveBtn').title = d.leaveBtn;
+  if ($('startRoomTxt')) $('startRoomTxt').textContent = d.startGame;
+  if ($('guestWaitHint')) $('guestWaitHint').textContent = d.hostWaitHint;
   if ($('adLabel1')) $('adLabel1').textContent = d.adLabel;
   if ($('adLabel2')) $('adLabel2').textContent = d.adLabel;
 
@@ -1946,7 +2556,9 @@ function applyLanguage() {
     const aiTag = t.querySelector('.ai-tag');
     if (aiTag) aiTag.textContent = d.tags.ai;
     const duoTag = t.querySelector('.duo-tag');
-    if (duoTag) duoTag.textContent = (k === 'memo') ? d.tags.new : d.tags.duo;
+    if (duoTag) {
+      duoTag.textContent = (k === 'memo') ? d.tags.new : (['durak', 'pk'].includes(k)) ? d.tags.multi : d.tags.duo;
+    }
   });
 }
 
@@ -2126,18 +2738,154 @@ const turnTxt = (g, ok) => g.winner !== null ? I18N[lang].gameOver : ok ? I18N[l
 // 3. ИГРОВЫЕ ДВИЖКИ
 // ==========================================================================
 
-// ---------- Игра: Дурак ----------
+// ---------- Игра: Шахматы ----------
+const CHESS_GLYPHS = {
+  0: { k: '♔', q: '♕', r: '♖', b: '♗', n: '♘', p: '♙' },
+  1: { k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' }
+};
+
+let chessSelected = null;
+
+function handleChessClick(idx) {
+  const g = S.g;
+  if (!g || g.turn !== S.me || g.winner !== null) return;
+
+  if (chessSelected !== null) {
+    const legal = g.legalMoves || [];
+    const canMove = legal.some(m => m.from === chessSelected && m.to === idx);
+    if (canMove) {
+      haptics.impactLight();
+      send({ t: 'chess_move', from: chessSelected, to: idx });
+      chessSelected = null;
+      return;
+    }
+  }
+
+  const piece = g.b[idx];
+  if (piece && piece.c === S.me) {
+    haptics.impactLight();
+    chessSelected = idx;
+    render();
+  } else {
+    if (chessSelected !== null) {
+      chessSelected = null;
+      render();
+    }
+  }
+}
+
+function chess(g) {
+  const me = S.me, my = g.turn === me && g.winner === null;
+  const legalMoves = g.legalMoves || [];
+  const dests = chessSelected !== null ? legalMoves.filter(m => m.from === chessSelected).map(m => m.to) : [];
+
+  let kingSq = -1;
+  for (let i = 0; i < 64; i++) {
+    if (g.b[i] && g.b[i].c === g.turn && g.b[i].t === 'k') { kingSq = i; break; }
+  }
+
+  const flip = me === 1;
+  const rows = flip ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7];
+  const cols = flip ? [7, 6, 5, 4, 3, 2, 1, 0] : [0, 1, 2, 3, 4, 5, 6, 7];
+
+  let boardHtml = '';
+  for (const r of rows) {
+    for (const c of cols) {
+      const idx = r * 8 + c;
+      const isLight = (r + c) % 2 === 0;
+      const piece = g.b[idx];
+      const isSel = chessSelected === idx;
+      const isLast = g.last && (g.last.from === idx || g.last.to === idx);
+      const isCheck = g.inCheck && kingSq === idx;
+      const isLegal = dests.includes(idx);
+      const isCap = isLegal && (piece !== null || (g.b[chessSelected] && g.b[chessSelected].t === 'p' && (idx % 8 !== chessSelected % 8)));
+
+      let cls = `chess-sq ${isLight ? 'light' : 'dark'}`;
+      if (isSel) cls += ' sel';
+      if (isLast) cls += ' last';
+      if (isCheck) cls += ' check';
+      if (isCap) cls += ' legal-cap';
+      else if (isLegal) cls += ' legal-dot';
+
+      let pieceHtml = '';
+      if (piece) {
+        const glyph = (CHESS_GLYPHS[piece.c] && CHESS_GLYPHS[piece.c][piece.t]) || '';
+        pieceHtml = `<span class="chess-piece ${piece.c === 0 ? 'w' : 'b'}">${glyph}</span>`;
+      }
+
+      boardHtml += `<button class="${cls}" data-sq="${idx}">${pieceHtml}</button>`;
+    }
+  }
+
+  const wCap = (g.captured[0] || []).map(t => CHESS_GLYPHS[1][t] || '').join('');
+  const bCap = (g.captured[1] || []).map(t => CHESS_GLYPHS[0][t] || '').join('');
+
+  const whiteName = S.names[0] || (lang === 'en' ? 'White' : 'Белые');
+  const blackName = S.names[1] || (lang === 'en' ? 'Black' : 'Чёрные');
+  const yourColor = me === 0 ? (lang === 'en' ? 'White ♔' : 'Белые ♔') : (lang === 'en' ? 'Black ♚' : 'Чёрные ♚');
+
+  let statusTxt = '';
+  if (g.winner !== null) {
+    if (g.winner === -1) statusTxt = I18N[lang].gameTie;
+    else if (g.winner === me) statusTxt = '🏆 ' + (lang === 'en' ? 'Checkmate! You won' : 'Шах и мат! Вы победили');
+    else statusTxt = lang === 'en' ? 'Checkmate! Opponent won' : 'Шах и мат! Победил соперник';
+  } else {
+    if (my) {
+      statusTxt = `<b>${I18N[lang].yourTurn}</b>` + (g.inCheck ? ' · <span style="color:var(--red)">⚠️ ' + (lang === 'en' ? 'Check!' : 'Шах!') + '</span>' : '');
+    } else {
+      statusTxt = I18N[lang].oppTurn + (g.inCheck ? ' · <span style="color:var(--red)">⚠️ ' + (lang === 'en' ? 'Check!' : 'Шах!') + '</span>' : '');
+    }
+  }
+
+  const topColor = flip ? 0 : 1;
+  const botColor = flip ? 1 : 0;
+  const topName = flip ? whiteName : blackName;
+  const botName = flip ? blackName : whiteName;
+  const topCap = flip ? wCap : bCap;
+  const botCap = flip ? bCap : wCap;
+
+  return `<div class="center" style="gap:8px">
+    <div class="st">${statusTxt} · <small style="color:var(--mut)">(${lang === 'en' ? 'you are' : 'вы —'} ${yourColor})</small></div>
+    <div class="chess-wrap">
+      <div class="chess-hud">
+        <span><b>${esc(topName)}</b></span>
+        <span class="chess-graveyard">${topCap}</span>
+      </div>
+      <div class="chess-board">${boardHtml}</div>
+      <div class="chess-hud">
+        <span><b>${esc(botName)}</b></span>
+        <span class="chess-graveyard">${botCap}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ---------- Игра: Дурак (2–4 игрока) ----------
 function durak(g) {
-  const tr = g.trump, att = S.me === g.att, und = g.table.some(x => !x.d), all = g.table.length && !und;
+  const tr = g.trump;
+  const isAtt = S.me === g.att;
+  const isDef = S.me === g.def;
+  const isOther = !isAtt && !isDef;
+  const und = g.table.some(x => !x.d);
+  const all = g.table.length && !und;
   const beats = (a, c) => (c.s === a.s && c.r > a.r) || (c.s === tr && a.s !== tr);
-  const ok = c => att ? (!g.table.length || g.table.some(x => x.a.r === c.r || (x.d && x.d.r === c.r)))
-                      : (!g.taking && g.table.some(x => !x.d && beats(x.a, c)));
+
+  const ok = c => {
+    if (isAtt) {
+      return !g.table.length || g.table.some(x => x.a.r === c.r || (x.d && x.d.r === c.r));
+    }
+    if (isDef) {
+      return !g.taking && g.table.some(x => !x.d && beats(x.a, c));
+    }
+    return g.table.length > 0 && g.table.some(x => x.a.r === c.r || (x.d && x.d.r === c.r));
+  };
+
   const key = c => (c.s === tr ? 20 : 0) + c.r + c.s / 10;
   let st, btn = null, act = null;
 
-  if (att) {
+  if (isAtt) {
     if (g.taking) {
-      st = lang === 'en' ? 'Opponent takes. Toss cards or finish' : 'Соперник берёт. Подкиньте карты или завершите';
+      st = lang === 'en' ? 'Defender takes. Toss cards or finish' : 'Защитник берёт. Подкиньте карты или завершите';
       btn = lang === 'en' ? 'Done' : 'Готово';
       act = 'done';
     } else if (!g.table.length) {
@@ -2147,32 +2895,65 @@ function durak(g) {
       btn = lang === 'en' ? 'Pass' : 'Бито';
       act = 'done';
     } else {
-      st = lang === 'en' ? 'Waiting for opponent to defend' : 'Ждём, пока соперник отобьётся';
+      st = lang === 'en' ? 'Waiting for defender' : 'Ждём, пока защитник отобьётся';
     }
-  } else {
+  } else if (isDef) {
     if (g.taking) {
       st = lang === 'en' ? 'You are taking cards…' : 'Вы берёте карты…';
     } else if (!g.table.length) {
-      st = lang === 'en' ? 'Opponent’s turn' : 'Ход соперника';
+      st = lang === 'en' ? 'Waiting for attack…' : 'Ждём атаки…';
     } else if (und) {
       st = lang === 'en' ? '<b>Defend</b> or take' : '<b>Отбейте</b> карту или возьмите';
       btn = lang === 'en' ? 'Take' : 'Беру';
       act = 'take';
     } else {
-      st = lang === 'en' ? 'Waiting for opponent' : 'Ждём соперника';
+      st = lang === 'en' ? 'Waiting for other players' : 'Ждём соперников';
+    }
+  } else {
+    if (g.taking) {
+      st = lang === 'en' ? 'Defender is taking. Toss cards' : 'Защитник берёт. Подкиньте карты';
+      btn = lang === 'en' ? 'Done' : 'Готово';
+      act = 'done';
+    } else if (all) {
+      st = lang === 'en' ? 'Cards beaten. Toss more or pass' : 'Карты отбиты. Подкиньте ещё или пас';
+      btn = lang === 'en' ? 'Pass' : 'Бито';
+      act = 'done';
+    } else {
+      st = lang === 'en' ? `Attack on ${esc(S.names[g.def] || 'defender')}` : `Атака на ${esc(S.names[g.def] || 'защитника')}`;
     }
   }
 
-  const turn = att ? (g.taking || !und) : (und && !g.taking);
-  const hand = [...g.hand].sort((a, b) => key(a) - key(b)).map((c, i) =>
+  const turn = isAtt ? (g.taking || !und) : isDef ? (und && !g.taking) : (g.table.length > 0);
+  const hand = [...(g.hand || [])].sort((a, b) => key(a) - key(b)).map((c, i) =>
     card(c, (ok(c) ? 'ok' : 'no') + an('h' + c.r + '-' + c.s, 'deal'), M({t:'card', r:c.r, s:c.s}), `animation-delay:${i * 45}ms`)).join('');
-  const opp = Array.from({length:g.opp}, (_, i) => `<div class="c back${an('o' + i, 'dealo')}" style="animation-delay:${i * 45}ms"></div>`).join('');
-  const tbl = g.table.map(x => `<div class="pair">${card(x.a, an('a' + x.a.r + '-' + x.a.s, 'pop'))}${x.d ? card(x.d, an('d' + x.d.r + '-' + x.d.s, 'pop')) : ''}</div>`).join('');
 
+  let oppsHeader = '';
+  if (g.opps && g.opps.length > 1) {
+    oppsHeader = `<div class="durak-opps-4p">` + g.opps.map(op => {
+      const opIsAtt = op.seat === g.att;
+      const opIsDef = op.seat === g.def;
+      const roleText = op.done ? '🏆 ' + (lang === 'en' ? 'Out' : 'Вышел')
+                     : opIsAtt ? '⚔️ ' + (lang === 'en' ? 'Attack' : 'Атака')
+                     : opIsDef ? '🛡️ ' + (lang === 'en' ? 'Defend' : 'Защита')
+                     : '👥 ' + (lang === 'en' ? 'Waiting' : 'Ждёт');
+      const cls = opIsAtt ? 'active-turn' : opIsDef ? 'def-turn' : '';
+      const cardsWord = lang === 'en' ? 'cards' : 'карт';
+      return `<div class="opp-chip ${cls}">
+        <span class="opp-chip-name">${esc(op.name)}</span>
+        <span class="opp-chip-role">${roleText}</span>
+        <span class="opp-chip-cards">🃏 ${op.count} ${cardsWord}</span>
+      </div>`;
+    }).join('') + `</div>`;
+  } else {
+    const opp = Array.from({length:g.opp || 0}, (_, i) => `<div class="c back${an('o' + i, 'dealo')}" style="animation-delay:${i * 45}ms"></div>`).join('');
+    oppsHeader = `<div class="hand opp">${opp}</div>`;
+  }
+
+  const tbl = g.table.map(x => `<div class="pair">${card(x.a, an('a' + x.a.r + '-' + x.a.s, 'pop'))}${x.d ? card(x.d, an('d' + x.d.r + '-' + x.d.s, 'pop')) : ''}</div>`).join('');
   const trumpTitle = lang === 'en' ? 'Trump' : 'Козырь';
   const deckTitle = g.deck ? (lang === 'en' ? ` · in deck ${g.deck}` : ` · в колоде ${g.deck}`) : (lang === 'en' ? ' · deck is empty' : ' · колода пуста');
 
-  return `<div class="hand opp">${opp}</div>
+  return `${oppsHeader}
   <div class="mid">
     <div class="deckw">
       <div class="deck">${g.tc ? card(g.tc, 'tr') : ''}${g.deck > 1 ? `<div class="c back"><em>${g.deck}</em></div>` : ''}</div>
@@ -2288,47 +3069,95 @@ function wd(g) {
   return `<div class="center wd" style="${cs}"><div class="st">${info}</div>${Array.from({length:6}, (_, i) => row(g.guesses[i], i)).join('')}<div class="keys">${keys}</div>${ctl}</div>`;
 }
 
-// ---------- Игра: Поход ----------
+// ---------- Игра: Поход (2–4 игрока) ----------
+let pkSelectedTarget = null;
+
 function pk(g) {
-  const me = S.me, o = 1 - me, nm = i => esc(S.names[i]), q = s => `«${esc(s)}»`;
-  const form = (id, act, ph, btn) => `<div class="frm"><input id="${id}" maxlength="40" placeholder="${ph}" autocomplete="off"><button class="go primary" data-f="${act}" data-in="${id}">${btn}</button></div>`;
+  const me = S.me, nm = i => esc(S.names[i]), q = s => `«${esc(s)}»`;
+  const activePeers = S.peers.map((on, i) => on ? i : null).filter(x => x !== null);
+  const otherPeers = activePeers.filter(i => i !== me);
+  const isMulti = activePeers.length > 2;
+  const form = (id, act, ph, btn, extraAttr = '') => `<div class="frm"><input id="${id}" maxlength="40" placeholder="${ph}" autocomplete="off"><button class="go primary" data-f="${act}" data-in="${id}" ${extraAttr}>${btn}</button></div>`;
 
   if (g.phase === 'prep') {
     const mainTitle = lang === 'en' ? 'I am going on a trip and taking with me…' : 'Я иду в поход и беру с собой…';
     const catPh = lang === 'en' ? 'item category' : 'категорию предметов';
     const catDone = lang === 'en' ? 'Done' : 'Готово';
-    const catHint = lang === 'en' ? 'E.g.: red things · starts with K · edible · round objects.<br>Opponent will not see it until end.' : 'Например: всё красное · на букву К · съедобное · круглое.<br>Соперник не узнает её до конца игры.';
-    return `<div class="center"><p class="sent">${mainTitle}</p>${g.ready[me]
-      ? `<div class="st">${lang === 'en' ? 'Your category:' : 'Ваша категория:'} <b>${q(g.mine)}</b><br>${lang === 'en' ? `Waiting for ${nm(o)} to set theirs…` : `Ждём, пока ${nm(o)} придумает свою…`}</div>`
-      : `${form('cIn', 'cat', catPh, catDone)}<div class="hint">${catHint}</div>`}</div>`;
+    const catHint = lang === 'en' ? 'E.g.: red things · starts with K · edible · round objects.<br>Opponents will not see it until end.' : 'Например: всё красное · на букву К · съедобное · круглое.<br>Соперники не узнают её до конца игры.';
+
+    let statusList = '';
+    if (isMulti) {
+      statusList = `<div class="wait-players-list" style="margin: 12px 0;">` + activePeers.map(i => {
+        const isR = g.ready && g.ready[i];
+        const statusText = isR ? (lang === 'en' ? '✅ Ready' : '✅ Придумал') : (lang === 'en' ? '⏳ Thinking…' : '⏳ Придумывает…');
+        return `<div class="wait-player-slot ${isR ? 'filled' : 'empty'}"><span>${nm(i)}${i === me ? ' (' + (lang === 'en' ? 'You' : 'Вы') + ')' : ''}</span><span class="role-pill">${statusText}</span></div>`;
+      }).join('') + `</div>`;
+    }
+
+    return `<div class="center"><p class="sent">${mainTitle}</p>${g.ready && g.ready[me]
+      ? `<div class="st">${lang === 'en' ? 'Your category:' : 'Ваша категория:'} <b>${q(g.mine)}</b><br>${isMulti ? (lang === 'en' ? 'Waiting for other players…' : 'Ждём остальных игроков…') : (lang === 'en' ? `Waiting for ${nm(otherPeers[0])}…` : `Ждём, пока ${nm(otherPeers[0])} придумает свою…`)}</div>${statusList}`
+      : `${form('cIn', 'cat', catPh, catDone)}<div class="hint">${catHint}</div>${statusList}`}</div>`;
   }
 
   const log = g.log.map(e => {
     let t;
-    if (e.k === 'item') t = lang === 'en' ? `takes: ${q(e.txt)}` : `берёт с собой: ${q(e.txt)}`;
+    const targetName = e.target !== undefined && e.target !== null ? ` → <b>${nm(e.target)}</b>` : '';
+    if (e.k === 'item') t = lang === 'en' ? `${targetName} takes: ${q(e.txt)}` : `${targetName} берёт: ${q(e.txt)}`;
     else if (e.k === 'ans') t = e.v ? (lang === 'en' ? '✅ You can go on the trip' : '✅ Ты идёшь в поход') : (lang === 'en' ? '❌ You cannot go on the trip' : '❌ Ты не идёшь в поход');
-    else if (e.k === 'guess') t = lang === 'en' ? `guesses category: ${q(e.txt)}` : `пробует угадать категорию: ${q(e.txt)}`;
+    else if (e.k === 'guess') t = lang === 'en' ? `${targetName} guesses category: ${q(e.txt)}` : `${targetName} пробует угадать категорию: ${q(e.txt)}`;
     else t = e.v ? (lang === 'en' ? '✅ Correct!' : '✅ Верно!') : (lang === 'en' ? '❌ Incorrect' : '❌ Неверно');
     return `<div class="msg ${e.by === me ? 'mine' : ''}"><b>${nm(e.by)}</b>${t}</div>`;
   }).join('') || `<div class="hint">${lang === 'en' ? `Game started. First turn: ${nm(g.turn)}` : `Игра началась. Первым ходит ${nm(g.turn)}`}</div>`;
 
-  const t = g.turn === me;
+  const isMyTurn = g.turn === me;
+  const targetSeat = g.target !== undefined && g.target !== null ? g.target : otherPeers[0];
+  const isMyTarget = targetSeat === me;
   const mineCat = `<div class="chip2">${lang === 'en' ? 'Your category:' : 'Ваша категория:'} ${q(g.mine)}</div>`;
   let act = '';
 
   if (g.phase === 'done') {
-    act = `<h3>${lang === 'en' ? 'Categories revealed' : 'Категории раскрыты'}</h3><div>${nm(0)}: <b>${q(g.cats[0])}</b></div><div>${nm(1)}: <b>${q(g.cats[1])}</b></div>`;
+    const revealed = activePeers.map(i => `<div>${nm(i)}: <b>${q(g.cats ? g.cats[i] : '')}</b></div>`).join('');
+    act = `<h3>${lang === 'en' ? 'Categories revealed' : 'Категории раскрыты'}</h3>${revealed}`;
   } else if (g.step === 'item') {
-    act = t ? `<h3>${lang === 'en' ? 'What are you taking on the trip?' : 'Что ты берёшь с собой в поход?'}</h3>${form('iIn', 'item', lang === 'en' ? 'Item name' : 'Название предмета', lang === 'en' ? 'Send' : 'Отправить')}` : `<div>${nm(g.turn)} ${lang === 'en' ? 'is picking an item…' : 'выбирает предмет…'}</div>`;
+    if (isMyTurn) {
+      if (pkSelectedTarget === null || !otherPeers.includes(pkSelectedTarget)) {
+        pkSelectedTarget = otherPeers[0];
+      }
+      let targetsBar = '';
+      if (isMulti) {
+        targetsBar = `<div class="pk-targets-bar"><span>${lang === 'en' ? 'Ask:' : 'Спросить у:'}</span>` + otherPeers.map(op =>
+          `<button class="pk-target-btn ${pkSelectedTarget === op ? 'sel' : ''}" data-pktarget="${op}">${nm(op)}</button>`
+        ).join('') + `</div>`;
+      }
+      act = `<h3>${lang === 'en' ? 'What are you taking on the trip?' : 'Что ты берёшь с собой в поход?'}</h3>${targetsBar}${form('iIn', 'item', lang === 'en' ? 'Item name' : 'Название предмета', lang === 'en' ? 'Send' : 'Отправить')}`;
+    } else {
+      act = `<div>${nm(g.turn)} ${lang === 'en' ? 'is picking an item…' : 'выбирает предмет…'}</div>`;
+    }
   } else if (g.step === 'judge') {
-    act = t ? `<div>${lang === 'en' ? `Waiting for ${nm(o)}’s answer…` : `Ждём ответа ${nm(o)}…`}</div>` : `<h3>${nm(g.turn)} ${lang === 'en' ? 'takes' : 'берёт с собой'} ${q(g.item)}</h3><div class="row"><button ${M({t:'judge', v:true})} class="primary">${lang === 'en' ? 'You can go' : 'Ты идёшь в поход'}</button><button class="ghost" ${M({t:'judge', v:false})}>${lang === 'en' ? 'You cannot go' : 'Ты не идёшь в поход'}</button></div>${mineCat}`;
+    if (isMyTarget) {
+      act = `<h3>${nm(g.turn)} ${lang === 'en' ? 'takes' : 'берёт с собой'} ${q(g.item)}</h3><div class="row"><button ${M({t:'judge', v:true})} class="primary">${lang === 'en' ? 'You can go' : 'Ты идёшь в поход'}</button><button class="ghost" ${M({t:'judge', v:false})}>${lang === 'en' ? 'You cannot go' : 'Ты не идёшь в поход'}</button></div>${mineCat}`;
+    } else {
+      act = `<div>${lang === 'en' ? `Waiting for ${nm(targetSeat)}’s answer…` : `Ждём ответа ${nm(targetSeat)}…`}</div>`;
+    }
   } else if (g.step === 'decide') {
     const verdict = g.ans ? (lang === 'en' ? '✅ You can go' : '✅ Ты идёшь в поход') : (lang === 'en' ? '❌ You cannot go' : '❌ Ты не идёшь в поход');
-    act = t ? `<h3>${verdict}</h3><div>${q(g.item)}</div><div class="row"><button ${M({t:'try'})} class="primary">${lang === 'en' ? 'Try to guess category' : 'Попробовать угадать категорию'}</button><button class="ghost" ${M({t:'skip'})}>${lang === 'en' ? 'Skip' : 'Пропустить'}</button></div>` : `<div>${nm(g.turn)} ${lang === 'en' ? 'is deciding whether to guess…' : 'решает, пробовать ли угадать вашу категорию…'}</div>`;
+    if (isMyTurn) {
+      act = `<h3>${verdict}</h3><div>${q(g.item)} (${nm(targetSeat)})</div><div class="row"><button ${M({t:'try'})} class="primary">${lang === 'en' ? 'Try to guess category' : 'Попробовать угадать категорию'}</button><button class="ghost" ${M({t:'skip'})}>${lang === 'en' ? 'Skip' : 'Пропустить'}</button></div>`;
+    } else {
+      act = `<div>${nm(g.turn)} ${lang === 'en' ? 'is deciding whether to guess…' : 'решает, пробовать ли угадать категорию…'}</div>`;
+    }
   } else if (g.step === 'guess') {
-    act = t ? `<h3>${lang === 'en' ? `What is ${nm(o)}’s category?` : `Какая категория у ${nm(o)}?`}</h3>${form('gIn', 'pguess', lang === 'en' ? 'Your guess' : 'Ваш вариант', lang === 'en' ? 'Send' : 'Отправить')}` : `<div>${nm(g.turn)} ${lang === 'en' ? 'is writing a guess…' : 'пишет догадку…'}</div>`;
+    if (isMyTurn) {
+      act = `<h3>${lang === 'en' ? `What is ${nm(targetSeat)}’s category?` : `Какая категория у ${nm(targetSeat)}?`}</h3>${form('gIn', 'pguess', lang === 'en' ? 'Your guess' : 'Ваш вариант', lang === 'en' ? 'Send' : 'Отправить')}`;
+    } else {
+      act = `<div>${nm(g.turn)} ${lang === 'en' ? 'is writing a guess…' : 'пишет догадку…'}</div>`;
+    }
   } else {
-    act = t ? `<div>${lang === 'en' ? `Waiting for ${nm(o)}’s answer…` : `Ждём ответа ${nm(o)}…`}</div>` : `<h3>${nm(g.turn)} ${lang === 'en' ? 'thinks:' : 'думает:'} ${q(g.guess)}</h3><div class="row"><button ${M({t:'verify', v:true})} class="primary">${lang === 'en' ? 'Correct ✅' : 'Верно ✅'}</button><button class="ghost" ${M({t:'verify', v:false})}>${lang === 'en' ? 'Incorrect ❌' : 'Неверно ❌'}</button></div>${mineCat}`;
+    if (isMyTarget) {
+      act = `<h3>${nm(g.turn)} ${lang === 'en' ? 'thinks:' : 'думает:'} ${q(g.guess)}</h3><div class="row"><button ${M({t:'verify', v:true})} class="primary">${lang === 'en' ? 'Correct ✅' : 'Верно ✅'}</button><button class="ghost" ${M({t:'verify', v:false})}>${lang === 'en' ? 'Incorrect ❌' : 'Неверно ❌'}</button></div>${mineCat}`;
+    } else {
+      act = `<div>${lang === 'en' ? `Waiting for ${nm(targetSeat)}’s answer…` : `Ждём ответа ${nm(targetSeat)}…`}</div>`;
+    }
   }
 
   const giveupBtn = lang === 'en' ? 'Give up & reveal categories' : 'Сдаться и раскрыть категории';
@@ -2483,26 +3312,68 @@ function sendChat() {
 function render() {
   $('lobby').hidden = true;
   $('game').hidden = false;
-  const me = S.me, both = S.peers[0] && S.peers[1], g = S.g, opp = 1 - me;
+  const me = S.me, g = S.g;
+  const activePeers = S.peers.map((on, i) => on ? i : null).filter(x => x !== null);
+  const count = activePeers.length;
+  const both = count >= 2;
+  const isHost = me === 0;
+
   $('code').textContent = S.code;
   $('wcode').textContent = S.code;
-  $('dot').className = S.on[opp] ? 'on' : '';
-  $('oppn').textContent = both ? S.names[opp] : I18N[lang].oppDefault;
-  $('score').textContent = `${I18N[lang].youScore} ${S.score[me]} : ${S.score[opp]}`;
-  $('wait').hidden = both;
-  $('menu').hidden = !both || !!S.kind;
+
+  if (count > 2) {
+    $('dot').className = 'on';
+    $('oppn').textContent = `👥 ${count} ` + (lang === 'en' ? 'players' : 'игрока');
+    $('score').textContent = `${I18N[lang].youScore} ${S.score[me]}`;
+  } else {
+    const opp = activePeers.find(i => i !== me) ?? (1 - me);
+    $('dot').className = S.on[opp] ? 'on' : '';
+    $('oppn').textContent = both ? S.names[opp] : I18N[lang].oppDefault;
+    $('score').textContent = `${I18N[lang].youScore} ${S.score[me]} : ${S.score[opp]}`;
+  }
+
+  const inMenuOrGame = S.inMenu || S.isBot || !!S.kind;
+  $('wait').hidden = inMenuOrGame;
+  $('menu').hidden = !inMenuOrGame || !!S.kind;
   $('board').hidden = !S.kind;
   $('menuBtn').hidden = !S.kind;
 
-  if (S.isBot) {
-    document.querySelectorAll('.tiles .tile').forEach(t => {
-      const k = t.dataset.k;
-      const isBotSupported = ['durak', 'ttt', 'c4', 'rps'].includes(k);
-      t.style.opacity = isBotSupported ? '1' : '0.4';
-    });
-  } else {
-    document.querySelectorAll('.tiles .tile').forEach(t => t.style.opacity = '1');
+  const wList = $('waitPlayersList');
+  if (wList && !$('wait').hidden) {
+    let slotsHtml = '';
+    for (let i = 0; i < 4; i++) {
+      const isConnected = S.peers[i];
+      const name = S.names[i] || '';
+      const isMe = i === me;
+      if (isConnected) {
+        const rolePill = i === 0 ? `<span class="role-pill host">👑 ${lang === 'en' ? 'Host' : 'Хост'}</span>` : `<span class="role-pill">👤 ${lang === 'en' ? 'Player' : 'Игрок'}</span>`;
+        slotsHtml += `<div class="wait-player-slot filled"><span>${esc(name)}${isMe ? ' (' + (lang === 'en' ? 'You' : 'Вы') + ')' : ''}</span>${rolePill}</div>`;
+      } else {
+        const ph = i < 2 ? (lang === 'en' ? 'Waiting for player…' : 'Ожидание игрока…') : (lang === 'en' ? `Slot ${i + 1} (optional)` : `Место ${i + 1} (необяз.)`);
+        slotsHtml += `<div class="wait-player-slot empty"><span>${ph}</span></div>`;
+      }
+    }
+    wList.innerHTML = slotsHtml;
   }
+  if ($('startRoomBtn')) {
+    $('startRoomBtn').hidden = !both || !isHost;
+  }
+  if ($('guestWaitHint')) {
+    $('guestWaitHint').hidden = !both || isHost;
+  }
+
+  document.querySelectorAll('.tiles .tile').forEach(t => {
+    const k = t.dataset.k;
+    if (S.isBot) {
+      const isBotSupported = ['durak', 'chess', 'ttt', 'c4', 'rps'].includes(k);
+      t.style.opacity = isBotSupported ? '1' : '0.4';
+    } else if (count > 2) {
+      const isMultiSupported = ['durak', 'pk'].includes(k);
+      t.style.opacity = isMultiSupported ? '1' : '0.4';
+    } else {
+      t.style.opacity = '1';
+    }
+  });
 
   const over = !!g && g.winner !== null;
   $('over').hidden = !over || S.kind === 'pt';
@@ -2515,12 +3386,14 @@ function render() {
   if (S.gid !== lastGid) {
     P = new Set();
     lastGid = S.gid;
+    chessSelected = null;
+    pkSelectedTarget = null;
     cvClear();
   }
   cur = new Set();
 
   const keep = [...$('board').querySelectorAll('input')].map(i => [i.id, i.value, document.activeElement === i]);
-  $('board').innerHTML = {durak, ttt, c4, rps, memo, wd, pk, pt}[S.kind](g);
+  $('board').innerHTML = {durak, chess, ttt, c4, rps, memo, wd, pk, pt}[S.kind](g);
   keep.forEach(([id, v, f]) => {
     const el = $(id);
     if (el) { el.value = v; if (f) el.focus(); }
@@ -2537,18 +3410,18 @@ function render() {
     const pkk = S.kind === 'pk';
     const L_RU = {
       durak:'Вы остались в дураках', pk:'Соперник угадал вашу категорию',
-      memo:'Соперник набрал больше пар'
+      memo:'Соперник набрал больше пар', chess:'Шах и мат! Вы проиграли'
     };
     const L_EN = {
       durak:'You are the fool', pk:'Opponent guessed your category',
-      memo:'Opponent found more pairs'
+      memo:'Opponent found more pairs', chess:'Checkmate! You lost'
     };
     const L = lang === 'en' ? L_EN : L_RU;
     const won = g.winner === me;
     if (won) haptics.notificationSuccess();
     else if (g.winner >= 0) haptics.notificationWarning();
 
-    $('res').textContent = g.winner === -1 ? (pkk ? I18N[lang].gameOver : I18N[lang].gameTie) : won ? I18N[lang].gameWin : (L[S.kind] || I18N[lang].gameLose);
+    $('res').textContent = g.winner === -1 ? (pkk ? I18N[lang].gameOver : I18N[lang].gameTie) : won ? ((S.kind === 'chess') ? (lang === 'en' ? 'Checkmate! You won 🏆' : 'Шах и мат! Вы победили 🏆') : I18N[lang].gameWin) : (L[S.kind] || I18N[lang].gameLose);
   }
 }
 
@@ -2591,6 +3464,27 @@ document.addEventListener('click', e => {
     return setChat(true, true);
   }
 
+  if (e.target.closest('#startRoomBtn')) {
+    haptics.impactMedium();
+    send({ t: 'open_menu' });
+    return;
+  }
+
+  const pkBtn = e.target.closest('.pk-target-btn');
+  if (pkBtn && pkBtn.dataset.pktarget !== undefined) {
+    haptics.impactLight();
+    pkSelectedTarget = +pkBtn.dataset.pktarget;
+    render();
+    return;
+  }
+
+  const cSq = e.target.closest('.chess-sq');
+  if (cSq && S && S.kind === 'chess' && S.g) {
+    const idx = +cSq.dataset.sq;
+    handleChessClick(idx);
+    return;
+  }
+
   const x = e.target.closest('[data-m],[data-k],[data-f],[data-ui],[data-col],[data-sz],[data-tool]');
   if (!x) return;
   const d = x.dataset;
@@ -2613,9 +3507,14 @@ document.addEventListener('click', e => {
     return render();
   }
   if (d.k) {
-    if (S && S.isBot && !['durak', 'ttt', 'c4', 'rps'].includes(d.k)) {
+    const activeCount = S ? S.peers.filter(Boolean).length : 2;
+    if (S && S.isBot && !['durak', 'chess', 'ttt', 'c4', 'rps'].includes(d.k)) {
       haptics.notificationWarning();
       return toast(I18N[lang].botOnly2P);
+    }
+    if (activeCount > 2 && !['durak', 'pk'].includes(d.k)) {
+      haptics.notificationWarning();
+      return toast(lang === 'en' ? `Mode only for 2 players (${activeCount} currently in room)` : `Этот режим только для 2 игроков (в комнате сейчас ${activeCount})`);
     }
     haptics.impactMedium();
     return send({t:'pick', k:d.k});
@@ -2625,7 +3524,11 @@ document.addEventListener('click', e => {
     if (!el.value.trim()) return toast(I18N[lang].enterText);
     haptics.impactLight();
     lastSent = {id:el.id, v:el.value};
-    send({t:d.f, w:el.value});
+    const payload = {t:d.f, w:el.value};
+    if (d.f === 'item' && pkSelectedTarget !== null) {
+      payload.target = pkSelectedTarget;
+    }
+    send(payload);
     el.value = '';
     return;
   }
